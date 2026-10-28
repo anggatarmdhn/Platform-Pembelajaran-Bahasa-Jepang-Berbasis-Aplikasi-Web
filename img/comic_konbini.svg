@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="konbiniBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ECFDF5"/>
+      <stop offset="100%" stop-color="#D1FAE5"/>
+    </linearGradient>
+    <filter id="shadowKonbini" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Panel Frame -->
+  <rect x="8" y="8" width="584" height="304" rx="16" fill="url(#konbiniBg)" stroke="#10B981" stroke-width="3"/>
+
+  <!-- Comic Badge -->
+  <rect x="24" y="20" width="170" height="28" rx="8" fill="#10B981"/>
+  <text x="34" y="39" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="12" fill="#FFFFFF" letter-spacing="0.5">KOMIK SITUASI #3</text>
+  <text x="206" y="39" font-family="'Noto Sans JP', sans-serif" font-weight="700" font-size="13" fill="#065F46">Minimarket Tokyo: Tanya Harga &amp; Uang Yen (円)</text>
+
+  <!-- Store Shelves in Background with Drink bottles -->
+  <rect x="24" y="58" width="552" height="60" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+  <!-- Drink Bottles Colored -->
+  <rect x="40" y="66" width="14" height="34" rx="3" fill="#10B981"/>
+  <rect x="60" y="66" width="14" height="34" rx="3" fill="#F59E0B"/>
+  <rect x="80" y="66" width="14" height="34" rx="3" fill="#EF4444"/>
+  <rect x="100" y="66" width="14" height="34" rx="3" fill="#3B82F6"/>
+  <rect x="120" y="66" width="14" height="34" rx="3" fill="#8B5CF6"/>
+  <text x="150" y="88" font-family="'Noto Sans JP', sans-serif" font-weight="800" font-size="14" fill="#047857">コンビニ・おにぎりコーナー (Konbini Onigiri)</text>
+
+  <!-- Cashier (Left) with Konbini Striped Uniform -->
+  <g transform="translate(60, 110)">
+    <path d="M40 90 C40 60 65 52 85 52 C105 52 130 60 130 90 Z" fill="#10B981" stroke="#065F46" stroke-width="2"/>
+    <!-- Stripes -->
+    <path d="M55 56 L55 90 M75 53 L75 90 M95 53 L95 90 M115 56 L115 90" stroke="#FFFFFF" stroke-width="4"/>
+    <!-- Head -->
+    <ellipse cx="85" cy="30" rx="18" ry="20" fill="#FDE68A" stroke="#1E293B" stroke-width="2"/>
+    <path d="M68 24 C68 12 78 8 85 8 C92 8 102 12 102 24 Z" fill="#334155"/>
+    <circle cx="78" cy="28" r="2.5" fill="#1E293B"/>
+    <circle cx="92" cy="28" r="2.5" fill="#1E293B"/>
+    <path d="M80 36 Q85 40 90 36" stroke="#B45309" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- Counter & Cash Register (Center) -->
+  <g transform="translate(220, 130)">
+    <!-- Register Monitor -->
+    <rect x="30" y="10" width="70" height="50" rx="6" fill="#1E293B" stroke="#0F172A" stroke-width="2"/>
+    <rect x="36" y="16" width="58" height="38" rx="4" fill="#0F172A"/>
+    <!-- Cashier Screen Numbers -->
+    <text x="42" y="32" font-family="'Plus Jakarta Sans', monospace" font-weight="800" font-size="9" fill="#10B981">TOTAL</text>
+    <text x="42" y="47" font-family="'Plus Jakarta Sans', monospace" font-weight="900" font-size="16" fill="#F59E0B">¥150</text>
+    <!-- Register Stand -->
+    <rect x="58" y="60" width="14" height="25" fill="#475569"/>
+    <!-- Onigiri on Counter -->
+    <path d="M125 50 L145 85 L105 85 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="2"/>
+    <rect x="115" y="70" width="20" height="15" rx="1" fill="#1E293B"/>
+    <rect x="110" y="55" width="30" height="10" rx="2" fill="#FEF3C7" stroke="#D97706" stroke-width="1"/>
+    <text x="112" y="63" font-family="'Noto Sans JP', sans-serif" font-weight="700" font-size="7" fill="#B45309">ツナマヨ</text>
+  </g>
+
+  <!-- Kenji Holding Coins (Right) -->
+  <g transform="translate(390, 110)">
+    <path d="M50 90 C50 65 75 55 95 55 C115 55 140 65 140 90 Z" fill="#2563EB" stroke="#1E293B" stroke-width="2"/>
+    <ellipse cx="95" cy="32" rx="19" ry="22" fill="#FDE68A" stroke="#1E293B" stroke-width="2"/>
+    <path d="M76 28 C74 12 85 4 95 4 C106 4 116 12 114 28 Z" fill="#1E293B"/>
+    <ellipse cx="88" cy="30" rx="3" ry="4" fill="#1E293B"/>
+    <ellipse cx="102" cy="30" rx="3" ry="4" fill="#1E293B"/>
+    <path d="M90 38 Q95 44 100 38 Z" fill="#D9383A"/>
+    <!-- Hand holding Coins -->
+    <ellipse cx="65" cy="75" rx="12" ry="8" fill="#FDE68A"/>
+    <circle cx="60" cy="72" r="7" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1.5"/>
+    <text x="56" y="75" font-family="sans-serif" font-weight="900" font-size="7" fill="#475569">100</text>
+    <circle cx="70" cy="74" r="6" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
+    <text x="67" y="77" font-family="sans-serif" font-weight="900" font-size="7" fill="#B45309">50</text>
+  </g>
+
+  <!-- Comic Speech Bubble -->
+  <g transform="translate(180, 50)" filter="url(#shadowKonbini)">
+    <path d="M10 0 L250 0 C260 0 265 5 265 15 L265 48 C265 58 260 62 250 62 L80 62 L60 76 L68 62 L10 62 C0 62 -5 58 -5 48 L-5 15 C-5 5 0 0 10 0 Z" fill="#FFFFFF" stroke="#10B981" stroke-width="2.5"/>
+    <text x="14" y="24" font-family="'Noto Sans JP', sans-serif" font-weight="900" font-size="15" fill="#047857">「150円（ひゃくごじゅうえん）です！」</text>
+    <text x="14" y="46" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#475569">Kenji: "Kore wa ikura desu ka? (Berapa harganya?)"</text>
+  </g>
+
+  <!-- Counter Table -->
+  <rect x="24" y="240" width="552" height="50" rx="8" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="2"/>
+</svg>

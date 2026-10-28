@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradAnggata" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <linearGradient id="jacketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Circle -->
+  <circle cx="60" cy="60" r="58" fill="url(#bgGradAnggata)" stroke="#2563EB" stroke-width="3"/>
+  <circle cx="60" cy="60" r="50" fill="none" stroke="#BFDBFE" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- Shoulders & Gakuran/School Jacket -->
+  <path d="M22 114 C24 90 40 82 60 82 C80 82 96 90 98 114 Z" fill="url(#jacketGrad)"/>
+  <!-- White Inner Shirt / Hoodie -->
+  <path d="M48 82 L60 98 L72 82 Z" fill="#FFFFFF"/>
+  <path d="M56 82 L60 88 L64 82 Z" fill="#D9383A"/>
+
+  <!-- Neck -->
+  <rect x="52" y="70" width="16" height="15" rx="4" fill="#FCD34D"/>
+
+  <!-- Head & Face -->
+  <ellipse cx="60" cy="54" rx="23" ry="25" fill="#FDE68A"/>
+
+  <!-- Hair (Youthful Anime Boy Hair) -->
+  <path d="M36 50 C34 32 46 18 60 18 C74 18 86 32 84 50 C80 44 74 42 66 45 C60 38 48 40 44 48 C40 48 38 49 36 50 Z" fill="#1E293B"/>
+  <!-- Side locks & bangs -->
+  <path d="M35 50 L38 66 L42 56 Z" fill="#1E293B"/>
+  <path d="M85 50 L82 66 L78 56 Z" fill="#1E293B"/>
+  <path d="M48 40 L52 50 L56 42 L62 52 L68 42 L74 50 L76 40 Z" fill="#1E293B"/>
+
+  <!-- Ears -->
+  <circle cx="37" cy="56" r="5" fill="#FDE68A"/>
+  <circle cx="83" cy="56" r="5" fill="#FDE68A"/>
+
+  <!-- Cheerful Eyebrows -->
+  <path d="M46 44 Q51 39 56 43" stroke="#1E293B" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <path d="M64 43 Q69 39 74 44" stroke="#1E293B" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+
+  <!-- Energetic Anime Eyes -->
+  <ellipse cx="51" cy="52" rx="4" ry="5.5" fill="#1E293B"/>
+  <ellipse cx="69" cy="52" rx="4" ry="5.5" fill="#1E293B"/>
+  <circle cx="50" cy="50.5" r="1.8" fill="#FFFFFF"/>
+  <circle cx="68" cy="50.5" r="1.8" fill="#FFFFFF"/>
+  <circle cx="52.5" cy="54" r="0.9" fill="#93C5FD"/>
+  <circle cx="70.5" cy="54" r="0.9" fill="#93C5FD"/>
+
+  <!-- Cute Blush -->
+  <ellipse cx="44" cy="59" rx="3.5" ry="2" fill="#FCA5A5" opacity="0.6"/>
+  <ellipse cx="76" cy="59" rx="3.5" ry="2" fill="#FCA5A5" opacity="0.6"/>
+
+  <!-- Nose & Big Happy Smile -->
+  <circle cx="60" cy="59" r="1.2" fill="#F59E0B"/>
+  <path d="M53 65 Q60 74 67 65 Z" fill="#D9383A"/>
+  <path d="M56 65 Q60 68 64 65 Z" fill="#FFFFFF"/>
+
+  <!-- Student Crest Badge on Uniform -->
+  <circle cx="36" cy="98" r="5.5" fill="#F59E0B" stroke="#B45309" stroke-width="1"/>
+  <path d="M34 98 L38 98 M36 96 L36 100" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

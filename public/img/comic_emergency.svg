@@ -1,0 +1,63 @@
+<svg viewBox="0 0 600 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Station Hallway Background -->
+  <rect width="600" height="320" fill="#F8FAFC"/>
+  <rect y="0" width="600" height="230" fill="#E2E8F0"/>
+  <rect y="230" width="600" height="90" fill="#CBD5E1"/>
+
+  <!-- Restroom Sign on Wall -->
+  <g transform="translate(380, 50)">
+    <rect width="140" height="75" rx="8" fill="#1E293B" stroke="#0F172A" stroke-width="2.5"/>
+    <!-- Men Symbol (Blue) -->
+    <circle cx="35" cy="24" r="7" fill="#3B82F6"/>
+    <path d="M26 34 L44 34 L40 54 L30 54 Z" fill="#3B82F6"/>
+    <!-- Women Symbol (Pink/Red) -->
+    <circle cx="70" cy="24" r="7" fill="#F43F5E"/>
+    <polygon points="62,34 78,34 82,54 58,54" fill="#F43F5E"/>
+    <!-- Arrow -->
+    <text x="110" y="44" font-family="'Noto Sans JP', sans-serif" font-weight="900" font-size="22" fill="#FBBF24">➔</text>
+    <text x="70" y="68" font-family="'Noto Sans JP', sans-serif" font-weight="900" font-size="10" fill="#FFFFFF" text-anchor="middle">お手洗い TOILET</text>
+  </g>
+
+  <!-- Kenji (Urgent/Looking around) -->
+  <g transform="translate(140, 115)">
+    <rect x="0" y="38" width="42" height="65" rx="12" fill="#2563EB"/>
+    <circle cx="21" cy="20" r="18" fill="#FDE68A"/>
+    <path d="M4 18 Q21 -4 38 18 Q21 8 4 18 Z" fill="#1E293B"/>
+    <!-- Eyes slightly wide -->
+    <circle cx="15" cy="20" r="3.5" fill="#1E293B"/>
+    <circle cx="27" cy="20" r="3.5" fill="#1E293B"/>
+    <!-- Sweat drop -->
+    <path d="M38 14 Q42 18 38 22 Q34 18 38 14" fill="#38BDF8"/>
+    <path d="M17 28 Q21 25 25 28" stroke="#78350F" stroke-width="2" fill="none"/>
+    <rect x="6" y="102" width="12" height="35" rx="5" fill="#1E293B"/>
+    <rect x="24" y="102" width="12" height="35" rx="5" fill="#1E293B"/>
+  </g>
+
+  <!-- Speech Bubble Kenji -->
+  <g transform="translate(40, 20)">
+    <rect width="250" height="54" rx="14" fill="#FFFFFF" stroke="#DC2626" stroke-width="2.5"/>
+    <polygon points="140,54 150,66 160,54" fill="#FFFFFF"/>
+    <polygon points="138,54 150,68 162,54" fill="none" stroke="#DC2626" stroke-width="2.5"/>
+    <rect x="139" y="52" width="22" height="4" fill="#FFFFFF"/>
+    <text x="125" y="24" font-family="'Noto Sans JP', sans-serif" font-weight="900" font-size="14" fill="#991B1B" text-anchor="middle">すみません、トイレはどこですか？</text>
+    <text x="125" y="42" font-family="sans-serif" font-weight="700" font-size="11" fill="#DC2626" text-anchor="middle">Sumimasen, toire wa doko desu ka?</text>
+  </g>
+
+  <!-- Station Officer Pointing to Toilet Sign -->
+  <g transform="translate(290, 110)">
+    <rect x="0" y="38" width="42" height="65" rx="12" fill="#1E3A8A"/>
+    <!-- Officer Hat -->
+    <rect x="2" y="-2" width="38" height="12" rx="4" fill="#1E293B"/>
+    <rect x="-2" y="8" width="46" height="4" rx="2" fill="#0F172A"/>
+    <circle cx="21" cy="4" r="3" fill="#F59E0B"/>
+    <circle cx="21" cy="20" r="18" fill="#FDE68A"/>
+    <path d="M14 20 Q18 16 22 20" stroke="#1E293B" stroke-width="2.2" fill="none"/>
+    <path d="M24 20 Q28 16 32 20" stroke="#1E293B" stroke-width="2.2" fill="none"/>
+    <path d="M18 28 Q22 32 26 28" stroke="#78350F" stroke-width="2" fill="none"/>
+    <!-- Arm Pointing Right -->
+    <line x1="38" y1="52" x2="80" y2="40" stroke="#FDE68A" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="82" cy="39" r="5" fill="#FDE68A"/>
+    <rect x="6" y="102" width="12" height="35" rx="5" fill="#0F172A"/>
+    <rect x="24" y="102" width="12" height="35" rx="5" fill="#0F172A"/>
+  </g>
+</svg>

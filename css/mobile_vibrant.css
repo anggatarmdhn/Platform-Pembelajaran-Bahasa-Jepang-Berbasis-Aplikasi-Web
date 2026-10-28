@@ -1,0 +1,890 @@
+/* ====================================================
+   SIJapanese - Mobile-First & Vibrant Festive Theme
+   Designed for Smartphones (HP / Mobile Web App)
+   Aesthetic: Playful, Cheerful, Modern Japanese Pop (Irodori & Nintendo Pop)
+   ==================================================== */
+
+/* ===== 1. ROOT VIBRANT PALETTE & TACTILE TOKENS ===== */
+:root {
+  --pop-pink: #BA3D27;
+  --pop-pink-soft: #FBF0EB;
+  --pop-pink-border: #F3D9D0;
+
+  --pop-orange: #C27608;
+  --pop-orange-soft: #FEF7EC;
+  --pop-orange-border: #FBE6C2;
+
+  --pop-cyan: #2A6496;
+  --pop-cyan-soft: #F0F5FA;
+  --pop-cyan-border: #C8DCEE;
+
+  --pop-green: #2B7A4F;
+  --pop-green-soft: #EFF8F3;
+  --pop-green-border: #BCE2CC;
+
+  --pop-purple: #7C467C;
+  --pop-purple-soft: #F9F2F9;
+  --pop-purple-border: #E8D3E8;
+
+  --pop-red: #BA3D27;
+  --pop-dark: #2B241F;
+  --pop-shadow-3d: 0 4px 0 rgba(60, 45, 30, 0.10), 0 8px 18px rgba(60, 45, 30, 0.05);
+}
+
+/* ===== 2. GLOBAL MOBILE FOUNDATION ===== */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  padding-bottom: 84px !important;
+  background: var(--bg, #FAF6F0) !important;
+}
+
+/* TACTILE 3D BUTTON PRESS FEEL (Joyful & Responsive) */
+.btn-step-next,
+.btn-step-prev,
+.btn-step-orange-next,
+.btn-mission-shortcut,
+.btn-quiz-stay-retry,
+.btn-quiz-stay-review,
+.btn-quiz-stay-summary,
+.materi-level-btn,
+.mode-btn,
+.quest-opt-btn {
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn-step-next:active,
+.btn-step-prev:active,
+.btn-step-orange-next:active,
+.btn-mission-shortcut:active,
+.btn-quiz-stay-retry:active,
+.btn-quiz-stay-review:active,
+.quest-opt-btn:active {
+  transform: translateY(2px) scale(0.98) !important;
+}
+
+/* ====================================================
+   3. SMARTPHONE RESPONSIVE (MAX-WIDTH: 768px & 480px)
+   ==================================================== */
+@media (max-width: 768px) {
+  /* Set exact page top padding to match mobile navbar height (56px) */
+  .page {
+    padding-top: 56px !important;
+  }
+
+  /* ===== NAVBAR MOBILE ===== */
+  .navbar {
+    height: 56px !important;
+    padding: 0 14px !important;
+    background: rgba(250, 246, 240, 0.96) !important;
+    backdrop-filter: blur(16px) !important;
+    border-bottom: 1.5px solid var(--border-light, #EBE4D8) !important;
+  }
+
+  .nav-logo {
+    gap: 7px !important;
+  }
+
+  .logo-crest .svg-crest {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .logo-text {
+    font-size: 1.12rem !important;
+  }
+
+  .nav-links {
+    display: none !important;
+  }
+
+  .nav-auth-wrap {
+    gap: 6px !important;
+  }
+
+  .nav-score-compact {
+    padding: 0.25rem 0.65rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .nav-profile-bubble-btn {
+    padding: 2px 7px 2px 2px !important;
+  }
+
+  .bubble-name-text {
+    max-width: 68px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* ===== FLOATING BOTTOM DOCK NAVIGATION (HP APP FEEL) ===== */
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 4px 6px max(6px, env(safe-area-inset-bottom, 0px)) !important;
+    background: rgba(250, 246, 240, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    border-top: 1.5px solid var(--border-light, #EBE4D8) !important;
+    border-radius: 20px 20px 0 0 !important;
+    box-shadow: 0 -4px 20px rgba(60, 45, 30, 0.05) !important;
+    z-index: 2000 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+  }
+
+  /* ===== FOOTER ON MOBILE (SEAMLESS & NO BELANG) ===== */
+  .site-footer {
+    background: transparent !important;
+    border-top: none !important;
+    padding: 14px 16px calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+    margin-top: 20px !important;
+  }
+
+  .footer-copy {
+    color: var(--text-light, #A3968B) !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+  }
+
+  .mob-nav-btn {
+    flex: 1 !important;
+    padding: 4px 2px !important;
+    gap: 3px !important;
+    border-radius: 12px !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    color: #64748B !important;
+    transition: all 0.18s ease !important;
+  }
+
+  .mob-nav-btn:active {
+    transform: scale(0.9) !important;
+  }
+
+  /* Tab-specific vibrant colors */
+  .mob-nav-btn[data-page="home"].active {
+    color: var(--pop-pink) !important;
+  }
+  .mob-nav-btn[data-page="home"].active .svg-icon {
+    stroke: var(--pop-pink) !important;
+  }
+
+  .mob-nav-btn[data-page="materi"].active {
+    color: var(--pop-cyan) !important;
+  }
+  .mob-nav-btn[data-page="materi"].active .svg-icon {
+    stroke: var(--pop-cyan) !important;
+  }
+
+  .mob-nav-btn[data-page="hiragana"].active {
+    color: var(--pop-pink) !important;
+  }
+  .mob-nav-btn[data-page="hiragana"].active .mob-kana-badge {
+    background: var(--pop-pink) !important;
+    color: #FFFFFF !important;
+  }
+
+  .mob-nav-btn[data-page="katakana"].active {
+    color: #2563EB !important;
+  }
+  .mob-nav-btn[data-page="katakana"].active .mob-kana-badge {
+    background: #2563EB !important;
+    color: #FFFFFF !important;
+  }
+
+  .mob-nav-btn[data-page="vocabulary"].active {
+    color: var(--pop-green) !important;
+  }
+  .mob-nav-btn[data-page="vocabulary"].active .svg-icon {
+    stroke: var(--pop-green) !important;
+  }
+
+  .mob-nav-btn[data-page="games"].active {
+    color: var(--pop-orange) !important;
+  }
+  .mob-nav-btn[data-page="games"].active .svg-icon {
+    stroke: var(--pop-orange) !important;
+  }
+
+  .mob-kana-badge {
+    width: 22px !important;
+    height: 22px !important;
+    border-radius: 6px !important;
+    font-size: 0.82rem !important;
+    font-weight: 800 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--card-inner) !important;
+    color: #475569 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* ===== HERO & BERANDA ON MOBILE ===== */
+  .hero-section {
+    padding: 14px 14px 20px !important;
+  }
+
+  .hero-card {
+    padding: 20px 16px !important;
+    border-radius: 20px !important;
+    background: var(--card) !important;
+    border: 1.5px solid var(--border) !important;
+    box-shadow: 0 8px 24px rgba(186, 61, 39, 0.08) !important;
+  }
+
+  .hero-title {
+    font-size: 1.85rem !important;
+    line-height: 1.22 !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.92rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1.2rem !important;
+  }
+
+  .hero-cta {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .hero-cta button,
+  .hero-cta .cta-btn {
+    width: 100% !important;
+    height: 48px !important;
+    justify-content: center !important;
+    font-size: 0.92rem !important;
+    border-radius: 14px !important;
+  }
+
+  .hero-stats-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin-top: 14px !important;
+  }
+
+  .stat-card {
+    padding: 12px 10px !important;
+    border-radius: 14px !important;
+  }
+
+  .stat-number {
+    font-size: 1.45rem !important;
+  }
+
+  /* ===== MISI BELAJAR CARD (100% MOBILE THUMB-FRIENDLY) ===== */
+  .misi-belajar-card {
+    padding: 18px 14px !important;
+    border-radius: 20px !important;
+    margin: 1.2rem 0 !important;
+  }
+
+  .mission-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .mission-title {
+    font-size: 1.15rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .mission-desc {
+    font-size: 0.85rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .mission-actions-row {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 9px !important;
+    margin-top: 0.8rem !important;
+  }
+
+  .btn-mission-shortcut {
+    width: 100% !important;
+    min-height: 48px !important;
+    justify-content: flex-start !important;
+    padding: 0.65rem 1rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 14px !important;
+  }
+
+  /* ===== PROGRESS CARDS (BERANDA) ===== */
+  .progress-card {
+    padding: 14px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  /* ===== HALAMAN MATERI (SMARTPHONE APP VIEW) ===== */
+  .materi-page-container {
+    padding: 12px 12px 90px !important;
+    max-width: 100vw !important;
+  }
+
+  .materi-hero-banner {
+    padding: 18px 14px !important;
+    border-radius: 20px !important;
+    margin-bottom: 1.2rem !important;
+  }
+
+  .materi-banner-inner {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0 !important;
+  }
+
+  .materi-hero-artwork {
+    display: none !important;
+  }
+
+  .materi-banner-title {
+    font-size: 1.45rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .materi-banner-desc {
+    font-size: 0.88rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .materi-banner-cast {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .materi-cast-chip {
+    padding: 3px 8px !important;
+    font-size: 0.78rem !important;
+  }
+
+  /* KOTAK LEVEL HORIZONTAL CAROUSEL (N5-N1) */
+  .materi-level-nav {
+    display: flex !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 8px !important;
+    padding: 4px 2px 10px !important;
+    margin-bottom: 1rem !important;
+  }
+  .materi-level-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .materi-level-btn {
+    flex-shrink: 0 !important;
+    min-width: 130px !important;
+    padding: 10px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .lvl-name {
+    font-size: 0.95rem !important;
+  }
+  .lvl-sub {
+    font-size: 0.75rem !important;
+  }
+
+  /* DAFTAR MODUL MATERI */
+  .materi-lesson-list {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .materi-lesson-card {
+    padding: 16px 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .lesson-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .btn-open-lesson {
+    width: 100% !important;
+    height: 44px !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+  }
+
+  /* STEPPER CARDS (CONCEPT CARD TAHAP SESUAI DESAIN - TIDAK TERPOTONG) */
+  .lesson-stepper-bar {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px 6px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-bottom: 1.2rem !important;
+    overflow-x: visible !important;
+    flex-wrap: wrap !important;
+  }
+
+  .step-btn {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    min-height: 52px !important;
+    padding: 7px 4px !important;
+    border-radius: 14px !important;
+    background: var(--card, #FAF6F0) !important;
+    border: 1.5px solid var(--border, #DFD7C8) !important;
+    box-shadow: 0 1px 3px rgba(60, 45, 30, 0.04) !important;
+    flex-shrink: 0 !important;
+    transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    outline: none !important;
+  }
+
+  .step-btn .step-badge {
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    color: var(--text-light, #8C7E72) !important;
+    margin-bottom: 1px !important;
+    line-height: 1.1 !important;
+  }
+
+  .step-btn .step-title {
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    color: var(--text, #2D2520) !important;
+    line-height: 1.2 !important;
+  }
+
+  .step-btn:active {
+    transform: scale(0.96) !important;
+  }
+
+  .step-btn.active {
+    background: #FEF7EC !important;
+    border: 2px solid #BA3D27 !important;
+    box-shadow: 0 4px 14px rgba(186, 61, 39, 0.12) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .step-btn.active .step-badge {
+    color: #BA3D27 !important;
+    font-weight: 800 !important;
+  }
+
+  .step-btn.active .step-title {
+    color: #BA3D27 !important;
+    font-weight: 800 !important;
+  }
+
+  /* MANGA BOOK VIEWER (LANGKAH 2) */
+  .manga-book-container {
+    padding: 12px 10px !important;
+    border-radius: 16px !important;
+  }
+
+  .manga-speech-row {
+    margin-bottom: 1rem !important;
+    gap: 8px !important;
+  }
+
+  .manga-avatar-chip {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.2rem !important;
+  }
+
+  .manga-bubble {
+    max-width: calc(100% - 48px) !important;
+    padding: 0.65rem 0.85rem !important;
+    font-size: 0.88rem !important;
+    border-radius: 14px !important;
+  }
+
+  .manga-bubble .manga-jp {
+    font-size: 1.05rem !important;
+  }
+
+  /* 3 AKSARA CARDS (LANGKAH 3) */
+  .huruf-3cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .huruf-card-pillar {
+    padding: 16px 14px !important;
+    border-radius: 18px !important;
+  }
+
+  /* BEDAH KALIMAT (LANGKAH 4) */
+  .kalimat-hero-card {
+    padding: 16px 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .sentence-chars-row,
+  .kalimat-bubbles-container {
+    gap: 4px !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+
+  .kalimat-char-bubble {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.28rem !important;
+    border-radius: 10px !important;
+  }
+
+  .kalimat-filter-bar {
+    display: flex !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 6px !important;
+    padding-bottom: 4px !important;
+  }
+  .kalimat-filter-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .btn-filter-tag,
+  .btn-filter-script {
+    flex-shrink: 0 !important;
+    padding: 5px 12px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .kalimat-breakdown-card {
+    padding: 12px 10px !important;
+    border-radius: 14px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .btn-breakdown-speaker {
+    align-self: flex-end !important;
+  }
+
+  /* ===== QUEST BOX & KUIS INTERAKTIF ON SMARTPHONE ===== */
+  .quest-box {
+    padding: 16px 14px !important;
+    border-radius: 18px !important;
+    margin-bottom: 1.4rem !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .quest-header-meta {
+    margin-bottom: 0.6rem !important;
+  }
+
+  .quest-badge {
+    font-size: 0.78rem !important;
+    padding: 0.3rem 0.75rem !important;
+  }
+
+  .quest-comic-wrap {
+    margin: 0.8rem 0 1rem !important;
+    border-radius: 14px !important;
+  }
+
+  .quest-comic-img {
+    max-height: 220px !important;
+    object-fit: cover !important;
+    width: 100% !important;
+  }
+
+  .quest-audio-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 10px 12px !important;
+    gap: 8px !important;
+  }
+
+  .btn-quest-audio {
+    width: 100% !important;
+    height: 46px !important;
+    justify-content: center !important;
+    font-size: 0.88rem !important;
+    border-radius: 12px !important;
+  }
+
+  .quest-audio-label {
+    text-align: center !important;
+    font-size: 0.85rem !important;
+  }
+
+  .quest-question {
+    font-size: 1.05rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* OPS KUIS 100% FULL-WIDTH THUMB TARGET */
+  .quest-options-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .quest-opt-btn {
+    width: 100% !important;
+    min-height: 52px !important;
+    padding: 12px 14px !important;
+    font-size: 0.92rem !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-align: left !important;
+    border: 2px solid var(--border) !important;
+    border-bottom: 3.5px solid rgba(60, 45, 30, 0.12) !important;
+    background: var(--card, #FFFBF6) !important;
+  }
+
+  .opt-badge {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.85rem !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+  }
+
+  .step-bottom-nav {
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin-top: 1.4rem !important;
+  }
+
+  .step-bottom-nav button,
+  .btn-step-prev,
+  .btn-step-next {
+    width: 100% !important;
+    height: 48px !important;
+    justify-content: center !important;
+    font-size: 0.92rem !important;
+    border-radius: 14px !important;
+  }
+
+  /* HASIL KUIS IN-PAGE (TETAP DI KUIS) */
+  .quiz-stay-card {
+    padding: 18px 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .quiz-stay-crest {
+    font-size: 2.2rem !important;
+  }
+
+  .quiz-stay-title {
+    font-size: 1.25rem !important;
+  }
+
+  .quiz-stay-desc {
+    font-size: 0.88rem !important;
+  }
+
+  .quiz-stay-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .btn-quiz-stay-retry,
+  .btn-quiz-stay-review,
+  .btn-quiz-stay-summary {
+    width: 100% !important;
+    height: 46px !important;
+    justify-content: center !important;
+    font-size: 0.88rem !important;
+  }
+
+  /* ===== HIRAGANA & KATAKANA PAGES (SMARTPHONE GRID) ===== */
+  .page-header {
+    padding: 14px 14px 16px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .page-title-wrap h1 {
+    font-size: 1.55rem !important;
+  }
+
+  .page-title-wrap p {
+    font-size: 0.82rem !important;
+  }
+
+  .page-mode-toggle {
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+
+  .mode-btn {
+    flex: 1 !important;
+    height: 42px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+  }
+
+  .char-grid-container {
+    padding: 0 10px 40px !important;
+  }
+
+  .char-filter-wrapper {
+    padding: 10px !important;
+    border-radius: 14px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .char-filter-bar {
+    display: flex !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 6px !important;
+  }
+  .char-filter-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .filter-pill {
+    flex-shrink: 0 !important;
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* 5-KOLOM KANA GRID HP */
+  .char-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .char-card {
+    padding: 8px 2px 6px !important;
+    min-height: 58px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .char-card:active {
+    transform: scale(0.94) !important;
+  }
+
+  .char-main {
+    font-size: 1.45rem !important;
+  }
+
+  .char-romaji {
+    font-size: 0.72rem !important;
+    margin-top: 1px !important;
+  }
+
+  .char-audio-btn {
+    width: 20px !important;
+    height: 20px !important;
+    top: 3px !important;
+    left: 3px !important;
+  }
+
+  /* ===== MINI GAMES PAGE ON MOBILE ===== */
+  .game-menu-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .game-card {
+    padding: 16px 14px !important;
+    border-radius: 18px !important;
+  }
+
+  /* ===== MODAL BOTTOM-SHEET / CENTERED ON SMARTPHONE ===== */
+  .profile-modal-card,
+  .login-modal-card,
+  .modal-card {
+    width: calc(100% - 24px) !important;
+    max-width: 440px !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+    border-radius: 22px !important;
+    padding: 20px 16px !important;
+    margin: auto !important;
+  }
+}
+
+/* ====================================================
+   4. EXTRA MERIAH & WARNA-WARNI AKSEN (IRODORI CHEERFUL)
+   ==================================================== */
+/* Irodori Color Top Rim on Cards */
+.materi-lesson-card:nth-child(5n+1),
+.quest-box:nth-child(5n+1) {
+  border-top: 4px solid var(--pop-pink) !important;
+}
+.materi-lesson-card:nth-child(5n+2),
+.quest-box:nth-child(5n+2) {
+  border-top: 4px solid var(--pop-cyan) !important;
+}
+.materi-lesson-card:nth-child(5n+3),
+.quest-box:nth-child(5n+3) {
+  border-top: 4px solid var(--pop-orange) !important;
+}
+.materi-lesson-card:nth-child(5n+4),
+.quest-box:nth-child(5n+4) {
+  border-top: 4px solid var(--pop-green) !important;
+}
+.materi-lesson-card:nth-child(5n+5),
+.quest-box:nth-child(5n+5) {
+  border-top: 4px solid var(--pop-purple) !important;
+}
+
+/* Option Letter Badges Color Variety */
+.quest-options-grid button:nth-child(1) .opt-badge {
+  background: var(--pop-pink-soft) !important;
+  color: var(--pop-pink) !important;
+  border: 1.5px solid var(--pop-pink-border) !important;
+}
+.quest-options-grid button:nth-child(2) .opt-badge {
+  background: var(--pop-cyan-soft) !important;
+  color: #0284C7 !important;
+  border: 1.5px solid var(--pop-cyan-border) !important;
+}
+.quest-options-grid button:nth-child(3) .opt-badge {
+  background: var(--pop-orange-soft) !important;
+  color: #D97706 !important;
+  border: 1.5px solid var(--pop-orange-border) !important;
+}
+.quest-options-grid button:nth-child(4) .opt-badge {
+  background: var(--pop-green-soft) !important;
+  color: #059669 !important;
+  border: 1.5px solid var(--pop-green-border) !important;
+}
+
+/* Option Button Hover / Tap Glow */
+.quest-opt-btn:hover {
+  border-color: #CBD5E1 !important;
+  background: #FAFAFA !important;
+}
+.quest-opt-btn.correct {
+  background: #ECFDF5 !important;
+  border-color: #10B981 !important;
+  border-bottom-color: #059669 !important;
+  color: #065F46 !important;
+}
+.quest-opt-btn.wrong {
+  background: #FEF2F2 !important;
+  border-color: #EF4444 !important;
+  border-bottom-color: #DC2626 !important;
+  color: #991B1B !important;
+}

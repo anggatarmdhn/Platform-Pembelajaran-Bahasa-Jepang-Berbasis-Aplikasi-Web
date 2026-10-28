@@ -1,0 +1,605 @@
+/* ====================================================
+   SIJapanese - User Auth, Profile Modal & Navbar Styles
+   Aesthetic: SIJapanese Multi-Color (Merah, Biru, Kuning, Hijau)
+   Clean, Compact & Responsive (Tidak Pernah Overflow)
+   ==================================================== */
+
+/* Container Navbar Kanan */
+.nav-auth-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Score Pill Ringkas di Navbar */
+.nav-score-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #FFFBEB;
+  border: 1.5px solid #FDE68A;
+  color: #B45309;
+  font-weight: 800;
+  font-size: 0.84rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-pill, 9999px);
+  white-space: nowrap;
+}
+.nav-score-compact svg {
+  width: 14px;
+  height: 14px;
+  fill: #F59E0B;
+}
+
+/* Tombol Bubble Profil (Kompak & Elegan) */
+.nav-profile-bubble-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--card, #FFFBF6);
+  border: 1.5px solid var(--border, #E8E0D5);
+  padding: 0.25rem 0.75rem 0.25rem 0.35rem;
+  border-radius: var(--radius-pill, 9999px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(60, 45, 30, 0.05);
+  font-family: inherit;
+  outline: none;
+  color: var(--text, #2D2520);
+  white-space: nowrap;
+}
+.nav-profile-bubble-btn:hover {
+  border-color: var(--red, #BA3D27);
+  box-shadow: 0 4px 14px rgba(186, 61, 39, 0.15);
+  transform: translateY(-1px);
+}
+.nav-profile-bubble-btn.is-guru {
+  background: #FEF2F2;
+  border-color: #FECACA;
+}
+
+/* Lingkaran Avatar */
+.bubble-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  border: 1.5px solid #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.bubble-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.nav-profile-bubble-btn.is-guru .bubble-avatar-circle {
+  background: #FEE2E2;
+  border-color: var(--red, #BA3D27);
+}
+.bubble-online-status {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 9px;
+  height: 9px;
+  background: #10B981;
+  border: 1.5px solid #FFFFFF;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.bubble-name-text {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #0F172A;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.svg-caret-mini {
+  width: 12px;
+  height: 12px;
+  stroke: #64748B;
+  stroke-width: 2.5;
+  fill: none;
+}
+
+/* Tombol Masuk Sebelum Login */
+.btn-nav-masuk {
+  background: transparent;
+  border: 1.5px solid var(--border, #E5DDD0);
+  color: #1E293B;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill, 9999px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+.btn-nav-masuk:hover {
+  background: #F4EFE6;
+  border-color: #A3968B;
+  color: var(--red, #BA3D27);
+}
+
+/* ====================================================
+   MODAL PROFIL PESERTA & SERTIFIKAT (PAS MENCET BUBBLE)
+   ==================================================== */
+.sij-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+}
+.sij-modal-backdrop.show {
+  display: flex;
+}
+.sij-modal-card {
+  background: var(--card, #FFFBF6);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(60, 45, 30, 0.25);
+  border: 1.5px solid var(--border, #E8E0D5);
+  position: relative;
+  animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalPop {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.sij-modal-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1.5px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.sij-modal-titles h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0;
+  color: #0F172A;
+}
+.sij-modal-titles p {
+  font-size: 0.8rem;
+  color: #64748B;
+  margin: 0.15rem 0 0;
+}
+.sij-modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+  border-radius: 8px;
+  line-height: 1;
+}
+.sij-modal-close-btn:hover {
+  background: var(--card-inner);
+  color: #0F172A;
+}
+
+.sij-modal-body {
+  padding: 1.4rem 1.5rem;
+}
+
+/* Pasfoto 3x4 Area */
+.sij-pasfoto-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1.5px dashed var(--border, #E5DDD0);
+}
+.sij-pasfoto-box {
+  width: 85px;
+  height: 105px;
+  border-radius: 12px;
+  border: 2px solid var(--border, #E5DDD0);
+  background: var(--card-inner, #F4EFE6);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+.sij-pasfoto-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.sij-pasfoto-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+}
+.sij-badge-foto-kustom {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.12rem 0.5rem;
+  border-radius: 9999px;
+}
+.sij-pasfoto-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-pasfoto-upload {
+  background: var(--red, #BA3D27);
+  color: #FFFFFF;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+.btn-pasfoto-upload:hover {
+  background: #B91C1C;
+}
+.btn-pasfoto-anonim {
+  background: var(--card-inner);
+  color: #475569;
+  border: 1.5px solid var(--border, #E5DDD0);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-pasfoto-anonim:hover {
+  background: var(--border, #E5DDD0);
+}
+
+/* Form Fields */
+.sij-form-group {
+  margin-bottom: 0.95rem;
+}
+.sij-form-group label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+.sij-form-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--border, #E5DDD0);
+  border-radius: 11px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #0F172A;
+  background: var(--card-inner, #F4EFE6);
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+.sij-form-input:focus {
+  background: var(--card, #FAF6F0);
+  border-color: var(--red, #BA3D27);
+  box-shadow: 0 0 0 3px rgba(217, 56, 58, 0.15);
+}
+.sij-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.guru-access-box {
+  background: #FEF2F2;
+  border: 1.5px solid #FECACA;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+.btn-open-guru-dash {
+  background: var(--red, #BA3D27);
+  color: #FFFFFF !important;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.btn-open-guru-dash:hover {
+  background: #B91C1C;
+}
+
+.btn-sij-save-profile {
+  width: 100%;
+  padding: 0.82rem;
+  background: linear-gradient(135deg, var(--red, #BA3D27) 0%, #B91C1C 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(217, 56, 58, 0.28);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+.btn-sij-save-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(217, 56, 58, 0.38);
+}
+
+.modal-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1.5px dashed var(--border, #E5DDD0);
+  font-size: 0.82rem;
+}
+.btn-modal-link {
+  background: transparent;
+  border: none;
+  color: #2563EB;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+}
+.btn-modal-link:hover {
+  text-decoration: underline;
+}
+.btn-modal-logout {
+  background: transparent;
+  border: none;
+  color: #DC2626;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.btn-modal-logout:hover {
+  text-decoration: underline;
+}
+
+/* Quick Login Modal (Pilih Akun Bersih Tanpa Log & Tanpa Link Bawah) */
+.sij-demo-account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.sij-demo-account-btn {
+  background: var(--card-inner, #F4EFE6);
+  border: 1.5px solid var(--border, #E5DDD0);
+  border-radius: 14px;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+.sij-demo-account-btn:hover {
+  background: var(--card, #FAF6F0);
+  border-color: #2563EB;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+  transform: translateY(-2px);
+}
+.sij-demo-account-btn.btn-is-guru:hover {
+  border-color: var(--red, #BA3D27);
+  box-shadow: 0 4px 12px rgba(217, 56, 58, 0.15);
+}
+.demo-acc-avatar-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border, #E5DDD0);
+  background: var(--card, #FAF6F0);
+  flex-shrink: 0;
+  display: block;
+}
+.prof-role-avatar-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border, #E5DDD0);
+  background: var(--card, #FAF6F0);
+  flex-shrink: 0;
+  display: block;
+}
+.demo-role-pill {
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 0.32rem 0.75rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.demo-role-pill.guru {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+.demo-role-pill.siswa {
+  background: #EFF6FF;
+  color: #2563EB;
+  border: 1px solid #BFDBFE;
+}
+
+/* ====================================================
+   LOADING OVERLAY TRANSITION (PINDAH LOGIN / AKUN / GURU)
+   ==================================================== */
+.sij-loading-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(10px);
+  z-index: 999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.sij-loading-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+.sij-loading-card {
+  background: var(--card, #FAF6F0);
+  border-radius: 24px;
+  padding: 2.2rem 2.4rem;
+  width: 100%;
+  max-width: 350px;
+  text-align: center;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4);
+  border: 1.5px solid var(--border, #E5DDD0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  animation: cardZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes cardZoomIn {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.sij-spinner-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3.5px solid #F1F5F9;
+  border-top-color: var(--red, #BA3D27);
+  border-right-color: #2563EB;
+  border-bottom-color: #10B981;
+  border-left-color: #F59E0B;
+  animation: sijSpin 0.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+@keyframes sijSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.sij-spinner-inner {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--card-inner, #F4EFE6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  animation: counterSpin 0.9s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
+  overflow: hidden;
+}
+.sij-spinner-inner img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+@keyframes counterSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.sij-loading-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0.2rem 0 0;
+}
+.sij-loading-sub {
+  font-size: 0.84rem;
+  color: #64748B;
+  margin: 0;
+}
+
+.sij-loading-progress-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--card-inner);
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+.sij-loading-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--red, #BA3D27) 0%, #F59E0B 35%, #10B981 70%, #2563EB 100%);
+  animation: fillProgress 0.7s ease forwards;
+}
+@keyframes fillProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* Responsive: Di layar kecil sembunyikan nama, tampilkan bubble avatar saja */
+@media (max-width: 1024px) {
+  .bubble-name-text {
+    display: none;
+  }
+}
