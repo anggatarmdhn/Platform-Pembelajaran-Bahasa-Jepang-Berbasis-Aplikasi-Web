@@ -1891,7 +1891,7 @@
             <svg viewBox="0 0 24 24" class="svg-icon-large"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
           </div>
           <h3>Flash Card</h3>
-          <p>Hafalkan Hiragana, Katakana, Kosakata, tandai kartu berbintang ⭐, serta latih intensif kartu paling susah 🔥.</p>
+          <p>Hafalkan karakter Hiragana &amp; Katakana, tandai huruf yang sulit untuk dilatih intensif.</p>
           <div class="game-difficulty"><span class="diff-dot green-dot"></span> Tingkat: Fleksibel &amp; Hafalan</div>
         </div>
 

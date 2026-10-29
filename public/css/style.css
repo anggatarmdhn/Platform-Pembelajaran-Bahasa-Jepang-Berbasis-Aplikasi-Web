@@ -4296,6 +4296,68 @@ body {
   0%, 100% { transform: translate(-50%, -50%); }
   20%, 60% { transform: translate(-58%, -50%); }
   40%, 80% { transform: translate(-42%, -50%); }
+/* BLAST CROSSHAIR & SHOCKWAVE */
+.blast-crosshair {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid rgba(56, 189, 248, 0.7);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 18;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+.blast-crosshair.visible {
+  opacity: 1;
+}
+.blast-crosshair::before,
+.blast-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(56, 189, 248, 0.85);
+}
+.blast-crosshair::before {
+  top: 50%;
+  left: -5px;
+  right: -5px;
+  height: 1.5px;
+  transform: translateY(-50%);
+}
+.blast-crosshair::after {
+  left: 50%;
+  top: -5px;
+  bottom: -5px;
+  width: 1.5px;
+  transform: translateX(-50%);
+}
+
+.blast-shockwave {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  border: 2.5px solid #38BDF8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+  pointer-events: none;
+  z-index: 16;
+  animation: blastWaveExpand 0.4s ease-out forwards;
+}
+@keyframes blastWaveExpand {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.95; }
+  100% { transform: translate(-50%, -50%) scale(5); opacity: 0; border-width: 1px; }
+}
+
+/* DEFENSE BARRIER FLASH */
+.barrier-damage-flash {
+  animation: barrierDamageGlow 0.35s ease-in-out infinite alternate;
+}
+@keyframes barrierDamageGlow {
+  0% { filter: drop-shadow(0 -4px 14px rgba(220, 38, 38, 0.9)); }
+  100% { filter: drop-shadow(0 -4px 6px rgba(220, 38, 38, 0.3)); }
 }
 
 /* ===== TURRET AT BOTTOM ===== */

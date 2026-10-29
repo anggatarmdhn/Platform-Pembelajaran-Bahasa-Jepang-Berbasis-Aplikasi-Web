@@ -2207,6 +2207,9 @@ function initBlastBattle() {
 
       <!-- ARENA -->
       <div class="blast-arena" id="blast-arena">
+        <!-- Crosshair Reticle -->
+        <div class="blast-crosshair" id="blast-crosshair"></div>
+
         <!-- Cosmic Grid & Stars -->
         <div class="blast-arena-bg"></div>
 
@@ -2245,12 +2248,55 @@ function initBlastBattle() {
     </div>
   `;
 
+  // Dynamic Pointer Aiming Tracker
+  const arenaEl = document.getElementById('blast-arena');
+  if (arenaEl) {
+    arenaEl.onpointermove = (e) => {
+      if (!blastState.running || blastState.paused) return;
+      updateBlastAimAngle(e.clientX, e.clientY);
+    };
+    arenaEl.onpointerleave = () => {
+      const crosshair = document.getElementById('blast-crosshair');
+      if (crosshair) crosshair.classList.remove('visible');
+    };
+  }
+
   // Spawn initial bubbles
   populateInitialBlastBubbles();
 
   // Start timers and animation loop
   startBlastTimers();
   blastState.animId = requestAnimationFrame(blastGameLoop);
+}
+
+function updateBlastAimAngle(clientX, clientY) {
+  const arena = document.getElementById('blast-arena');
+  const turret = document.getElementById('blast-turret-wrap');
+  const barrel = document.getElementById('blast-turret-barrel');
+  const crosshair = document.getElementById('blast-crosshair');
+  if (!arena || !turret || !barrel) return;
+
+  const arenaRect = arena.getBoundingClientRect();
+  const turretRect = turret.getBoundingClientRect();
+
+  const px = clientX - arenaRect.left;
+  const py = clientY - arenaRect.top;
+
+  if (crosshair) {
+    crosshair.style.left = px + 'px';
+    crosshair.style.top = py + 'px';
+    crosshair.classList.add('visible');
+  }
+
+  const turretOriginX = (turretRect.left + turretRect.width / 2) - arenaRect.left;
+  const turretOriginY = turretRect.top - arenaRect.top + 28;
+
+  const dx = px - turretOriginX;
+  const dy = py - turretOriginY;
+  const angleRad = Math.atan2(dy, dx);
+  const angleDeg = angleRad * (180 / Math.PI) + 90;
+
+  barrel.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
 }
 
 const BUBBLE_THEMES = ['cyan', 'indigo', 'violet', 'emerald', 'amber', 'rose'];
@@ -2473,7 +2519,8 @@ function shootBlastBubble(bubbleId, event) {
     speakJapanese(bubble.char);
 
     spawnBlastPopParticles(bubbleCenterX, bubbleCenterY, bubble.theme);
-    showBlastFloatingText(`+${gained}${blastState.combo > 1 ? ' (' + blastState.combo + 'x COMBO!)' : ''}`, bubble.x, bubble.y, '#38BDF8');
+    spawnBlastShockwave(bubbleCenterX, bubbleCenterY, bubble.theme);
+    showBlastFloatingText(`+${gained}${blastState.combo > 1 ? ' (' + blastState.combo + 'x STREAK)' : ''}`, bubble.x, bubble.y, '#38BDF8');
 
     bubbleEl.classList.add('bubble-exploding');
     setTimeout(() => {
@@ -2560,6 +2607,19 @@ function spawnBlastPopParticles(cx, cy, theme) {
   }
 }
 
+function spawnBlastShockwave(cx, cy, theme) {
+  const fxLayer = document.getElementById('blast-fx-layer');
+  if (!fxLayer) return;
+
+  const sw = document.createElement('div');
+  sw.className = `blast-shockwave theme-${theme}`;
+  sw.style.left = cx + 'px';
+  sw.style.top = cy + 'px';
+
+  fxLayer.appendChild(sw);
+  setTimeout(() => sw.remove(), 420);
+}
+
 function showBlastFloatingText(text, xPercent, yPercent, color = '#FFFFFF') {
   const fxLayer = document.getElementById('blast-fx-layer');
   if (!fxLayer) return;
@@ -2589,7 +2649,7 @@ function updateBlastHUD() {
   }
   if (comboText && comboPill) {
     if (blastState.combo > 1) {
-      comboText.textContent = `${blastState.combo}x COMBO 🔥`;
+      comboText.textContent = `${blastState.combo}x STREAK`;
       comboPill.classList.add('active');
     } else {
       comboText.textContent = `1x Streak`;
@@ -2671,7 +2731,7 @@ function triggerBlastGameOver() {
       </div>
 
       <div class="blast-result-header">
-        ${isNewRecord ? '<div class="new-record-pill">🏆 REKOR BARU TERCIPTA!</div>' : ''}
+        ${isNewRecord ? '<div class="new-record-pill">REKOR BARU TERCIPTA!</div>' : ''}
         <h2>Sesi Kana Blast Selesai!</h2>
         <p>Refleks menembak dan membaca aksara Jepangmu luar biasa!</p>
       </div>
@@ -3038,8 +3098,10 @@ function getRandomKanaItem() {
 
 function startMonsterGame() {
   getAudioContext();
+  stopMonsterLoop(); // Clear any existing animation frames and timeouts to prevent stacking
   msState.running = true;
   msState.paused = false;
+  msState.barrierInvulnerable = false;
   msState.lives = 3;
   msState.score = 0;
   msState.combo = 0;
@@ -3065,7 +3127,9 @@ function startMonsterGame() {
     inp.focus();
     inp.oninput = (e) => handleMonsterInput(e.target.value);
     inp.onkeydown = (e) => {
-      if (e.key === 'Backspace') handleMonsterBackspace();
+      if (e.key === 'Backspace') {
+        handleMonsterBackspace();
+      }
     };
   }
 
@@ -3090,6 +3154,24 @@ document.addEventListener('keydown', (e) => {
   const battle = document.getElementById('ms-battle');
   if (battle && !battle.classList.contains('hidden') && typeof msState !== 'undefined' && msState.running && !msState.paused) {
     const inp = document.getElementById('ms-input');
+
+    // Cegah tombol Backspace menavigasi riwayat browser (penyebab utama game tertutup!)
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      if (inp) {
+        if (document.activeElement !== inp) inp.focus();
+        inp.value = inp.value.slice(0, -1);
+        handleMonsterBackspace();
+      }
+      return;
+    }
+
+    // Cegah tombol Spasi atau Enter memicu tombol lain di background
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      return;
+    }
+
     if (inp && document.activeElement !== inp) {
       if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
         inp.focus();
@@ -3252,12 +3334,16 @@ function monsterGameLoop(now) {
   if (!msState.running) return;
 
   if (!msState.paused) {
-    const dt = (now - msState.lastFrameTime) / 1000;
+    // Clamp delta-time agar saat tab browser tidak aktif/lag, monster tidak loncat langsung ke gerbang
+    const rawDt = (now - msState.lastFrameTime) / 1000;
+    const dt = Math.min(Math.max(rawDt, 0), 0.045);
     msState.lastFrameTime = now;
 
-    for (let i = msState.monsters.length - 1; i >= 0; i--) {
+    const breachedList = [];
+
+    for (let i = 0; i < msState.monsters.length; i++) {
       const m = msState.monsters[i];
-      if (m.dead) continue;
+      if (!m || m.dead) continue;
 
       // Drop down vertically from top (0%) towards the gate (78%)
       m.progress += m.speed * dt * 100;
@@ -3271,9 +3357,18 @@ function monsterGameLoop(now) {
 
       // Reached bottom defense gate
       if (m.progress >= 78) {
-        monsterBreachedDefense(m);
+        breachedList.push(m);
       }
     }
+
+    // Proses monster yang mencapai gerbang secara aman tanpa merusak indeks loop
+    for (const b of breachedList) {
+      if (msState.running) {
+        monsterBreachedDefense(b);
+      }
+    }
+
+    if (!msState.running) return; // Jika game over dipicu, hentikan loop sekarang
 
     if (msState.monsters.length === 0 && msState.monstersSpawnedInWave >= msState.monstersTargetInWave) {
       waveCompleted();
@@ -3282,10 +3377,13 @@ function monsterGameLoop(now) {
     msState.lastFrameTime = now;
   }
 
-  msState.animId = requestAnimationFrame(monsterGameLoop);
+  if (msState.running) {
+    msState.animId = requestAnimationFrame(monsterGameLoop);
+  }
 }
 
 function monsterBreachedDefense(m) {
+  if (m.dead) return;
   m.dead = true;
   msState.monsters = msState.monsters.filter(mob => mob.id !== m.id);
 
@@ -3297,18 +3395,31 @@ function monsterBreachedDefense(m) {
     clearMonsterInput();
   }
 
-  msState.lives--;
-  msState.combo = 0;
-  updateMonsterHUD();
-  playSfx('hurt');
+  // Grace period perisai (1.2 detik): Jika 2 monster tiba bersamaan, tidak langsung membuang 2 nyawa sekaligus
+  if (!msState.barrierInvulnerable) {
+    msState.lives--;
+    msState.combo = 0;
+    updateMonsterHUD();
+    playSfx('hurt');
 
-  const arena = document.getElementById('ms-arena');
-  if (arena) {
-    arena.classList.add('arena-shake');
-    setTimeout(() => arena.classList.remove('arena-shake'), 400);
+    msState.barrierInvulnerable = true;
+    const barrier = document.querySelector('.ms-defense-barrier-bottom');
+    if (barrier) barrier.classList.add('barrier-damage-flash');
+    setTimeout(() => {
+      msState.barrierInvulnerable = false;
+      if (barrier) barrier.classList.remove('barrier-damage-flash');
+    }, 1200);
+
+    const arena = document.getElementById('ms-arena');
+    if (arena) {
+      arena.classList.add('arena-shake');
+      setTimeout(() => arena.classList.remove('arena-shake'), 400);
+    }
+
+    showFloatingText('Gerbang Ditembus! -1 Nyawa', m.xPercent, 76, '#EF4444');
+  } else {
+    showFloatingText('Perisai Bertahan!', m.xPercent, 76, '#F59E0B');
   }
-
-  showFloatingText('Gerbang Ditembus! -1 Nyawa', m.xPercent, 76, '#EF4444');
 
   if (msState.lives <= 0) {
     triggerGameOver();
@@ -3529,7 +3640,17 @@ function restartMonsterGame() {
 }
 
 function exitMonsterGame() {
+  if (msState.running && !msState.paused) {
+    toggleMonsterPause(true);
+    if (!confirm('Pertarungan sedang berlangsung. Yakin ingin keluar ke menu mini games?')) {
+      toggleMonsterPause(false);
+      return;
+    }
+  }
   stopMonsterLoop();
+  msState.monsters = [];
+  const track = document.getElementById('ms-monsters-track');
+  if (track) track.innerHTML = '';
   document.getElementById('ms-gameover-modal').classList.add('hidden');
   initMonsterLobby();
   showPage('games');
