@@ -1139,7 +1139,19 @@ const PRESET_VOCAB_HIRAGANA = [
   { char: 'すし', romaji: 'sushi', mean: 'Sushi' },
   { char: 'やま', romaji: 'yama', mean: 'Gunung' },
   { char: 'かわ', romaji: 'kawa', mean: 'Sungai' },
-  { char: 'くるま', romaji: 'kuruma', mean: 'Mobil' }
+  { char: 'つき', romaji: 'tsuki', mean: 'Bulan' },
+  { char: 'くるま', romaji: 'kuruma', mean: 'Mobil' },
+  { char: 'せんせい', romaji: 'sensei', mean: 'Guru' },
+  { char: 'ともだち', romaji: 'tomodachi', mean: 'Teman' },
+  { char: 'がくせい', romaji: 'gakusei', mean: 'Murid / Siswa' },
+  { char: 'りんご', romaji: 'ringo', mean: 'Apel' },
+  { char: 'とり', romaji: 'tori', mean: 'Burung' },
+  { char: 'さかな', romaji: 'sakana', mean: 'Ikan' },
+  { char: 'みかん', romaji: 'mikan', mean: 'Jeruk' },
+  { char: 'たまご', romaji: 'tamago', mean: 'Telur' },
+  { char: 'てがみ', romaji: 'tegami', mean: 'Surat' },
+  { char: 'あさ', romaji: 'asa', mean: 'Pagi Hari' },
+  { char: 'よる', romaji: 'yoru', mean: 'Malam Hari' }
 ];
 
 const PRESET_VOCAB_KATAKANA = [
@@ -1152,18 +1164,26 @@ const PRESET_VOCAB_KATAKANA = [
   { char: 'ノート', romaji: 'nooto', mean: 'Buku Catatan' },
   { char: 'ペン', romaji: 'pen', mean: 'Pulpen' },
   { char: 'ホテル', romaji: 'hoteru', mean: 'Hotel' },
-  { char: 'コーヒー', romaji: 'koohii', mean: 'Kopi' }
+  { char: 'コーヒー', romaji: 'koohii', mean: 'Kopi' },
+  { char: 'タクシー', romaji: 'takushii', mean: 'Taksi' },
+  { char: 'ラジオ', romaji: 'rajio', mean: 'Radio' },
+  { char: 'アイス', romaji: 'aisu', mean: 'Es Krim' },
+  { char: 'ケーキ', romaji: 'keeki', mean: 'Kue' },
+  { char: 'ミルク', romaji: 'miruku', mean: 'Susu' },
+  { char: 'シャツ', romaji: 'shatsu', mean: 'Kemeja / Kaos' },
+  { char: 'ベッド', romaji: 'beddo', mean: 'Tempat Tidur' },
+  { char: 'ビル', romaji: 'biru', mean: 'Gedung' }
 ];
 
 function buildDefaultQuestions(gameId) {
   const list = [];
-  const hMode = (gameId === 'kana-blast') ? 'kana-hiragana' : 'hiragana';
-  const kMode = (gameId === 'kana-blast') ? 'kana-katakana' : 'katakana';
+  const hMode = (gameId === 'kana-blast' || gameId === 'flash-card' || gameId === 'memory-match' || gameId === 'speed-quiz') ? 'vocab-hiragana' : 'words';
+  const kMode = (gameId === 'kana-blast' || gameId === 'flash-card' || gameId === 'memory-match' || gameId === 'speed-quiz') ? 'vocab-katakana' : 'words';
 
-  // 1. 46 Hiragana Dasar
-  PRESET_HIRAGANA_46.forEach((item, idx) => {
+  // 1. Kosakata Hiragana Utuh (kasa, neko, inu, dll)
+  PRESET_VOCAB_HIRAGANA.forEach((item, idx) => {
     list.push({
-      id: `${gameId}_h_${idx + 1}`,
+      id: `${gameId}_vh_${idx + 1}`,
       char: item.char,
       romaji: item.romaji,
       mean: item.mean,
@@ -1171,10 +1191,10 @@ function buildDefaultQuestions(gameId) {
     });
   });
 
-  // 2. 46 Katakana Dasar
-  PRESET_KATAKANA_46.forEach((item, idx) => {
+  // 2. Kosakata Katakana Utuh (pan, terebi, kamera, dll)
+  PRESET_VOCAB_KATAKANA.forEach((item, idx) => {
     list.push({
-      id: `${gameId}_k_${idx + 1}`,
+      id: `${gameId}_vk_${idx + 1}`,
       char: item.char,
       romaji: item.romaji,
       mean: item.mean,
@@ -1193,28 +1213,6 @@ function buildDefaultQuestions(gameId) {
     });
   });
 
-  // 4. Kosakata khusus untuk Kana Blast
-  if (gameId === 'kana-blast') {
-    PRESET_VOCAB_HIRAGANA.forEach((item, idx) => {
-      list.push({
-        id: `kb_vh_${idx + 1}`,
-        char: item.char,
-        romaji: item.romaji,
-        mean: item.mean,
-        mode: 'vocab-hiragana'
-      });
-    });
-    PRESET_VOCAB_KATAKANA.forEach((item, idx) => {
-      list.push({
-        id: `kb_vk_${idx + 1}`,
-        char: item.char,
-        romaji: item.romaji,
-        mean: item.mean,
-        mode: 'vocab-katakana'
-      });
-    });
-  }
-
   return list;
 }
 
@@ -1224,11 +1222,11 @@ const DEFAULT_GAME_CONFIG = {
     durations: [30, 45, 60, 90, 999],
     defaultDuration: 60,
     subModes: [
-      { id: 'kana-hiragana', name: 'Aksara Hiragana (46 Huruf Dasar)', active: true },
-      { id: 'kana-katakana', name: 'Aksara Katakana (46 Huruf Dasar)', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
       { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ, dll.)', active: true },
       { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ, dll.)', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
+      { id: 'kana-hiragana', name: 'Aksara Hiragana Dasar', active: true },
+      { id: 'kana-katakana', name: 'Aksara Katakana Dasar', active: true },
       { id: 'mix', name: 'Campuran Ekstrem (Kana & Kata)', active: true }
     ],
     customQuestions: buildDefaultQuestions('kana-blast')
@@ -1238,19 +1236,20 @@ const DEFAULT_GAME_CONFIG = {
     speeds: ['slow', 'normal', 'fast'],
     defaultSpeed: 'normal',
     subModes: [
-      { id: 'hiragana', name: 'Hiragana Saja (46 Huruf)', active: true },
-      { id: 'katakana', name: 'Katakana Saja (46 Huruf)', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
+      { id: 'words', name: 'Kosakata Mini (ねこ, いぬ, かさ, dll.)', active: true },
+      { id: 'hiragana', name: 'Hiragana Saja', active: true },
+      { id: 'katakana', name: 'Katakana Saja', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true },
       { id: 'mix', name: 'Campuran Hiragana & Katakana', active: true }
     ],
     customQuestions: buildDefaultQuestions('sky-defense')
   },
   'flash-card': {
-    title: 'Flash Card Aksara & Kanji',
+    title: 'Flash Card Kosakata & Kanji',
     subModes: [
-      { id: 'all', name: 'Semua Huruf & Kanji', active: true },
-      { id: 'hiragana', name: 'Hiragana', active: true },
-      { id: 'katakana', name: 'Katakana', active: true },
+      { id: 'all', name: 'Semua Kosakata & Kanji', active: true },
+      { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ)', active: true },
+      { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ)', active: true },
       { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
     ],
     customQuestions: buildDefaultQuestions('flash-card')
@@ -1259,9 +1258,9 @@ const DEFAULT_GAME_CONFIG = {
     title: 'Memory Match',
     pairsCount: 8,
     subModes: [
-      { id: 'all', name: 'Campuran Hiragana & Katakana', active: true },
-      { id: 'hiragana', name: 'Hiragana Saja', active: true },
-      { id: 'katakana', name: 'Katakana Saja', active: true },
+      { id: 'all', name: 'Semua Kosakata (Hiragana & Katakana)', active: true },
+      { id: 'vocab-hiragana', name: 'Kosakata Hiragana Saja (かさ, ねこ)', active: true },
+      { id: 'vocab-katakana', name: 'Kosakata Katakana Saja (パン, テレビ)', active: true },
       { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
     ],
     customQuestions: buildDefaultQuestions('memory-match')
@@ -1270,135 +1269,196 @@ const DEFAULT_GAME_CONFIG = {
     title: 'Speed Quiz Mode',
     duration: 30,
     subModes: [
-      { id: 'all', name: 'Semua Aksara & Kanji', active: true },
-      { id: 'hiragana', name: 'Hiragana Saja', active: true },
-      { id: 'katakana', name: 'Katakana Saja', active: true },
+      { id: 'all', name: 'Semua Kosakata & Kanji', active: true },
+      { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ)', active: true },
+      { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ)', active: true },
       { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
     ],
     customQuestions: buildDefaultQuestions('speed-quiz')
   },
   'word-builder': {
     title: 'Word Builder',
+    duration: 90,
     subModes: [
       { id: 'word-builder', name: 'Susun Kosakata', active: true }
     ],
     customQuestions: [
-      { id: 'wb_c1', meaning: 'Tokyo (Ibu kota)', romaji: 't-o-u-k-y-o-u', answer: ['と','う','き','ょ','う'], chars: ['と','う','き','ょ','う','か','さ','ね'], mode: 'word-builder' },
-      { id: 'wb_c2', meaning: 'Gunung Fuji', romaji: 'f-u-j-i-s-a-n', answer: ['ふ','じ','さ','ん'], chars: ['ふ','じ','さ','ん','や','ま','て','ら'], mode: 'word-builder' },
-      { id: 'wb_c3', meaning: 'Terima Kasih', romaji: 'a-r-i-g-a-t-o-u', answer: ['あ','り','が','と','う'], chars: ['あ','り','が','と','う','こ','そ','ね'], mode: 'word-builder' },
-      { id: 'wb_c4', meaning: 'Selamat Pagi', romaji: 'o-h-a-y-o-u', answer: ['お','は','よ','う'], chars: ['お','は','よ','う','み','ず','ね','こ'], mode: 'word-builder' },
-      { id: 'wb_c5', meaning: 'Kucing', romaji: 'n-e-k-o', answer: ['ね','こ'], chars: ['ね','こ','い','ぬ','と','り','さ','る'], mode: 'word-builder' }
+      { id: 'wb_c1', char: 'とうきょう', mean: 'Tokyo (Ibu kota Jepang)', romaji: 't-o-u-k-y-o-u', answer: ['と','う','き','ょ','う'], chars: ['と','う','き','ょ','う','か','さ','ね'], mode: 'word-builder' },
+      { id: 'wb_c2', char: 'ふじさん', mean: 'Gunung Fuji', romaji: 'f-u-j-i-s-a-n', answer: ['ふ','じ','さ','ん'], chars: ['ふ','じ','さ','ん','や','ま','て','ら'], mode: 'word-builder' },
+      { id: 'wb_c3', char: 'ありがとう', mean: 'Terima Kasih', romaji: 'a-r-i-g-a-t-o-u', answer: ['あ','り','が','と','う'], chars: ['あ','り','が','と','う','こ','そ','ね'], mode: 'word-builder' },
+      { id: 'wb_c4', char: 'おはよう', mean: 'Selamat Pagi', romaji: 'o-h-a-y-o-u', answer: ['お','は','よ','う'], chars: ['お','は','よ','う','み','ず','ね','こ'], mode: 'word-builder' },
+      { id: 'wb_c5', char: 'ねこ', mean: 'Kucing Lucu', romaji: 'n-e-k-o', answer: ['ね','こ'], chars: ['ね','こ','い','ぬ','と','り','さ','る'], mode: 'word-builder' },
+      { id: 'wb_c6', char: 'さくら', mean: 'Bunga Sakura Musim Semi', romaji: 's-a-k-u-r-a', answer: ['さ','く','ら'], chars: ['さ','く','ら','は','な','き','く','さ'], mode: 'word-builder' },
+      { id: 'wb_c7', char: 'せんせい', mean: 'Guru Pengajar', romaji: 's-e-n-s-e-i', answer: ['せ','ん','せ','い'], chars: ['せ','ん','せ','い','が','く','こ','う'], mode: 'word-builder' }
     ]
   }
 };
 
 const GameConfigManager = {
-  get() {
+  _dbCache: null,
+  _listeners: [],
+
+  subscribe(fn) {
+    if (typeof fn === 'function') this._listeners.push(fn);
+  },
+
+  notify() {
+    this._listeners.forEach(fn => {
+      try { fn(this.get()); } catch (e) {}
+    });
+  },
+
+  initFromServer(serverConfigs, serverQuestions) {
+    if (!serverConfigs || !Array.isArray(serverConfigs) || serverConfigs.length === 0) return;
+    const cache = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+    serverConfigs.forEach(cfg => {
+      const gId = cfg.game_id;
+      const qList = (serverQuestions || []).filter(q => q.game_id === gId).map(q => ({
+        id: String(q.id),
+        char: q.char,
+        romaji: q.romaji,
+        mean: q.meaning,
+        mode: q.sub_mode,
+        extra_data: q.extra_data
+      }));
+      cache[gId] = {
+        title: cfg.title,
+        duration: cfg.duration,
+        defaultDuration: cfg.duration,
+        durations: [30, 45, 60, 90, 999],
+        subModes: Array.isArray(cfg.sub_modes) ? cfg.sub_modes : (DEFAULT_GAME_CONFIG[gId] ? DEFAULT_GAME_CONFIG[gId].subModes : []),
+        customQuestions: qList.length > 0 ? qList : (DEFAULT_GAME_CONFIG[gId] ? DEFAULT_GAME_CONFIG[gId].customQuestions : [])
+      };
+    });
+    this._dbCache = cache;
+    this.save(cache);
+    this.notify();
+  },
+
+  async syncFromDatabase() {
     try {
-      const raw = localStorage.getItem(GAME_CONFIG_STORAGE_KEY);
-      if (!raw) return JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
-      const parsed = JSON.parse(raw);
-      const merged = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
-      for (const k in parsed) {
-        if (merged[k]) {
-          merged[k] = Object.assign(merged[k], parsed[k]);
-        } else {
-          merged[k] = parsed[k];
+      const res = await fetch('/api/minigames/config');
+      if (!res.ok) return;
+      const json = await res.json();
+      if (json && json.success && json.data) {
+        const cache = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+        for (const gId in json.data) {
+          const item = json.data[gId];
+          cache[gId] = {
+            title: item.title,
+            duration: item.duration,
+            defaultDuration: item.duration,
+            durations: [30, 45, 60, 90, 999],
+            subModes: item.subModes || (DEFAULT_GAME_CONFIG[gId] ? DEFAULT_GAME_CONFIG[gId].subModes : []),
+            customQuestions: item.customQuestions || []
+          };
         }
+        this._dbCache = cache;
+        this.save(cache);
+        this.notify();
       }
-
-      // Auto-enrichment: Pastikan Hiragana dan Katakana terdaftar jika sebelumnya hanya ada Kanji
-      const mainGames = ['kana-blast', 'sky-defense', 'flash-card', 'memory-match', 'speed-quiz'];
-      let needsResave = false;
-      for (const gId of mainGames) {
-        if (merged[gId]) {
-          const qs = merged[gId].customQuestions || [];
-          const hasHira = qs.some(q => q.mode === 'hiragana' || q.mode === 'kana-hiragana');
-          const hasKata = qs.some(q => q.mode === 'katakana' || q.mode === 'kana-katakana');
-          if (!hasHira || !hasKata || qs.length < 25) {
-            const defaults = buildDefaultQuestions(gId);
-            const existingKeys = new Set(qs.map(q => q.char + '_' + (q.mode || '')));
-            defaults.forEach(d => {
-              if (!existingKeys.has(d.char + '_' + d.mode)) {
-                qs.push(d);
-              }
-            });
-            merged[gId].customQuestions = qs;
-            needsResave = true;
-          }
-        }
-      }
-      if (needsResave) {
-        this.save(merged);
-      }
-
-      return merged;
     } catch (e) {
-      return JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+      console.warn('GameConfigManager: Gagal sync dari database, menggunakan fallback.', e);
     }
   },
+
+  get() {
+    if (this._dbCache) return this._dbCache;
+    try {
+      const raw = localStorage.getItem(GAME_CONFIG_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        this._dbCache = parsed;
+        return parsed;
+      }
+    } catch (e) {}
+    this._dbCache = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+    return this._dbCache;
+  },
+
   save(config) {
+    this._dbCache = config;
     try {
       localStorage.setItem(GAME_CONFIG_STORAGE_KEY, JSON.stringify(config));
     } catch (e) {}
   },
+
   getGame(gameId) {
     const all = this.get();
     return all[gameId] || DEFAULT_GAME_CONFIG[gameId] || null;
   },
+
   getSubModes(gameId) {
     const g = this.getGame(gameId);
     return (g && g.subModes) ? g.subModes.filter(m => m.active !== false) : [];
   },
+
   getAllSubModes(gameId) {
     const g = this.getGame(gameId);
     return (g && g.subModes) ? g.subModes : [];
   },
+
   getDurations(gameId) {
     const g = this.getGame(gameId);
     return (g && g.durations) ? g.durations : [30, 45, 60, 90, 999];
   },
+
   getDuration(gameId, fallback = 30) {
     const g = this.getGame(gameId);
     return (g && g.duration) ? g.duration : (g && g.defaultDuration ? g.defaultDuration : fallback);
   },
+
   getQuestions(gameId, mode = null) {
     const g = this.getGame(gameId);
     if (!g || !g.customQuestions) return [];
     if (!mode || mode === 'all' || mode === 'mix') return g.customQuestions;
     return g.customQuestions.filter(q => {
       if (q.mode === mode) return true;
-      if (mode === 'hiragana' && q.mode === 'kana-hiragana') return true;
-      if (mode === 'kana-hiragana' && q.mode === 'hiragana') return true;
-      if (mode === 'katakana' && q.mode === 'kana-katakana') return true;
-      if (mode === 'kana-katakana' && q.mode === 'katakana') return true;
+      if (mode === 'vocab-hiragana' && (q.mode === 'vocab-hiragana' || q.mode === 'kana-hiragana' || q.mode === 'hiragana' || q.mode === 'words')) return true;
+      if (mode === 'vocab-katakana' && (q.mode === 'vocab-katakana' || q.mode === 'kana-katakana' || q.mode === 'katakana')) return true;
+      if (mode === 'hiragana' && (q.mode === 'hiragana' || q.mode === 'kana-hiragana' || q.mode === 'vocab-hiragana' || q.mode === 'words')) return true;
+      if (mode === 'katakana' && (q.mode === 'katakana' || q.mode === 'kana-katakana' || q.mode === 'vocab-katakana')) return true;
+      if (mode.includes('kanji') && (q.mode && q.mode.includes('kanji'))) return true;
       return false;
     });
   },
-  setDuration(gameId, duration) {
+
+  async setDuration(gameId, duration) {
+    const dur = parseInt(duration, 10);
     const all = this.get();
     if (all[gameId]) {
-      all[gameId].duration = parseInt(duration, 10);
-      all[gameId].defaultDuration = parseInt(duration, 10);
+      all[gameId].duration = dur;
+      all[gameId].defaultDuration = dur;
       this.save(all);
     }
+    try {
+      await fetch('/api/minigames/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ game_id: gameId, duration: dur })
+      });
+    } catch (e) {}
+    this.notify();
   },
-  setDurationsList(gameId, durationsArr) {
-    const all = this.get();
-    if (all[gameId]) {
-      all[gameId].durations = durationsArr.map(n => parseInt(n, 10));
-      this.save(all);
-    }
-  },
-  addSubMode(gameId, modeObj) {
+
+  async addSubMode(gameId, modeObj) {
     const all = this.get();
     if (all[gameId]) {
       if (!all[gameId].subModes) all[gameId].subModes = [];
       all[gameId].subModes.push(modeObj);
       this.save(all);
     }
+    try {
+      await fetch('/api/minigames/submodes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ game_id: gameId, id: modeObj.id, name: modeObj.name })
+      });
+    } catch (e) {}
+    this.notify();
   },
-  toggleSubMode(gameId, modeId) {
+
+  async toggleSubMode(gameId, modeId) {
     const all = this.get();
     if (all[gameId] && all[gameId].subModes) {
       const target = all[gameId].subModes.find(m => m.id === modeId);
@@ -1407,96 +1467,181 @@ const GameConfigManager = {
         this.save(all);
       }
     }
+    try {
+      await fetch('/api/minigames/submodes/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ game_id: gameId, submode_id: modeId })
+      });
+    } catch (e) {}
+    this.notify();
   },
-  deleteSubMode(gameId, modeId) {
+
+  async deleteSubMode(gameId, modeId) {
     const all = this.get();
     if (all[gameId] && all[gameId].subModes) {
       all[gameId].subModes = all[gameId].subModes.filter(m => m.id !== modeId);
       this.save(all);
     }
+    try {
+      await fetch('/api/minigames/submodes', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ game_id: gameId, submode_id: modeId })
+      });
+    } catch (e) {}
+    this.notify();
   },
-  addQuestion(gameId, questionObj) {
+
+  async addQuestion(gameId, questionObj) {
+    let savedQuestion = null;
+    try {
+      const res = await fetch('/api/minigames/questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          game_id: gameId,
+          sub_mode: questionObj.mode || 'vocab-hiragana',
+          char: questionObj.char,
+          romaji: questionObj.romaji,
+          meaning: questionObj.mean || questionObj.meaning || ''
+        })
+      });
+      const data = await res.json();
+      if (data && data.success && data.question) {
+        savedQuestion = data.question;
+      }
+    } catch (e) {}
+
+    const itemToAdd = savedQuestion || {
+      id: questionObj.id || ('q_' + Date.now()),
+      char: questionObj.char,
+      romaji: questionObj.romaji,
+      mean: questionObj.mean || questionObj.meaning || '',
+      mode: questionObj.mode || 'vocab-hiragana'
+    };
+
     const all = this.get();
     if (all[gameId]) {
       if (!all[gameId].customQuestions) all[gameId].customQuestions = [];
-      all[gameId].customQuestions.push(questionObj);
+      all[gameId].customQuestions.push(itemToAdd);
       this.save(all);
     }
+    this.notify();
+    return itemToAdd;
   },
-  updateQuestion(gameId, questionId, updatedObj) {
+
+  async updateQuestion(gameId, questionId, updatedObj) {
+    try {
+      if (!String(questionId).startsWith('cfg_') && !String(questionId).startsWith('q_')) {
+        await fetch(`/api/minigames/questions/${questionId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            sub_mode: updatedObj.mode,
+            char: updatedObj.char,
+            romaji: updatedObj.romaji,
+            meaning: updatedObj.mean || updatedObj.meaning || ''
+          })
+        });
+      }
+    } catch (e) {}
+
     const all = this.get();
     if (all[gameId] && all[gameId].customQuestions) {
-      const idx = all[gameId].customQuestions.findIndex(q => q.id === questionId);
+      const idx = all[gameId].customQuestions.findIndex(q => String(q.id) === String(questionId));
       if (idx !== -1) {
         all[gameId].customQuestions[idx] = Object.assign(all[gameId].customQuestions[idx], updatedObj);
         this.save(all);
       }
     }
+    this.notify();
   },
-  deleteQuestion(gameId, questionId) {
+
+  async deleteQuestion(gameId, questionId) {
+    try {
+      if (!String(questionId).startsWith('cfg_') && !String(questionId).startsWith('q_')) {
+        await fetch(`/api/minigames/questions/${questionId}`, {
+          method: 'DELETE',
+          headers: { 'Accept': 'application/json' }
+        });
+      }
+    } catch (e) {}
+
     const all = this.get();
     if (all[gameId] && all[gameId].customQuestions) {
-      all[gameId].customQuestions = all[gameId].customQuestions.filter(q => q.id !== questionId);
+      all[gameId].customQuestions = all[gameId].customQuestions.filter(q => String(q.id) !== String(questionId));
       this.save(all);
     }
+    this.notify();
   },
-  loadPreset(gameId, presetType) {
-    const all = this.get();
-    if (!all[gameId]) return 0;
-    if (!all[gameId].customQuestions) all[gameId].customQuestions = [];
-    const target = all[gameId].customQuestions;
-    const existingKeys = new Set(target.map(q => q.char + '_' + (q.mode || '')));
 
+  async loadPreset(gameId, presetType) {
     let toAdd = [];
-    if (presetType === 'hiragana') {
-      const mode = (gameId === 'kana-blast') ? 'kana-hiragana' : 'hiragana';
-      toAdd = PRESET_HIRAGANA_46.map((h, i) => ({
-        id: `${gameId}_h_${Date.now()}_${i}`,
-        char: h.char,
-        romaji: h.romaji,
-        mean: h.mean,
-        mode: mode
+    if (presetType === 'hiragana' || presetType === 'vocab-hiragana') {
+      toAdd = PRESET_VOCAB_HIRAGANA.map(item => ({
+        char: item.char,
+        romaji: item.romaji,
+        mean: item.mean,
+        mode: 'vocab-hiragana'
       }));
-    } else if (presetType === 'katakana') {
-      const mode = (gameId === 'kana-blast') ? 'kana-katakana' : 'katakana';
-      toAdd = PRESET_KATAKANA_46.map((k, i) => ({
-        id: `${gameId}_k_${Date.now()}_${i}`,
-        char: k.char,
-        romaji: k.romaji,
-        mean: k.mean,
-        mode: mode
+    } else if (presetType === 'katakana' || presetType === 'vocab-katakana') {
+      toAdd = PRESET_VOCAB_KATAKANA.map(item => ({
+        char: item.char,
+        romaji: item.romaji,
+        mean: item.mean,
+        mode: 'vocab-katakana'
       }));
     } else if (presetType === 'kanji-n5') {
-      toAdd = PRESET_KANJI_N5.map((k, i) => ({
-        id: `${gameId}_kanji_${Date.now()}_${i}`,
-        char: k.char,
-        romaji: k.romaji,
-        mean: k.mean,
+      toAdd = PRESET_KANJI_N5.map(item => ({
+        char: item.char,
+        romaji: item.romaji,
+        mean: item.mean,
         mode: 'kanji-n5'
       }));
     }
 
     let addedCount = 0;
-    toAdd.forEach(item => {
+    const all = this.get();
+    const existing = (all[gameId] && all[gameId].customQuestions) || [];
+    const existingKeys = new Set(existing.map(q => q.char + '_' + (q.mode || '')));
+
+    for (const item of toAdd) {
       if (!existingKeys.has(item.char + '_' + item.mode)) {
-        target.push(item);
+        await this.addQuestion(gameId, item);
         addedCount++;
       }
-    });
-    this.save(all);
+    }
     return addedCount;
   },
-  resetToDefault(gameId = null) {
-    if (!gameId) {
-      this.save(DEFAULT_GAME_CONFIG);
-    } else {
-      const all = this.get();
-      all[gameId] = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG[gameId]));
-      this.save(all);
+
+  async resetToDefault(gameId = null) {
+    try {
+      await fetch('/api/minigames/reset', { method: 'POST', headers: { 'Accept': 'application/json' } });
+      await this.syncFromDatabase();
+    } catch (e) {
+      if (!gameId) {
+        this.save(DEFAULT_GAME_CONFIG);
+      } else {
+        const all = this.get();
+        all[gameId] = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG[gameId]));
+        this.save(all);
+      }
+      this.notify();
     }
   }
 };
+
 window.GameConfigManager = GameConfigManager;
+
+// Otomatis sinkronisasi kosakata minigames dari database SQLite
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    try {
+      GameConfigManager.syncFromDatabase();
+    } catch (e) {}
+  }, 100);
+}
 
 // ===== MINI GAMES =====
 let currentGame = null;

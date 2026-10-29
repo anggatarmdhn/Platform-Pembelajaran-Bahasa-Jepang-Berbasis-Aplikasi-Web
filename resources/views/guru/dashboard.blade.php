@@ -1008,13 +1008,13 @@
       <div class="master-card">
         <div class="master-card-header">
           <div class="master-card-title">
-            <h3>Pusat Pengaturan Mini Games &amp; Bank Soal Aksara</h3>
-            <p>Kelola durasi waktu permainan, tambah sub-mode baru (seperti <strong>Kanji N5 Dasar, Kanji N4 Wisata</strong>), dan kelola bank soal atau kosakata untuk masing-masing game murid.</p>
+            <h3>Pusat Pengaturan Mini Games &amp; Bank Soal Kosakata</h3>
+            <p>Kelola durasi waktu permainan, sub-mode, dan kelola bank soal kosakata lengkap (seperti <strong>かさ (kasa)</strong>, <strong>ねこ (neko)</strong>, <strong>パン (pan)</strong>, dan <strong>Kanji N5</strong>) yang tersimpan langsung di database SQLite untuk siswa.</p>
           </div>
           <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-            <button type="button" class="btn-preset" onclick="loadAdminPresetKanji()" title="Muat paket 15 Kanji N5 standar">+ Paket Kanji N5</button>
+            <button type="button" class="btn-preset" onclick="resetAdminGameDefault()" style="color:#DC2626; border-color:#FECACA;" title="Reset seluruh bank soal kosakata ke bawaan database">Reset Database Soal</button>
             <button type="button" class="btn-guru-primary" onclick="openAddGameQuestionModal()">
-              <span>+ Tambah Soal / Karakter</span>
+              <span>+ Tambah Soal Kosakata</span>
             </button>
           </div>
         </div>
@@ -1670,7 +1670,7 @@
   <div class="guru-modal-backdrop" id="modal-add-game-question">
     <div class="guru-modal-box">
       <div class="guru-modal-header">
-        <h3 id="modal-game-q-title">Tambah Soal / Karakter Game</h3>
+        <h3 id="modal-game-q-title">Tambah Soal Kosakata Game (Database)</h3>
         <button type="button" class="btn-close-modal" onclick="closeModal('modal-add-game-question')">&times;</button>
       </div>
       <form onsubmit="submitAddGameQuestion(event)">
@@ -1693,20 +1693,20 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Karakter / Kata Aksara Jepang:</label>
-          <input type="text" id="game-q-char" class="form-control" placeholder="contoh: 日 atau 山 atau ねこ" required style="font-size:1.15rem; font-family:'Noto Sans JP', sans-serif;" />
+          <label>Kata / Aksara Bahasa Jepang:</label>
+          <input type="text" id="game-q-char" class="form-control" placeholder="contoh: かさ atau ねこ atau パン atau 日" required style="font-size:1.15rem; font-family:'Noto Sans JP', sans-serif;" />
         </div>
         <div class="form-group">
           <label>Romaji / Cara Baca Latin:</label>
-          <input type="text" id="game-q-romaji" class="form-control" placeholder="contoh: hi / nichi atau yama atau neko" required />
+          <input type="text" id="game-q-romaji" class="form-control" placeholder="contoh: kasa atau neko atau pan atau hi" required />
         </div>
         <div class="form-group">
           <label>Arti Bahasa Indonesia:</label>
-          <input type="text" id="game-q-mean" class="form-control" placeholder="contoh: Matahari / Hari" required />
+          <input type="text" id="game-q-mean" class="form-control" placeholder="contoh: Payung atau Kucing atau Roti atau Matahari" required />
         </div>
         <div class="modal-btn-row">
           <button type="button" class="btn-cancel" onclick="closeModal('modal-add-game-question')">Batal</button>
-          <button type="submit" class="btn-guru-primary">Simpan ke Bank Soal Game</button>
+          <button type="submit" class="btn-guru-primary">Simpan ke Database SQLite</button>
         </div>
       </form>
     </div>
@@ -2223,10 +2223,10 @@
       renderAdminGameView();
     }
 
-    function loadAdminPreset(presetType) {
-      const added = GameConfigManager.loadPreset(currentAdminGame, presetType);
-      const label = presetType === 'hiragana' ? 'Hiragana (46)' : (presetType === 'katakana' ? 'Katakana (46)' : 'Kanji N5 (15)');
-      alert(`Paket ${label} berhasil disinkronkan (${added} butir baru ditambahkan)!`);
+    async function loadAdminPreset(presetType) {
+      const added = await GameConfigManager.loadPreset(currentAdminGame, presetType);
+      const label = presetType === 'hiragana' || presetType === 'vocab-hiragana' ? 'Kosakata Hiragana (kasa, neko, dll)' : (presetType === 'katakana' || presetType === 'vocab-katakana' ? 'Kosakata Katakana (pan, terebi, dll)' : 'Kanji N5');
+      alert(`Paket ${label} berhasil disinkronkan ke database (${added} butir baru ditambahkan)!`);
       renderAdminGameView();
     }
 
@@ -2246,10 +2246,18 @@
       if (adminSoalFilterMode !== 'all') {
         filtered = filtered.filter(q => {
           if (q.mode === adminSoalFilterMode) return true;
-          if (adminSoalFilterMode === 'hiragana' && q.mode === 'kana-hiragana') return true;
-          if (adminSoalFilterMode === 'kana-hiragana' && q.mode === 'hiragana') return true;
-          if (adminSoalFilterMode === 'katakana' && q.mode === 'kana-katakana') return true;
-          if (adminSoalFilterMode === 'kana-katakana' && q.mode === 'katakana') return true;
+          if (adminSoalFilterMode === 'vocab-hiragana' || adminSoalFilterMode === 'hiragana') {
+            return q.mode === 'vocab-hiragana' || q.mode === 'kana-hiragana' || q.mode === 'hiragana' || q.mode === 'words';
+          }
+          if (adminSoalFilterMode === 'vocab-katakana' || adminSoalFilterMode === 'katakana') {
+            return q.mode === 'vocab-katakana' || q.mode === 'kana-katakana' || q.mode === 'katakana';
+          }
+          if (adminSoalFilterMode === 'kanji-n5' || adminSoalFilterMode.includes('kanji')) {
+            return q.mode && q.mode.includes('kanji');
+          }
+          if (adminSoalFilterMode === 'word-builder') {
+            return q.mode === 'word-builder';
+          }
           return false;
         });
       }
@@ -2267,9 +2275,10 @@
 
       // Hitung jumlah butir per kategori
       const countAll = allQuestions.length;
-      const countHira = allQuestions.filter(q => q.mode === 'hiragana' || q.mode === 'kana-hiragana').length;
-      const countKata = allQuestions.filter(q => q.mode === 'katakana' || q.mode === 'kana-katakana').length;
+      const countHira = allQuestions.filter(q => q.mode === 'vocab-hiragana' || q.mode === 'hiragana' || q.mode === 'kana-hiragana' || q.mode === 'words').length;
+      const countKata = allQuestions.filter(q => q.mode === 'vocab-katakana' || q.mode === 'katakana' || q.mode === 'kana-katakana').length;
       const countKanji = allQuestions.filter(q => q.mode && q.mode.includes('kanji')).length;
+      const countWb = allQuestions.filter(q => q.mode === 'word-builder').length;
 
       // Pagination setup
       const totalPages = Math.ceil(filtered.length / adminSoalPageSize) || 1;
@@ -2287,7 +2296,7 @@
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#BE5544" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
                 <span>Pengaturan Waktu &amp; Kecepatan (${g.title})</span>
               </h4>
-              <p>Atur limit waktu bermain siswa agar latihan membaca aksara lebih menantang atau santai.</p>
+              <p>Atur limit waktu bermain siswa agar latihan membaca kosakata lebih menantang atau santai.</p>
             </div>
             <button type="button" class="btn-guru-primary" onclick="saveAdminGameDuration()">
               <span>Simpan Pengaturan Waktu</span>
@@ -2310,15 +2319,15 @@
           </div>
         </div>
 
-        <!-- CARD 2: KELOLA SUB-MODE PERMAINAN (HIRAGANA, KATAKANA, KANJI, DLL) -->
+        <!-- CARD 2: KELOLA SUB-MODE PERMAINAN (KOSAKATA HIRAGANA, KATAKANA, KANJI, DLL) -->
         <div class="admin-settings-card">
           <div class="admin-card-head">
             <div>
               <h4>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563EB" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                <span>Sub-Mode Permainan (${subModes.length} Mode Tersedia)</span>
+                <span>Sub-Mode Permainan (${subModes.length} Mode Tersedia di Database)</span>
               </h4>
-              <p>Aktifkan, nonaktifkan, atau tambah sub-mode baru (contoh: <strong>Kanji N5 Dasar, Kosakata N4</strong>) untuk game ini.</p>
+              <p>Aktifkan, nonaktifkan, atau tambah sub-mode baru (contoh: <strong>Kosakata Hiragana, Kosakata Katakana, Kanji N5 Dasar</strong>) untuk game ini.</p>
             </div>
             <button type="button" class="btn-preset" style="color:#2563EB; border-color:#BFDBFE;" onclick="openAddSubModeModal()">
               <span>+ Tambah Sub-Mode Baru</span>
@@ -2340,25 +2349,25 @@
           </div>
         </div>
 
-        <!-- CARD 3: BANK SOAL AKSARA (HIRAGANA, KATAKANA, KANJI) -->
+        <!-- CARD 3: BANK SOAL KOSAKATA (KASA, NEKO, PAN, DLL) & KANJI DATABASE -->
         <div class="admin-settings-card">
           <div class="admin-card-head">
             <div>
               <h4>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#059669" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span>Bank Soal Aksara &amp; Kanji (${allQuestions.length} Butir Soal Terdaftar)</span>
+                <span>Bank Soal Kosakata &amp; Aksara Database (${allQuestions.length} Butir Soal Terdaftar)</span>
               </h4>
-              <p>Kelola dan edit seluruh soal <strong>Hiragana</strong>, <strong>Katakana</strong>, <strong>Kanji</strong>, dan Kosakata yang aktif pada game ini. Anda dapat mengedit cara baca (romaji), arti, maupun menambah soal baru.</p>
+              <p>Kelola seluruh butir kosakata utuh (seperti <strong>かさ / kasa</strong>, <strong>ねこ / neko</strong>, <strong>パン / pan</strong>, dll.) dan <strong>Kanji</strong> yang tersimpan langsung di database SQLite untuk game ini.</p>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-              <button type="button" class="btn-preset" onclick="loadAdminPreset('hiragana')" title="Muat 46 Hiragana Dasar">+ Paket Hiragana</button>
-              <button type="button" class="btn-preset" onclick="loadAdminPreset('katakana')" title="Muat 46 Katakana Dasar">+ Paket Katakana</button>
+              <button type="button" class="btn-preset" onclick="loadAdminPreset('vocab-hiragana')" title="Muat 25 Kosakata Hiragana Standar (kasa, neko, dll)">+ Kosakata Hiragana</button>
+              <button type="button" class="btn-preset" onclick="loadAdminPreset('vocab-katakana')" title="Muat 18 Kosakata Katakana Standar (pan, terebi, dll)">+ Kosakata Katakana</button>
               <button type="button" class="btn-preset" onclick="loadAdminPreset('kanji-n5')" title="Muat 15 Kanji N5 Standar">+ Paket Kanji N5</button>
               <button type="button" class="btn-guru-primary" onclick="openAddGameQuestionModal()">
-                <span>+ Tambah Soal Baru</span>
+                <span>+ Tambah Soal Kosakata</span>
               </button>
               <button type="button" class="btn-preset" style="color:#DC2626; border-color:#FECACA;" onclick="resetAdminGameDefault()">
-                <span>Reset Awal</span>
+                <span>Reset Database</span>
               </button>
             </div>
           </div>
@@ -2370,13 +2379,13 @@
                 Semua Soal (${countAll})
               </button>
               ${countHira > 0 ? `
-                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'hiragana' || adminSoalFilterMode === 'kana-hiragana' ? 'active' : ''}" onclick="setAdminSoalFilter('hiragana')">
-                  Hiragana (${countHira})
+                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'vocab-hiragana' ? 'active' : ''}" onclick="setAdminSoalFilter('vocab-hiragana')">
+                  Kosakata Hiragana (${countHira})
                 </button>
               ` : ''}
               ${countKata > 0 ? `
-                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'katakana' || adminSoalFilterMode === 'kana-katakana' ? 'active' : ''}" onclick="setAdminSoalFilter('katakana')">
-                  Katakana (${countKata})
+                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'vocab-katakana' ? 'active' : ''}" onclick="setAdminSoalFilter('vocab-katakana')">
+                  Kosakata Katakana (${countKata})
                 </button>
               ` : ''}
               ${countKanji > 0 ? `
@@ -2384,9 +2393,14 @@
                   Kanji N5 (${countKanji})
                 </button>
               ` : ''}
+              ${countWb > 0 ? `
+                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'word-builder' ? 'active' : ''}" onclick="setAdminSoalFilter('word-builder')">
+                  Susun Kosakata (${countWb})
+                </button>
+              ` : ''}
             </div>
             <div style="position:relative; min-width:260px;">
-              <input type="text" id="admin-soal-search" class="form-control" placeholder="Cari aksara, romaji, arti..." oninput="onAdminSoalSearch(this.value)" value="${adminSoalSearch}" style="padding-left:34px;" />
+              <input type="text" id="admin-soal-search" class="form-control" placeholder="Cari kosakata, romaji, arti..." oninput="onAdminSoalSearch(this.value)" value="${adminSoalSearch}" style="padding-left:34px;" />
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#64748B" stroke-width="2" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
           </div>
@@ -2397,17 +2411,17 @@
               <thead>
                 <tr>
                   <th style="width:40px;">#</th>
-                  <th style="width:120px;">Karakter / Aksara</th>
+                  <th style="width:150px;">Kata / Karakter</th>
                   <th>Romaji (Cara Baca)</th>
                   <th>Arti Bahasa Indonesia</th>
-                  <th>Sub-Mode Target</th>
-                  <th style="width:120px; text-align:center;">Aksi</th>
+                  <th>Kategori Sub-Mode</th>
+                  <th style="width:140px; text-align:center;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 ${paged.length === 0 ? `
                   <tr>
-                    <td colspan="6" style="text-align:center; padding:2rem; color:#94A3B8;">Tidak ada butir soal yang sesuai pencarian atau filter sub-mode.</td>
+                    <td colspan="6" style="text-align:center; padding:2rem; color:#94A3B8;">Tidak ada butir soal kosakata yang sesuai pencarian atau filter kategori.</td>
                   </tr>
                 ` : paged.map((q, idx) => {
                   const displayChar = q.char || (q.answer ? q.answer.join('') : '-');
@@ -2415,8 +2429,8 @@
                   return `
                     <tr>
                       <td><strong>${startIdx + idx + 1}</strong></td>
-                      <td><span class="char-preview-pill">${displayChar}</span></td>
-                      <td><strong>${q.romaji || '-'}</strong></td>
+                      <td><span class="char-preview-pill" style="font-size:1.15rem; font-weight:800; letter-spacing:1px;">${displayChar}</span></td>
+                      <td><strong style="color:#0F172A;">${q.romaji || '-'}</strong></td>
                       <td>${displayMean}</td>
                       <td><span style="font-size:0.75rem; padding:3px 10px; border-radius:12px; background:#EFF6FF; color:#1D4ED8; font-weight:700;">${q.mode || 'Semua'}</span></td>
                       <td style="text-align:center;">
@@ -2434,7 +2448,7 @@
           ${filtered.length > adminSoalPageSize ? `
             <div class="admin-soal-pagination">
               <div>
-                Menampilkan <strong>${startIdx + 1} - ${Math.min(startIdx + adminSoalPageSize, filtered.length)}</strong> dari <strong>${filtered.length}</strong> butir soal (Total Terpasang: ${countAll})
+                Menampilkan <strong>${startIdx + 1} - ${Math.min(startIdx + adminSoalPageSize, filtered.length)}</strong> dari <strong>${filtered.length}</strong> butir soal kosakata (Total Database: ${countAll})
               </div>
               <div class="admin-soal-pagination-btns">
                 <button type="button" class="admin-page-btn" ${adminSoalPage <= 1 ? 'disabled' : ''} onclick="setAdminSoalPage(1)">&laquo;</button>
@@ -2446,14 +2460,14 @@
             </div>
           ` : `
             <div style="font-size:0.8rem; color:#64748B; margin-top:12px; text-align:right;">
-              Total: <strong>${filtered.length}</strong> butir soal ditampilkan
+              Total: <strong>${filtered.length}</strong> butir soal kosakata ditampilkan
             </div>
           `}
         </div>
       `;
     }
 
-    function saveAdminGameDuration() {
+    async function saveAdminGameDuration() {
       const input = document.getElementById('admin-game-duration-input');
       if (!input) return;
       const sec = parseInt(input.value, 10);
@@ -2461,8 +2475,8 @@
         alert('Masukkan durasi detik yang valid (minimal 5 detik).');
         return;
       }
-      GameConfigManager.setDuration(currentAdminGame, sec);
-      alert(`Durasi waktu bermain untuk ${currentAdminGame} berhasil disimpan: ${sec} detik!`);
+      await GameConfigManager.setDuration(currentAdminGame, sec);
+      alert(`Durasi waktu bermain untuk ${currentAdminGame} berhasil disimpan di database: ${sec} detik!`);
       renderAdminGameView();
     }
 
@@ -2476,26 +2490,26 @@
       openModal('modal-add-submode');
     }
 
-    function submitAddSubMode(e) {
+    async function submitAddSubMode(e) {
       e.preventDefault();
       const id = document.getElementById('submode-id').value.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
       const name = document.getElementById('submode-name').value.trim();
       if (!id || !name) return;
 
-      GameConfigManager.addSubMode(currentAdminGame, { id, name, active: true });
+      await GameConfigManager.addSubMode(currentAdminGame, { id, name, active: true });
       closeModal('modal-add-submode');
-      alert(`Sub-mode "${name}" berhasil ditambahkan!`);
+      alert(`Sub-mode "${name}" berhasil ditambahkan ke database!`);
       renderAdminGameView();
     }
 
-    function toggleAdminSubMode(modeId) {
-      GameConfigManager.toggleSubMode(currentAdminGame, modeId);
+    async function toggleAdminSubMode(modeId) {
+      await GameConfigManager.toggleSubMode(currentAdminGame, modeId);
       renderAdminGameView();
     }
 
-    function deleteAdminSubMode(modeId) {
-      if (!confirm('Hapus sub-mode ini?')) return;
-      GameConfigManager.deleteSubMode(currentAdminGame, modeId);
+    async function deleteAdminSubMode(modeId) {
+      if (!confirm('Hapus sub-mode ini dari database?')) return;
+      await GameConfigManager.deleteSubMode(currentAdminGame, modeId);
       renderAdminGameView();
     }
 
@@ -2508,7 +2522,7 @@
     }
 
     function openAddGameQuestionModal() {
-      document.getElementById('modal-game-q-title').textContent = 'Tambah Soal / Karakter Game';
+      document.getElementById('modal-game-q-title').textContent = 'Tambah Soal Kosakata Game (Database)';
       document.getElementById('game-q-edit-id').value = '';
       document.getElementById('game-q-target').value = currentAdminGame;
       document.getElementById('game-q-char').value = '';
@@ -2518,7 +2532,7 @@
       openModal('modal-add-game-question');
     }
 
-    function submitAddGameQuestion(e) {
+    async function submitAddGameQuestion(e) {
       e.preventDefault();
       const targetGame = document.getElementById('game-q-target').value;
       const editId = document.getElementById('game-q-edit-id').value;
@@ -2530,12 +2544,11 @@
       if (!char || !romaji) return;
 
       if (editId) {
-        GameConfigManager.updateQuestion(targetGame, editId, { char, romaji, mean, mode: submode });
-        alert('Soal / karakter berhasil diperbarui!');
+        await GameConfigManager.updateQuestion(targetGame, editId, { char, romaji, mean, mode: submode });
+        alert(`Soal kosakata "${char}" berhasil diperbarui di database!`);
       } else {
-        const newId = 'q_' + Date.now();
-        GameConfigManager.addQuestion(targetGame, { id: newId, char, romaji, mean, mode: submode });
-        alert('Soal / karakter baru berhasil ditambahkan ke bank soal!');
+        await GameConfigManager.addQuestion(targetGame, { char, romaji, mean, mode: submode });
+        alert(`Soal kosakata baru "${char}" berhasil disimpan ke database SQLite!`);
       }
 
       closeModal('modal-add-game-question');
@@ -2544,10 +2557,10 @@
 
     function editAdminGameQuestion(qId) {
       const questions = GameConfigManager.getQuestions(currentAdminGame);
-      const q = questions.find(item => item.id === qId);
+      const q = questions.find(item => String(item.id) === String(qId));
       if (!q) return;
 
-      document.getElementById('modal-game-q-title').textContent = 'Edit Soal / Karakter Game';
+      document.getElementById('modal-game-q-title').textContent = 'Edit Soal Kosakata Game (Database)';
       document.getElementById('game-q-edit-id').value = q.id;
       document.getElementById('game-q-target').value = currentAdminGame;
       updateSubmodeDropdownForModal();
@@ -2559,18 +2572,31 @@
       openModal('modal-add-game-question');
     }
 
-    function deleteAdminGameQuestion(qId) {
-      if (!confirm('Hapus butir soal / karakter ini dari bank game?')) return;
-      GameConfigManager.deleteQuestion(currentAdminGame, qId);
+    async function deleteAdminGameQuestion(qId) {
+      if (!confirm('Hapus butir soal kosakata ini dari database SQLite?')) return;
+      await GameConfigManager.deleteQuestion(currentAdminGame, qId);
       renderAdminGameView();
     }
 
-    function resetAdminGameDefault() {
-      if (!confirm('Kembalikan konfigurasi dan bank soal game ' + currentAdminGame + ' ke pengaturan awal bawaan (46 Hiragana, 46 Katakana, 15 Kanji)?')) return;
-      GameConfigManager.resetToDefault(currentAdminGame);
-      alert('Pengaturan game ' + currentAdminGame + ' berhasil direset ke default lengkap!');
+    async function resetAdminGameDefault() {
+      if (!confirm('Kembalikan seluruh bank soal ke database bawaan (kosakata kasa, neko, pan, dan kanji N5)?')) return;
+      await GameConfigManager.resetToDefault(currentAdminGame);
+      alert('Bank soal kosakata database berhasil direset!');
       renderAdminGameView();
     }
+
+    // Inisialisasi GameConfigManager dengan data server jika tersedia
+    @if(isset($minigameConfigs) && isset($minigameQuestions))
+      try {
+        const sConfigs = @json($minigameConfigs);
+        const sQuestions = @json($minigameQuestions);
+        GameConfigManager.initFromServer(sConfigs, sQuestions);
+      } catch (e) {}
+    @endif
+
+    GameConfigManager.subscribe(() => {
+      renderAdminGameView();
+    });
   </script>
 </body>
 </html>

@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\MateriLevel;
 use App\Models\MateriLesson;
 use App\Models\LessonQuest;
+use App\Models\MinigameConfig;
+use App\Models\MinigameQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,16 +30,20 @@ class GuruMasterController extends Controller
         $quests = LessonQuest::with('lesson.level')->orderBy('id', 'desc')->get();
         $students = User::where('role', 'siswa')->orderBy('score', 'desc')->get();
 
+        $minigameConfigs = MinigameConfig::all();
+        $minigameQuestions = MinigameQuestion::where('is_active', true)->orderBy('order', 'asc')->get();
+
         $stats = [
             'total_students' => $students->count(),
             'total_levels' => $levels->count(),
             'active_levels' => $levels->where('is_active', true)->count(),
             'total_lessons' => $lessons->count(),
             'total_quests' => $quests->count(),
+            'total_minigame_questions' => $minigameQuestions->count(),
             'highest_score' => $students->max('score') ?? 0,
         ];
 
-        return view('guru.dashboard', compact('levels', 'lessons', 'quests', 'students', 'stats'));
+        return view('guru.dashboard', compact('levels', 'lessons', 'quests', 'students', 'stats', 'minigameConfigs', 'minigameQuestions'));
     }
 
     // ==========================================
@@ -456,4 +462,218 @@ class GuruMasterController extends Controller
             'message' => "Soal quest berhasil dihapus."
         ]);
     }
+
+    // ==========================================
+    // 4. MANAJEMEN MINIGAMES & BANK SOAL KOSAKATA (DATABASE)
+    // ==========================================
+    public function getMinigameConfig()
+    {
+        $configs = MinigameConfig::all();
+        $questions = MinigameQuestion::where('is_active', true)->orderBy('order', 'asc')->get();
+
+        $result = [];
+        foreach ($configs as $cfg) {
+            $gameQuestions = $questions->where('game_id', $cfg->game_id)->values()->map(function($q) {
+                return [
+                    'id' => (string) $q->id,
+                    'char' => $q->char,
+                    'romaji' => $q->romaji,
+                    'mean' => $q->meaning,
+                    'mode' => $q->sub_mode,
+                    'extra_data' => $q->extra_data,
+                ];
+            });
+
+            $result[$cfg->game_id] = [
+                'title' => $cfg->title,
+                'duration' => $cfg->duration,
+                'subModes' => $cfg->sub_modes ?? [],
+                'customQuestions' => $gameQuestions,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $result,
+        ]);
+    }
+
+    public function storeMinigameQuestion(Request $request)
+    {
+        $validated = $request->validate([
+            'game_id' => 'required|string',
+            'sub_mode' => 'required|string',
+            'char' => 'required|string',
+            'romaji' => 'required|string',
+            'meaning' => 'required|string',
+            'extra_data' => 'nullable|string',
+        ]);
+
+        $maxOrder = MinigameQuestion::where('game_id', $validated['game_id'])->max('order') ?? 0;
+
+        $q = MinigameQuestion::create([
+            'game_id' => $validated['game_id'],
+            'sub_mode' => $validated['sub_mode'],
+            'char' => trim($validated['char']),
+            'romaji' => trim($validated['romaji']),
+            'meaning' => trim($validated['meaning']),
+            'extra_data' => $validated['extra_data'] ?? null,
+            'order' => $maxOrder + 1,
+            'is_active' => true,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Soal kosakata "' . $q->char . '" berhasil ditambahkan ke database!',
+            'question' => [
+                'id' => (string) $q->id,
+                'char' => $q->char,
+                'romaji' => $q->romaji,
+                'mean' => $q->meaning,
+                'mode' => $q->sub_mode,
+            ]
+        ]);
+    }
+
+    public function updateMinigameQuestion(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'sub_mode' => 'nullable|string',
+            'char' => 'required|string',
+            'romaji' => 'required|string',
+            'meaning' => 'required|string',
+        ]);
+
+        $q = MinigameQuestion::findOrFail($id);
+        $q->update([
+            'sub_mode' => $validated['sub_mode'] ?? $q->sub_mode,
+            'char' => trim($validated['char']),
+            'romaji' => trim($validated['romaji']),
+            'meaning' => trim($validated['meaning']),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Soal kosakata "' . $q->char . '" berhasil diperbarui di database!',
+            'question' => [
+                'id' => (string) $q->id,
+                'char' => $q->char,
+                'romaji' => $q->romaji,
+                'mean' => $q->meaning,
+                'mode' => $q->sub_mode,
+            ]
+        ]);
+    }
+
+    public function destroyMinigameQuestion($id)
+    {
+        $q = MinigameQuestion::findOrFail($id);
+        $char = $q->char;
+        $q->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Soal kosakata "' . $char . '" berhasil dihapus dari database!',
+        ]);
+    }
+
+    public function saveMinigameConfig(Request $request)
+    {
+        $validated = $request->validate([
+            'game_id' => 'required|string',
+            'duration' => 'required|integer|min:5|max:600',
+        ]);
+
+        $cfg = MinigameConfig::where('game_id', $validated['game_id'])->first();
+        if ($cfg) {
+            $cfg->update(['duration' => $validated['duration']]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengaturan waktu permainan berhasil disimpan di database!',
+        ]);
+    }
+
+    public function storeMinigameSubMode(Request $request)
+    {
+        $validated = $request->validate([
+            'game_id' => 'required|string',
+            'id' => 'required|string',
+            'name' => 'required|string',
+        ]);
+
+        $cfg = MinigameConfig::where('game_id', $validated['game_id'])->first();
+        if ($cfg) {
+            $subModes = $cfg->sub_modes ?? [];
+            $subModes[] = [
+                'id' => $validated['id'],
+                'name' => $validated['name'],
+                'active' => true,
+            ];
+            $cfg->update(['sub_modes' => $subModes]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sub-mode baru berhasil disimpan di database!',
+        ]);
+    }
+
+    public function toggleMinigameSubMode(Request $request)
+    {
+        $validated = $request->validate([
+            'game_id' => 'required|string',
+            'submode_id' => 'required|string',
+        ]);
+
+        $cfg = MinigameConfig::where('game_id', $validated['game_id'])->first();
+        if ($cfg) {
+            $subModes = $cfg->sub_modes ?? [];
+            foreach ($subModes as &$sm) {
+                if ($sm['id'] === $validated['submode_id']) {
+                    $sm['active'] = !($sm['active'] ?? true);
+                }
+            }
+            $cfg->update(['sub_modes' => $subModes]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status sub-mode berhasil diubah di database!',
+        ]);
+    }
+
+    public function deleteMinigameSubMode(Request $request)
+    {
+        $validated = $request->validate([
+            'game_id' => 'required|string',
+            'submode_id' => 'required|string',
+        ]);
+
+        $cfg = MinigameConfig::where('game_id', $validated['game_id'])->first();
+        if ($cfg) {
+            $subModes = array_values(array_filter($cfg->sub_modes ?? [], function($sm) use ($validated) {
+                return $sm['id'] !== $validated['submode_id'];
+            }));
+            $cfg->update(['sub_modes' => $subModes]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sub-mode berhasil dihapus dari database!',
+        ]);
+    }
+
+    public function resetMinigameDefault(Request $request)
+    {
+        $seeder = new \Database\Seeders\MinigameSeeder();
+        $seeder->run();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Bank soal kosakata (kasa, neko, dll.) dan kanji berhasil direset ke database!',
+        ]);
+    }
 }
+

@@ -74,6 +74,17 @@ Route::get('/api/tts', function (\Illuminate\Http\Request $request) {
     return redirect()->away('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ja&q=' . urlencode($text));
 })->name('api.tts');
 
+// API Minigames & Bank Soal Kosakata dari Database SQLite
+Route::get('/api/minigames/config', [GuruMasterController::class, 'getMinigameConfig'])->name('api.minigames.config');
+Route::post('/api/minigames/questions', [GuruMasterController::class, 'storeMinigameQuestion'])->name('api.minigames.questions.store');
+Route::put('/api/minigames/questions/{id}', [GuruMasterController::class, 'updateMinigameQuestion'])->name('api.minigames.questions.update');
+Route::delete('/api/minigames/questions/{id}', [GuruMasterController::class, 'destroyMinigameQuestion'])->name('api.minigames.questions.destroy');
+Route::post('/api/minigames/settings', [GuruMasterController::class, 'saveMinigameConfig'])->name('api.minigames.settings.save');
+Route::post('/api/minigames/submodes', [GuruMasterController::class, 'storeMinigameSubMode'])->name('api.minigames.submodes.store');
+Route::post('/api/minigames/submodes/toggle', [GuruMasterController::class, 'toggleMinigameSubMode'])->name('api.minigames.submodes.toggle');
+Route::delete('/api/minigames/submodes', [GuruMasterController::class, 'deleteMinigameSubMode'])->name('api.minigames.submodes.delete');
+Route::post('/api/minigames/reset', [GuruMasterController::class, 'resetMinigameDefault'])->name('api.minigames.reset');
+
 // ========================================================
 // DASHBOARD MASTER GURU (Khusus Guru Bahasa Jepang)
 // ========================================================
@@ -105,5 +116,16 @@ Route::prefix('guru')->middleware(['web'])->group(function () {
         Route::post('/quests', [GuruMasterController::class, 'storeQuest'])->name('guru.quests.store');
         Route::put('/quests/{id}', [GuruMasterController::class, 'updateQuest'])->name('guru.quests.update');
         Route::delete('/quests/{id}', [GuruMasterController::class, 'destroyQuest'])->name('guru.quests.destroy');
+
+        // CRUD Minigames & Bank Soal Kosakata (Database)
+        Route::post('/minigames/questions', [GuruMasterController::class, 'storeMinigameQuestion'])->name('guru.minigames.questions.store');
+        Route::put('/minigames/questions/{id}', [GuruMasterController::class, 'updateMinigameQuestion'])->name('guru.minigames.questions.update');
+        Route::delete('/minigames/questions/{id}', [GuruMasterController::class, 'destroyMinigameQuestion'])->name('guru.minigames.questions.destroy');
+        Route::post('/minigames/settings', [GuruMasterController::class, 'saveMinigameConfig'])->name('guru.minigames.settings.save');
+        Route::post('/minigames/submodes', [GuruMasterController::class, 'storeMinigameSubMode'])->name('guru.minigames.submodes.store');
+        Route::post('/minigames/submodes/toggle', [GuruMasterController::class, 'toggleMinigameSubMode'])->name('guru.minigames.submodes.toggle');
+        Route::delete('/minigames/submodes', [GuruMasterController::class, 'deleteMinigameSubMode'])->name('guru.minigames.submodes.delete');
+        Route::post('/minigames/reset', [GuruMasterController::class, 'resetMinigameDefault'])->name('guru.minigames.reset');
     });
 });
+
