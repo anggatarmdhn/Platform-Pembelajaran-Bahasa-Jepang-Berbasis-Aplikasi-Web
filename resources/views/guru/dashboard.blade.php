@@ -2190,12 +2190,43 @@
     // MINIGAMES MASTER ADMINISTRATION LOGIC
     // ==========================================
     let currentAdminGame = 'kana-blast';
+    let adminSoalFilterMode = 'all';
+    let adminSoalSearch = '';
+    let adminSoalPage = 1;
+    const adminSoalPageSize = 15;
 
     function switchAdminGameTab(gameKey) {
       currentAdminGame = gameKey;
+      adminSoalFilterMode = 'all';
+      adminSoalSearch = '';
+      adminSoalPage = 1;
       document.querySelectorAll('.admin-game-chip').forEach(btn => btn.classList.remove('active'));
       const activeBtn = document.getElementById('chip-game-' + gameKey);
       if (activeBtn) activeBtn.classList.add('active');
+      renderAdminGameView();
+    }
+
+    function setAdminSoalFilter(mode) {
+      adminSoalFilterMode = mode;
+      adminSoalPage = 1;
+      renderAdminGameView();
+    }
+
+    function onAdminSoalSearch(kw) {
+      adminSoalSearch = kw;
+      adminSoalPage = 1;
+      renderAdminGameView();
+    }
+
+    function setAdminSoalPage(page) {
+      adminSoalPage = page;
+      renderAdminGameView();
+    }
+
+    function loadAdminPreset(presetType) {
+      const added = GameConfigManager.loadPreset(currentAdminGame, presetType);
+      const label = presetType === 'hiragana' ? 'Hiragana (46)' : (presetType === 'katakana' ? 'Katakana (46)' : 'Kanji N5 (15)');
+      alert(`Paket ${label} berhasil disinkronkan (${added} butir baru ditambahkan)!`);
       renderAdminGameView();
     }
 
@@ -2207,8 +2238,45 @@
       if (!g) return;
 
       const subModes = GameConfigManager.getAllSubModes(currentAdminGame);
-      const questions = GameConfigManager.getQuestions(currentAdminGame);
+      const allQuestions = GameConfigManager.getQuestions(currentAdminGame);
       const duration = GameConfigManager.getDuration(currentAdminGame, 60);
+
+      // Filtering sub-mode
+      let filtered = allQuestions;
+      if (adminSoalFilterMode !== 'all') {
+        filtered = filtered.filter(q => {
+          if (q.mode === adminSoalFilterMode) return true;
+          if (adminSoalFilterMode === 'hiragana' && q.mode === 'kana-hiragana') return true;
+          if (adminSoalFilterMode === 'kana-hiragana' && q.mode === 'hiragana') return true;
+          if (adminSoalFilterMode === 'katakana' && q.mode === 'kana-katakana') return true;
+          if (adminSoalFilterMode === 'kana-katakana' && q.mode === 'katakana') return true;
+          return false;
+        });
+      }
+
+      // Filtering search keyword
+      if (adminSoalSearch && adminSoalSearch.trim()) {
+        const kw = adminSoalSearch.trim().toLowerCase();
+        filtered = filtered.filter(q => {
+          const c = (q.char || (q.answer ? q.answer.join('') : '')).toLowerCase();
+          const r = (q.romaji || '').toLowerCase();
+          const m = (q.mean || q.meaning || '').toLowerCase();
+          return c.includes(kw) || r.includes(kw) || m.includes(kw);
+        });
+      }
+
+      // Hitung jumlah butir per kategori
+      const countAll = allQuestions.length;
+      const countHira = allQuestions.filter(q => q.mode === 'hiragana' || q.mode === 'kana-hiragana').length;
+      const countKata = allQuestions.filter(q => q.mode === 'katakana' || q.mode === 'kana-katakana').length;
+      const countKanji = allQuestions.filter(q => q.mode && q.mode.includes('kanji')).length;
+
+      // Pagination setup
+      const totalPages = Math.ceil(filtered.length / adminSoalPageSize) || 1;
+      if (adminSoalPage > totalPages) adminSoalPage = totalPages;
+      if (adminSoalPage < 1) adminSoalPage = 1;
+      const startIdx = (adminSoalPage - 1) * adminSoalPageSize;
+      const paged = filtered.slice(startIdx, startIdx + adminSoalPageSize);
 
       container.innerHTML = `
         <!-- CARD 1: PENGATURAN DURASI / WAKTU PERMAINAN -->
@@ -2250,7 +2318,7 @@
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563EB" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
                 <span>Sub-Mode Permainan (${subModes.length} Mode Tersedia)</span>
               </h4>
-              <p>Aktifkan, nonaktifkan, atau tambah sub-mode baru (contoh: <strong>Kanji N5 Dasar, Kanji N4 Wisata</strong>) untuk game ini.</p>
+              <p>Aktifkan, nonaktifkan, atau tambah sub-mode baru (contoh: <strong>Kanji N5 Dasar, Kosakata N4</strong>) untuk game ini.</p>
             </div>
             <button type="button" class="btn-preset" style="color:#2563EB; border-color:#BFDBFE;" onclick="openAddSubModeModal()">
               <span>+ Tambah Sub-Mode Baru</span>
@@ -2272,18 +2340,20 @@
           </div>
         </div>
 
-        <!-- CARD 3: BANK SOAL / KOSAKATA GAME -->
+        <!-- CARD 3: BANK SOAL AKSARA (HIRAGANA, KATAKANA, KANJI) -->
         <div class="admin-settings-card">
           <div class="admin-card-head">
             <div>
               <h4>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#059669" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span>Bank Soal &amp; Karakter Aksara (${questions.length} Butir Soal Terpasang)</span>
+                <span>Bank Soal Aksara &amp; Kanji (${allQuestions.length} Butir Soal Terdaftar)</span>
               </h4>
-              <p>Kelola karakter aksara Jepang, romaji cara baca, dan arti bahasa Indonesia yang akan muncul saat siswa bermain.</p>
+              <p>Kelola dan edit seluruh soal <strong>Hiragana</strong>, <strong>Katakana</strong>, <strong>Kanji</strong>, dan Kosakata yang aktif pada game ini. Anda dapat mengedit cara baca (romaji), arti, maupun menambah soal baru.</p>
             </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button type="button" class="btn-preset" onclick="loadAdminPresetKanji()" title="Muat paket 15 Kanji N5 standar">+ Paket Kanji N5</button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="btn-preset" onclick="loadAdminPreset('hiragana')" title="Muat 46 Hiragana Dasar">+ Paket Hiragana</button>
+              <button type="button" class="btn-preset" onclick="loadAdminPreset('katakana')" title="Muat 46 Katakana Dasar">+ Paket Katakana</button>
+              <button type="button" class="btn-preset" onclick="loadAdminPreset('kanji-n5')" title="Muat 15 Kanji N5 Standar">+ Paket Kanji N5</button>
               <button type="button" class="btn-guru-primary" onclick="openAddGameQuestionModal()">
                 <span>+ Tambah Soal Baru</span>
               </button>
@@ -2293,6 +2363,35 @@
             </div>
           </div>
 
+          <!-- TOOLBAR FILTER SUB-MODE & SEARCH -->
+          <div class="admin-soal-toolbar">
+            <div class="admin-soal-filter-pills">
+              <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'all' ? 'active' : ''}" onclick="setAdminSoalFilter('all')">
+                Semua Soal (${countAll})
+              </button>
+              ${countHira > 0 ? `
+                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'hiragana' || adminSoalFilterMode === 'kana-hiragana' ? 'active' : ''}" onclick="setAdminSoalFilter('hiragana')">
+                  Hiragana (${countHira})
+                </button>
+              ` : ''}
+              ${countKata > 0 ? `
+                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'katakana' || adminSoalFilterMode === 'kana-katakana' ? 'active' : ''}" onclick="setAdminSoalFilter('katakana')">
+                  Katakana (${countKata})
+                </button>
+              ` : ''}
+              ${countKanji > 0 ? `
+                <button type="button" class="admin-soal-filter-pill ${adminSoalFilterMode === 'kanji-n5' ? 'active' : ''}" onclick="setAdminSoalFilter('kanji-n5')">
+                  Kanji N5 (${countKanji})
+                </button>
+              ` : ''}
+            </div>
+            <div style="position:relative; min-width:260px;">
+              <input type="text" id="admin-soal-search" class="form-control" placeholder="Cari aksara, romaji, arti..." oninput="onAdminSoalSearch(this.value)" value="${adminSoalSearch}" style="padding-left:34px;" />
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#64748B" stroke-width="2" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+          </div>
+
+          <!-- TABLE -->
           <div class="admin-table-wrap">
             <table class="admin-soal-table">
               <thead>
@@ -2306,26 +2405,50 @@
                 </tr>
               </thead>
               <tbody>
-                ${questions.length === 0 ? `
+                ${paged.length === 0 ? `
                   <tr>
-                    <td colspan="6" style="text-align:center; padding:2rem; color:#94A3B8;">Belum ada soal kustom di game ini. Silakan klik "+ Tambah Soal Baru" atau "+ Paket Kanji N5".</td>
+                    <td colspan="6" style="text-align:center; padding:2rem; color:#94A3B8;">Tidak ada butir soal yang sesuai pencarian atau filter sub-mode.</td>
                   </tr>
-                ` : questions.map((q, idx) => `
-                  <tr>
-                    <td><strong>${idx + 1}</strong></td>
-                    <td><span class="char-preview-pill">${q.char}</span></td>
-                    <td><strong>${q.romaji}</strong></td>
-                    <td>${q.mean || '-'}</td>
-                    <td><span style="font-size:0.75rem; padding:3px 10px; border-radius:12px; background:#EFF6FF; color:#1D4ED8; font-weight:700;">${q.mode || 'Semua'}</span></td>
-                    <td style="text-align:center;">
-                      <button type="button" class="btn-preset" style="padding:4px 8px; font-size:0.78rem;" onclick="editAdminGameQuestion('${q.id}')">Edit</button>
-                      <button type="button" class="btn-preset" style="padding:4px 8px; font-size:0.78rem; color:#DC2626; border-color:#FECACA;" onclick="deleteAdminGameQuestion('${q.id}')">Hapus</button>
-                    </td>
-                  </tr>
-                `).join('')}
+                ` : paged.map((q, idx) => {
+                  const displayChar = q.char || (q.answer ? q.answer.join('') : '-');
+                  const displayMean = q.mean || q.meaning || '-';
+                  return `
+                    <tr>
+                      <td><strong>${startIdx + idx + 1}</strong></td>
+                      <td><span class="char-preview-pill">${displayChar}</span></td>
+                      <td><strong>${q.romaji || '-'}</strong></td>
+                      <td>${displayMean}</td>
+                      <td><span style="font-size:0.75rem; padding:3px 10px; border-radius:12px; background:#EFF6FF; color:#1D4ED8; font-weight:700;">${q.mode || 'Semua'}</span></td>
+                      <td style="text-align:center;">
+                        <button type="button" class="btn-preset" style="padding:4px 8px; font-size:0.78rem;" onclick="editAdminGameQuestion('${q.id}')">Edit</button>
+                        <button type="button" class="btn-preset" style="padding:4px 8px; font-size:0.78rem; color:#DC2626; border-color:#FECACA;" onclick="deleteAdminGameQuestion('${q.id}')">Hapus</button>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
               </tbody>
             </table>
           </div>
+
+          <!-- PAGINATION -->
+          ${filtered.length > adminSoalPageSize ? `
+            <div class="admin-soal-pagination">
+              <div>
+                Menampilkan <strong>${startIdx + 1} - ${Math.min(startIdx + adminSoalPageSize, filtered.length)}</strong> dari <strong>${filtered.length}</strong> butir soal (Total Terpasang: ${countAll})
+              </div>
+              <div class="admin-soal-pagination-btns">
+                <button type="button" class="admin-page-btn" ${adminSoalPage <= 1 ? 'disabled' : ''} onclick="setAdminSoalPage(1)">&laquo;</button>
+                <button type="button" class="admin-page-btn" ${adminSoalPage <= 1 ? 'disabled' : ''} onclick="setAdminSoalPage(${adminSoalPage - 1})">&lsaquo;</button>
+                <span style="font-weight:700; padding:0 8px;">Hal ${adminSoalPage} dari ${totalPages}</span>
+                <button type="button" class="admin-page-btn" ${adminSoalPage >= totalPages ? 'disabled' : ''} onclick="setAdminSoalPage(${adminSoalPage + 1})">&rsaquo;</button>
+                <button type="button" class="admin-page-btn" ${adminSoalPage >= totalPages ? 'disabled' : ''} onclick="setAdminSoalPage(${totalPages})">&raquo;</button>
+              </div>
+            </div>
+          ` : `
+            <div style="font-size:0.8rem; color:#64748B; margin-top:12px; text-align:right;">
+              Total: <strong>${filtered.length}</strong> butir soal ditampilkan
+            </div>
+          `}
         </div>
       `;
     }
@@ -2429,9 +2552,9 @@
       document.getElementById('game-q-target').value = currentAdminGame;
       updateSubmodeDropdownForModal();
       document.getElementById('game-q-submode').value = q.mode || '';
-      document.getElementById('game-q-char').value = q.char || '';
+      document.getElementById('game-q-char').value = q.char || (q.answer ? q.answer.join('') : '');
       document.getElementById('game-q-romaji').value = q.romaji || '';
-      document.getElementById('game-q-mean').value = q.mean || '';
+      document.getElementById('game-q-mean').value = q.mean || q.meaning || '';
 
       openModal('modal-add-game-question');
     }
@@ -2442,48 +2565,10 @@
       renderAdminGameView();
     }
 
-    function loadAdminPresetKanji() {
-      const presetKanji = [
-        { char: '日', romaji: 'hi', mean: 'Matahari / Hari', mode: 'kanji-n5' },
-        { char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
-        { char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
-        { char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
-        { char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
-        { char: '田', romaji: 'ta', mean: 'Sawah', mode: 'kanji-n5' },
-        { char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
-        { char: '口', romaji: 'kuchi', mean: 'Mulut', mode: 'kanji-n5' },
-        { char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' },
-        { char: '門', romaji: 'mon', mean: 'Gerbang', mode: 'kanji-n5' },
-        { char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
-        { char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
-        { char: '金', romaji: 'kane', mean: 'Emas / Uang', mode: 'kanji-n5' },
-        { char: '土', romaji: 'tsuchi', mean: 'Tanah', mode: 'kanji-n5' },
-        { char: '本', romaji: 'hon', mean: 'Buku / Asal', mode: 'kanji-n5' }
-      ];
-
-      const existingSubModes = GameConfigManager.getAllSubModes(currentAdminGame);
-      if (!existingSubModes.some(m => m.id === 'kanji-n5')) {
-        GameConfigManager.addSubMode(currentAdminGame, { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, dll.)', active: true });
-      }
-
-      presetKanji.forEach(k => {
-        GameConfigManager.addQuestion(currentAdminGame, {
-          id: 'k_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
-          char: k.char,
-          romaji: k.romaji,
-          mean: k.mean,
-          mode: 'kanji-n5'
-        });
-      });
-
-      alert('Paket 15 Kanji N5 Dasar berhasil dimuat ke dalam bank game ' + currentAdminGame + '!');
-      renderAdminGameView();
-    }
-
     function resetAdminGameDefault() {
-      if (!confirm('Kembalikan konfigurasi dan bank soal game ' + currentAdminGame + ' ke pengaturan awal bawaan?')) return;
+      if (!confirm('Kembalikan konfigurasi dan bank soal game ' + currentAdminGame + ' ke pengaturan awal bawaan (46 Hiragana, 46 Katakana, 15 Kanji)?')) return;
       GameConfigManager.resetToDefault(currentAdminGame);
-      alert('Pengaturan game ' + currentAdminGame + ' berhasil direset ke default.');
+      alert('Pengaturan game ' + currentAdminGame + ' berhasil direset ke default lengkap!');
       renderAdminGameView();
     }
   </script>

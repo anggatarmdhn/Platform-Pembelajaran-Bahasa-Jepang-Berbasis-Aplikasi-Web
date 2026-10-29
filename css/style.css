@@ -5042,3 +5042,77 @@ body {
   min-width: 34px;
   text-align: center;
 }
+.admin-soal-toolbar {
+  margin: 16px 0;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.admin-soal-filter-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.admin-soal-filter-pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.admin-soal-filter-pill:hover {
+  border-color: #BE5544;
+  color: #BE5544;
+}
+.admin-soal-filter-pill.active {
+  background: #BE5544;
+  border-color: #BE5544;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(190, 85, 68, 0.25);
+}
+.admin-soal-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+.admin-soal-pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.admin-page-btn {
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.admin-page-btn:hover:not(:disabled) {
+  border-color: #BE5544;
+  color: #BE5544;
+}
+.admin-page-btn.active {
+  background: #BE5544;
+  border-color: #BE5544;
+  color: white;
+}
+.admin-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

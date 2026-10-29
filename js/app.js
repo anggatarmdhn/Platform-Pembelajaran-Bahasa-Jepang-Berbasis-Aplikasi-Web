@@ -1010,82 +1010,250 @@ function showVocabCategory(cat) {
 // ====================================================
 const GAME_CONFIG_STORAGE_KEY = 'sijapanese_minigames_config';
 
+const PRESET_HIRAGANA_46 = [
+  { char: 'あ', romaji: 'a', mean: 'Vokal A' },
+  { char: 'い', romaji: 'i', mean: 'Vokal I' },
+  { char: 'う', romaji: 'u', mean: 'Vokal U' },
+  { char: 'え', romaji: 'e', mean: 'Vokal E' },
+  { char: 'お', romaji: 'o', mean: 'Vokal O' },
+  { char: 'か', romaji: 'ka', mean: 'Baris K - Ka' },
+  { char: 'き', romaji: 'ki', mean: 'Baris K - Ki' },
+  { char: 'く', romaji: 'ku', mean: 'Baris K - Ku' },
+  { char: 'け', romaji: 'ke', mean: 'Baris K - Ke' },
+  { char: 'こ', romaji: 'ko', mean: 'Baris K - Ko' },
+  { char: 'さ', romaji: 'sa', mean: 'Baris S - Sa' },
+  { char: 'し', romaji: 'shi', mean: 'Baris S - Shi' },
+  { char: 'す', romaji: 'su', mean: 'Baris S - Su' },
+  { char: 'せ', romaji: 'se', mean: 'Baris S - Se' },
+  { char: 'そ', romaji: 'so', mean: 'Baris S - So' },
+  { char: 'た', romaji: 'ta', mean: 'Baris T - Ta' },
+  { char: 'ち', romaji: 'chi', mean: 'Baris T - Chi' },
+  { char: 'つ', romaji: 'tsu', mean: 'Baris T - Tsu' },
+  { char: 'て', romaji: 'te', mean: 'Baris T - Te' },
+  { char: 'と', romaji: 'to', mean: 'Baris T - To' },
+  { char: 'な', romaji: 'na', mean: 'Baris N - Na' },
+  { char: 'に', romaji: 'ni', mean: 'Baris N - Ni' },
+  { char: 'ぬ', romaji: 'nu', mean: 'Baris N - Nu' },
+  { char: 'ね', romaji: 'ne', mean: 'Baris N - Ne' },
+  { char: 'の', romaji: 'no', mean: 'Baris N - No' },
+  { char: 'は', romaji: 'ha', mean: 'Baris H - Ha' },
+  { char: 'ひ', romaji: 'hi', mean: 'Baris H - Hi' },
+  { char: 'ふ', romaji: 'fu', mean: 'Baris H - Fu' },
+  { char: 'へ', romaji: 'he', mean: 'Baris H - He' },
+  { char: 'ほ', romaji: 'ho', mean: 'Baris H - Ho' },
+  { char: 'ま', romaji: 'ma', mean: 'Baris M - Ma' },
+  { char: 'み', romaji: 'mi', mean: 'Baris M - Mi' },
+  { char: 'む', romaji: 'mu', mean: 'Baris M - Mu' },
+  { char: 'め', romaji: 'me', mean: 'Baris M - Me' },
+  { char: 'も', romaji: 'mo', mean: 'Baris M - Mo' },
+  { char: 'や', romaji: 'ya', mean: 'Baris Y - Ya' },
+  { char: 'ゆ', romaji: 'yu', mean: 'Baris Y - Yu' },
+  { char: 'よ', romaji: 'yo', mean: 'Baris Y - Yo' },
+  { char: 'ら', romaji: 'ra', mean: 'Baris R - Ra' },
+  { char: 'り', romaji: 'ri', mean: 'Baris R - Ri' },
+  { char: 'る', romaji: 'ru', mean: 'Baris R - Ru' },
+  { char: 'れ', romaji: 're', mean: 'Baris R - Re' },
+  { char: 'ろ', romaji: 'ro', mean: 'Baris R - Ro' },
+  { char: 'わ', romaji: 'wa', mean: 'Baris W - Wa' },
+  { char: 'を', romaji: 'wo', mean: 'Baris W - Wo (Partikel)' },
+  { char: 'ん', romaji: 'n', mean: 'Konsonan Sengau N' }
+];
+
+const PRESET_KATAKANA_46 = [
+  { char: 'ア', romaji: 'a', mean: 'Vokal A' },
+  { char: 'イ', romaji: 'i', mean: 'Vokal I' },
+  { char: 'ウ', romaji: 'u', mean: 'Vokal U' },
+  { char: 'エ', romaji: 'e', mean: 'Vokal E' },
+  { char: 'オ', romaji: 'o', mean: 'Vokal O' },
+  { char: 'カ', romaji: 'ka', mean: 'Baris K - Ka' },
+  { char: 'キ', romaji: 'ki', mean: 'Baris K - Ki' },
+  { char: 'ク', romaji: 'ku', mean: 'Baris K - Ku' },
+  { char: 'ケ', romaji: 'ke', mean: 'Baris K - Ke' },
+  { char: 'コ', romaji: 'ko', mean: 'Baris K - Ko' },
+  { char: 'サ', romaji: 'sa', mean: 'Baris S - Sa' },
+  { char: 'シ', romaji: 'shi', mean: 'Baris S - Shi' },
+  { char: 'ス', romaji: 'su', mean: 'Baris S - Su' },
+  { char: 'セ', romaji: 'se', mean: 'Baris S - Se' },
+  { char: 'ソ', romaji: 'so', mean: 'Baris S - So' },
+  { char: 'タ', romaji: 'ta', mean: 'Baris T - Ta' },
+  { char: 'チ', romaji: 'chi', mean: 'Baris T - Chi' },
+  { char: 'ツ', romaji: 'tsu', mean: 'Baris T - Tsu' },
+  { char: 'テ', romaji: 'te', mean: 'Baris T - Te' },
+  { char: 'ト', romaji: 'to', mean: 'Baris T - To' },
+  { char: 'ナ', romaji: 'na', mean: 'Baris N - Na' },
+  { char: 'ニ', romaji: 'ni', mean: 'Baris N - Ni' },
+  { char: 'ヌ', romaji: 'nu', mean: 'Baris N - Nu' },
+  { char: 'ネ', romaji: 'ne', mean: 'Baris N - Ne' },
+  { char: 'ノ', romaji: 'no', mean: 'Baris N - No' },
+  { char: 'ハ', romaji: 'ha', mean: 'Baris H - Ha' },
+  { char: 'ヒ', romaji: 'hi', mean: 'Baris H - Hi' },
+  { char: 'フ', romaji: 'fu', mean: 'Baris H - Fu' },
+  { char: 'ヘ', romaji: 'he', mean: 'Baris H - He' },
+  { char: 'ホ', romaji: 'ho', mean: 'Baris H - Ho' },
+  { char: 'マ', romaji: 'ma', mean: 'Baris M - Ma' },
+  { char: 'ミ', romaji: 'mi', mean: 'Baris M - Mi' },
+  { char: 'ム', romaji: 'mu', mean: 'Baris M - Mu' },
+  { char: 'メ', romaji: 'me', mean: 'Baris M - Me' },
+  { char: 'モ', romaji: 'mo', mean: 'Baris M - Mo' },
+  { char: 'ヤ', romaji: 'ya', mean: 'Baris Y - Ya' },
+  { char: 'ユ', romaji: 'yu', mean: 'Baris Y - Yu' },
+  { char: 'ヨ', romaji: 'yo', mean: 'Baris Y - Yo' },
+  { char: 'ラ', romaji: 'ra', mean: 'Baris R - Ra' },
+  { char: 'リ', romaji: 'ri', mean: 'Baris R - Ri' },
+  { char: 'ル', romaji: 'ru', mean: 'Baris R - Ru' },
+  { char: 'レ', romaji: 're', mean: 'Baris R - Re' },
+  { char: 'ロ', romaji: 'ro', mean: 'Baris R - Ro' },
+  { char: 'ワ', romaji: 'wa', mean: 'Baris W - Wa' },
+  { char: 'ヲ', romaji: 'wo', mean: 'Baris W - Wo (Partikel)' },
+  { char: 'ン', romaji: 'n', mean: 'Konsonan Sengau N' }
+];
+
+const PRESET_KANJI_N5 = [
+  { char: '日', romaji: 'hi / nichi', mean: 'Matahari / Hari' },
+  { char: '月', romaji: 'tsuki / getsu', mean: 'Bulan' },
+  { char: '木', romaji: 'ki / moku', mean: 'Pohon / Kayu' },
+  { char: '山', romaji: 'yama / san', mean: 'Gunung' },
+  { char: '川', romaji: 'kawa / gawa', mean: 'Sungai' },
+  { char: '田', romaji: 'ta / da', mean: 'Sawah' },
+  { char: '人', romaji: 'hito / jin', mean: 'Orang / Manusia' },
+  { char: '口', romaji: 'kuchi / guchi', mean: 'Mulut' },
+  { char: '車', romaji: 'kuruma / sha', mean: 'Mobil / Kendaraan' },
+  { char: '門', romaji: 'mon', mean: 'Gerbang' },
+  { char: '火', romaji: 'hi / ka', mean: 'Api' },
+  { char: '水', romaji: 'mizu / sui', mean: 'Air' },
+  { char: '金', romaji: 'kane / kin', mean: 'Emas / Uang' },
+  { char: '土', romaji: 'tsuchi / do', mean: 'Tanah' },
+  { char: '本', romaji: 'hon', mean: 'Buku / Asal' }
+];
+
+const PRESET_VOCAB_HIRAGANA = [
+  { char: 'かさ', romaji: 'kasa', mean: 'Payung' },
+  { char: 'ねこ', romaji: 'neko', mean: 'Kucing' },
+  { char: 'いぬ', romaji: 'inu', mean: 'Anjing' },
+  { char: 'ほん', romaji: 'hon', mean: 'Buku' },
+  { char: 'みず', romaji: 'mizu', mean: 'Air' },
+  { char: 'さくら', romaji: 'sakura', mean: 'Bunga Sakura' },
+  { char: 'はな', romaji: 'hana', mean: 'Bunga / Hidung' },
+  { char: 'えき', romaji: 'eki', mean: 'Stasiun' },
+  { char: 'あめ', romaji: 'ame', mean: 'Hujan' },
+  { char: 'すし', romaji: 'sushi', mean: 'Sushi' },
+  { char: 'やま', romaji: 'yama', mean: 'Gunung' },
+  { char: 'かわ', romaji: 'kawa', mean: 'Sungai' },
+  { char: 'くるま', romaji: 'kuruma', mean: 'Mobil' }
+];
+
+const PRESET_VOCAB_KATAKANA = [
+  { char: 'パン', romaji: 'pan', mean: 'Roti' },
+  { char: 'テレビ', romaji: 'terebi', mean: 'Televisi' },
+  { char: 'カメラ', romaji: 'kamera', mean: 'Kamera' },
+  { char: 'バス', romaji: 'basu', mean: 'Bus' },
+  { char: 'トイレ', romaji: 'toire', mean: 'Toilet' },
+  { char: 'ドア', romaji: 'doa', mean: 'Pintu' },
+  { char: 'ノート', romaji: 'nooto', mean: 'Buku Catatan' },
+  { char: 'ペン', romaji: 'pen', mean: 'Pulpen' },
+  { char: 'ホテル', romaji: 'hoteru', mean: 'Hotel' },
+  { char: 'コーヒー', romaji: 'koohii', mean: 'Kopi' }
+];
+
+function buildDefaultQuestions(gameId) {
+  const list = [];
+  const hMode = (gameId === 'kana-blast') ? 'kana-hiragana' : 'hiragana';
+  const kMode = (gameId === 'kana-blast') ? 'kana-katakana' : 'katakana';
+
+  // 1. 46 Hiragana Dasar
+  PRESET_HIRAGANA_46.forEach((item, idx) => {
+    list.push({
+      id: `${gameId}_h_${idx + 1}`,
+      char: item.char,
+      romaji: item.romaji,
+      mean: item.mean,
+      mode: hMode
+    });
+  });
+
+  // 2. 46 Katakana Dasar
+  PRESET_KATAKANA_46.forEach((item, idx) => {
+    list.push({
+      id: `${gameId}_k_${idx + 1}`,
+      char: item.char,
+      romaji: item.romaji,
+      mean: item.mean,
+      mode: kMode
+    });
+  });
+
+  // 3. 15 Kanji N5 Dasar
+  PRESET_KANJI_N5.forEach((item, idx) => {
+    list.push({
+      id: `${gameId}_kanji_${idx + 1}`,
+      char: item.char,
+      romaji: item.romaji,
+      mean: item.mean,
+      mode: 'kanji-n5'
+    });
+  });
+
+  // 4. Kosakata khusus untuk Kana Blast
+  if (gameId === 'kana-blast') {
+    PRESET_VOCAB_HIRAGANA.forEach((item, idx) => {
+      list.push({
+        id: `kb_vh_${idx + 1}`,
+        char: item.char,
+        romaji: item.romaji,
+        mean: item.mean,
+        mode: 'vocab-hiragana'
+      });
+    });
+    PRESET_VOCAB_KATAKANA.forEach((item, idx) => {
+      list.push({
+        id: `kb_vk_${idx + 1}`,
+        char: item.char,
+        romaji: item.romaji,
+        mean: item.mean,
+        mode: 'vocab-katakana'
+      });
+    });
+  }
+
+  return list;
+}
+
 const DEFAULT_GAME_CONFIG = {
   'kana-blast': {
     title: 'Kana Blast (Turret Blaster)',
     durations: [30, 45, 60, 90, 999],
     defaultDuration: 60,
     subModes: [
+      { id: 'kana-hiragana', name: 'Aksara Hiragana (46 Huruf Dasar)', active: true },
+      { id: 'kana-katakana', name: 'Aksara Katakana (46 Huruf Dasar)', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
       { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ, dll.)', active: true },
       { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ, dll.)', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
-      { id: 'kana-hiragana', name: 'Aksara Hiragana (104 Huruf)', active: true },
-      { id: 'kana-katakana', name: 'Aksara Katakana (104 Huruf)', active: true },
       { id: 'mix', name: 'Campuran Ekstrem (Kana & Kata)', active: true }
     ],
-    customQuestions: [
-      { id: 'kb_k1', char: '日', romaji: 'hi', mean: 'Matahari / Hari', mode: 'kanji-n5' },
-      { id: 'kb_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
-      { id: 'kb_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
-      { id: 'kb_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
-      { id: 'kb_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
-      { id: 'kb_k6', char: '田', romaji: 'ta', mean: 'Sawah', mode: 'kanji-n5' },
-      { id: 'kb_k7', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
-      { id: 'kb_k8', char: '口', romaji: 'kuchi', mean: 'Mulut', mode: 'kanji-n5' },
-      { id: 'kb_k9', char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' },
-      { id: 'kb_k10', char: '門', romaji: 'mon', mean: 'Gerbang', mode: 'kanji-n5' },
-      { id: 'kb_k11', char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
-      { id: 'kb_k12', char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
-      { id: 'kb_k13', char: '金', romaji: 'kane', mean: 'Emas / Uang', mode: 'kanji-n5' },
-      { id: 'kb_k14', char: '土', romaji: 'tsuchi', mean: 'Tanah', mode: 'kanji-n5' },
-      { id: 'kb_k15', char: '本', romaji: 'hon', mean: 'Buku / Asal', mode: 'kanji-n5' }
-    ]
+    customQuestions: buildDefaultQuestions('kana-blast')
   },
   'sky-defense': {
     title: 'Sky Atk Defense (Gerbang Desa)',
     speeds: ['slow', 'normal', 'fast'],
     defaultSpeed: 'normal',
     subModes: [
-      { id: 'hiragana', name: 'Hiragana Saja', active: true },
-      { id: 'katakana', name: 'Katakana Saja', active: true },
+      { id: 'hiragana', name: 'Hiragana Saja (46 Huruf)', active: true },
+      { id: 'katakana', name: 'Katakana Saja (46 Huruf)', active: true },
       { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
-      { id: 'mix', name: 'Campuran Hiragana & Katakana', active: true },
-      { id: 'words', name: 'Kosakata Mini (ねこ, いぬ, dll.)', active: true }
+      { id: 'mix', name: 'Campuran Hiragana & Katakana', active: true }
     ],
-    customQuestions: [
-      { id: 'sd_k1', char: '日', romaji: 'hi', mean: 'Matahari', mode: 'kanji-n5' },
-      { id: 'sd_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
-      { id: 'sd_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
-      { id: 'sd_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
-      { id: 'sd_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
-      { id: 'sd_k6', char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
-      { id: 'sd_k7', char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
-      { id: 'sd_k8', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
-      { id: 'sd_k9', char: '本', romaji: 'hon', mean: 'Buku', mode: 'kanji-n5' },
-      { id: 'sd_k10', char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' }
-    ]
+    customQuestions: buildDefaultQuestions('sky-defense')
   },
   'flash-card': {
     title: 'Flash Card Aksara & Kanji',
     subModes: [
-      { id: 'all', name: 'Semua Huruf', active: true },
+      { id: 'all', name: 'Semua Huruf & Kanji', active: true },
       { id: 'hiragana', name: 'Hiragana', active: true },
       { id: 'katakana', name: 'Katakana', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true },
-      { id: 'starred', name: 'Huruf Berbintang', active: true }
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
     ],
-    customQuestions: [
-      { id: 'fc_k1', char: '日', romaji: 'hi / nichi', mean: 'Matahari, hari', mode: 'kanji-n5', example: '日曜日 (Nichiyōbi)' },
-      { id: 'fc_k2', char: '月', romaji: 'tsuki / getsu', mean: 'Bulan', mode: 'kanji-n5', example: '月曜日 (Getsuyōbi)' },
-      { id: 'fc_k3', char: '木', romaji: 'ki / moku', mean: 'Pohon, kayu', mode: 'kanji-n5', example: '木曜日 (Mokuyōbi)' },
-      { id: 'fc_k4', char: '山', romaji: 'yama / san', mean: 'Gunung', mode: 'kanji-n5', example: '富士山 (Fujisan)' },
-      { id: 'fc_k5', char: '川', romaji: 'kawa / gawa', mean: 'Sungai', mode: 'kanji-n5', example: '小川 (Ogawa)' },
-      { id: 'fc_k6', char: '田', romaji: 'ta / da', mean: 'Sawah padi', mode: 'kanji-n5', example: '田中 (Tanaka)' },
-      { id: 'fc_k7', char: '人', romaji: 'hito / jin', mean: 'Orang, manusia', mode: 'kanji-n5', example: '日本人 (Nihonjin)' },
-      { id: 'fc_k8', char: '口', romaji: 'kuchi / guchi', mean: 'Mulut, pintu masuk', mode: 'kanji-n5', example: '出口 (Deguchi)' },
-      { id: 'fc_k9', char: '車', romaji: 'kuruma / sha', mean: 'Mobil, kendaraan', mode: 'kanji-n5', example: '電車 (Densha)' },
-      { id: 'fc_k10', char: '門', romaji: 'mon', mean: 'Gerbang', mode: 'kanji-n5', example: '校門 (Kōmon)' }
-    ]
+    customQuestions: buildDefaultQuestions('flash-card')
   },
   'memory-match': {
     title: 'Memory Match',
@@ -1096,16 +1264,7 @@ const DEFAULT_GAME_CONFIG = {
       { id: 'katakana', name: 'Katakana Saja', active: true },
       { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
     ],
-    customQuestions: [
-      { id: 'mm_k1', char: '日', romaji: 'hi', mean: 'Matahari', mode: 'kanji-n5' },
-      { id: 'mm_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
-      { id: 'mm_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
-      { id: 'mm_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
-      { id: 'mm_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
-      { id: 'mm_k6', char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
-      { id: 'mm_k7', char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
-      { id: 'mm_k8', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' }
-    ]
+    customQuestions: buildDefaultQuestions('memory-match')
   },
   'speed-quiz': {
     title: 'Speed Quiz Mode',
@@ -1116,25 +1275,19 @@ const DEFAULT_GAME_CONFIG = {
       { id: 'katakana', name: 'Katakana Saja', active: true },
       { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
     ],
-    customQuestions: [
-      { id: 'sq_k1', char: '日', romaji: 'hi', mean: 'Matahari', mode: 'kanji-n5' },
-      { id: 'sq_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
-      { id: 'sq_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
-      { id: 'sq_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
-      { id: 'sq_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
-      { id: 'sq_k6', char: '田', romaji: 'ta', mean: 'Sawah', mode: 'kanji-n5' },
-      { id: 'sq_k7', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
-      { id: 'sq_k8', char: '口', romaji: 'kuchi', mean: 'Mulut', mode: 'kanji-n5' },
-      { id: 'sq_k9', char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' },
-      { id: 'sq_k10', char: '本', romaji: 'hon', mean: 'Buku', mode: 'kanji-n5' }
-    ]
+    customQuestions: buildDefaultQuestions('speed-quiz')
   },
   'word-builder': {
     title: 'Word Builder',
+    subModes: [
+      { id: 'word-builder', name: 'Susun Kosakata', active: true }
+    ],
     customQuestions: [
-      { id: 'wb_c1', meaning: 'Tokyo (Ibu kota)', romaji: 't-o-u-k-y-o-u', answer: ['と','う','き','ょ','う'], chars: ['と','う','き','ょ','う','か','さ','ね'] },
-      { id: 'wb_c2', meaning: 'Gunung Fuji', romaji: 'f-u-j-i-s-a-n', answer: ['ふ','じ','さ','ん'], chars: ['ふ','じ','さ','ん','や','ま','て','ら'] },
-      { id: 'wb_c3', meaning: 'Terima Kasih', romaji: 'a-r-i-g-a-t-o-u', answer: ['あ','り','が','と','う'], chars: ['あ','り','が','と','う','こ','そ','ね'] }
+      { id: 'wb_c1', meaning: 'Tokyo (Ibu kota)', romaji: 't-o-u-k-y-o-u', answer: ['と','う','き','ょ','う'], chars: ['と','う','き','ょ','う','か','さ','ね'], mode: 'word-builder' },
+      { id: 'wb_c2', meaning: 'Gunung Fuji', romaji: 'f-u-j-i-s-a-n', answer: ['ふ','じ','さ','ん'], chars: ['ふ','じ','さ','ん','や','ま','て','ら'], mode: 'word-builder' },
+      { id: 'wb_c3', meaning: 'Terima Kasih', romaji: 'a-r-i-g-a-t-o-u', answer: ['あ','り','が','と','う'], chars: ['あ','り','が','と','う','こ','そ','ね'], mode: 'word-builder' },
+      { id: 'wb_c4', meaning: 'Selamat Pagi', romaji: 'o-h-a-y-o-u', answer: ['お','は','よ','う'], chars: ['お','は','よ','う','み','ず','ね','こ'], mode: 'word-builder' },
+      { id: 'wb_c5', meaning: 'Kucing', romaji: 'n-e-k-o', answer: ['ね','こ'], chars: ['ね','こ','い','ぬ','と','り','さ','る'], mode: 'word-builder' }
     ]
   }
 };
@@ -1153,6 +1306,32 @@ const GameConfigManager = {
           merged[k] = parsed[k];
         }
       }
+
+      // Auto-enrichment: Pastikan Hiragana dan Katakana terdaftar jika sebelumnya hanya ada Kanji
+      const mainGames = ['kana-blast', 'sky-defense', 'flash-card', 'memory-match', 'speed-quiz'];
+      let needsResave = false;
+      for (const gId of mainGames) {
+        if (merged[gId]) {
+          const qs = merged[gId].customQuestions || [];
+          const hasHira = qs.some(q => q.mode === 'hiragana' || q.mode === 'kana-hiragana');
+          const hasKata = qs.some(q => q.mode === 'katakana' || q.mode === 'kana-katakana');
+          if (!hasHira || !hasKata || qs.length < 25) {
+            const defaults = buildDefaultQuestions(gId);
+            const existingKeys = new Set(qs.map(q => q.char + '_' + (q.mode || '')));
+            defaults.forEach(d => {
+              if (!existingKeys.has(d.char + '_' + d.mode)) {
+                qs.push(d);
+              }
+            });
+            merged[gId].customQuestions = qs;
+            needsResave = true;
+          }
+        }
+      }
+      if (needsResave) {
+        this.save(merged);
+      }
+
       return merged;
     } catch (e) {
       return JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
@@ -1186,8 +1365,15 @@ const GameConfigManager = {
   getQuestions(gameId, mode = null) {
     const g = this.getGame(gameId);
     if (!g || !g.customQuestions) return [];
-    if (!mode || mode === 'all') return g.customQuestions;
-    return g.customQuestions.filter(q => q.mode === mode);
+    if (!mode || mode === 'all' || mode === 'mix') return g.customQuestions;
+    return g.customQuestions.filter(q => {
+      if (q.mode === mode) return true;
+      if (mode === 'hiragana' && q.mode === 'kana-hiragana') return true;
+      if (mode === 'kana-hiragana' && q.mode === 'hiragana') return true;
+      if (mode === 'katakana' && q.mode === 'kana-katakana') return true;
+      if (mode === 'kana-katakana' && q.mode === 'katakana') return true;
+      return false;
+    });
   },
   setDuration(gameId, duration) {
     const all = this.get();
@@ -1254,6 +1440,52 @@ const GameConfigManager = {
       this.save(all);
     }
   },
+  loadPreset(gameId, presetType) {
+    const all = this.get();
+    if (!all[gameId]) return 0;
+    if (!all[gameId].customQuestions) all[gameId].customQuestions = [];
+    const target = all[gameId].customQuestions;
+    const existingKeys = new Set(target.map(q => q.char + '_' + (q.mode || '')));
+
+    let toAdd = [];
+    if (presetType === 'hiragana') {
+      const mode = (gameId === 'kana-blast') ? 'kana-hiragana' : 'hiragana';
+      toAdd = PRESET_HIRAGANA_46.map((h, i) => ({
+        id: `${gameId}_h_${Date.now()}_${i}`,
+        char: h.char,
+        romaji: h.romaji,
+        mean: h.mean,
+        mode: mode
+      }));
+    } else if (presetType === 'katakana') {
+      const mode = (gameId === 'kana-blast') ? 'kana-katakana' : 'katakana';
+      toAdd = PRESET_KATAKANA_46.map((k, i) => ({
+        id: `${gameId}_k_${Date.now()}_${i}`,
+        char: k.char,
+        romaji: k.romaji,
+        mean: k.mean,
+        mode: mode
+      }));
+    } else if (presetType === 'kanji-n5') {
+      toAdd = PRESET_KANJI_N5.map((k, i) => ({
+        id: `${gameId}_kanji_${Date.now()}_${i}`,
+        char: k.char,
+        romaji: k.romaji,
+        mean: k.mean,
+        mode: 'kanji-n5'
+      }));
+    }
+
+    let addedCount = 0;
+    toAdd.forEach(item => {
+      if (!existingKeys.has(item.char + '_' + item.mode)) {
+        target.push(item);
+        addedCount++;
+      }
+    });
+    this.save(all);
+    return addedCount;
+  },
   resetToDefault(gameId = null) {
     if (!gameId) {
       this.save(DEFAULT_GAME_CONFIG);
@@ -1264,7 +1496,6 @@ const GameConfigManager = {
     }
   }
 };
-
 window.GameConfigManager = GameConfigManager;
 
 // ===== MINI GAMES =====
@@ -1360,7 +1591,34 @@ function toggleFlashCardStar(cardId, event) {
 function getFlashMasterList() {
   const list = [];
   
-  // 1. Hiragana
+  // 1. Prioritaskan Bank Soal dari GameConfigManager (Hiragana, Katakana, Kanji, dll.)
+  if (typeof GameConfigManager !== 'undefined') {
+    const customList = GameConfigManager.getQuestions('flash-card');
+    if (customList && customList.length > 0) {
+      customList.forEach(q => {
+        const modeKey = q.mode || q.subMode || 'hiragana';
+        const isKanji = modeKey.includes('kanji');
+        const isKata = modeKey.includes('katakana');
+        const isHira = !isKanji && !isKata;
+        list.push({
+          id: 'cfg_' + (q.id || Math.random().toString(36).substr(2, 9)),
+          char: q.char,
+          romaji: q.romaji,
+          type: isHira ? 'hiragana' : (isKata ? 'katakana' : modeKey),
+          typeLabel: isHira ? 'Hiragana' : (isKata ? 'Katakana' : (isKanji ? 'Kanji' : modeKey.toUpperCase())),
+          badgeClass: isHira ? 'hiragana' : (isKata ? 'katakana' : (isKanji ? 'kanji' : 'hiragana')),
+          category: 'Bank Soal Guru',
+          group: q.mean || q.meaning || '',
+          example: q.example || (q.mean ? `${q.char} = ${q.mean}` : ''),
+          meaning: q.mean || q.meaning || '',
+          speech: q.char
+        });
+      });
+      return list;
+    }
+  }
+
+  // Fallback jika belum tersimpan di GameConfigManager
   if (typeof HIRAGANA !== 'undefined' && Array.isArray(HIRAGANA)) {
     HIRAGANA.forEach((h, idx) => {
       list.push({
@@ -1379,7 +1637,6 @@ function getFlashMasterList() {
     });
   }
 
-  // 2. Katakana
   if (typeof KATAKANA !== 'undefined' && Array.isArray(KATAKANA)) {
     KATAKANA.forEach((k, idx) => {
       list.push({
@@ -1394,28 +1651,6 @@ function getFlashMasterList() {
         example: k.example || '',
         meaning: k.mnemonic || '',
         speech: k.char
-      });
-    });
-  }
-
-  // 3. Custom / Kanji from GameConfigManager
-  if (typeof GameConfigManager !== 'undefined') {
-    const customList = GameConfigManager.getQuestions('flash-card');
-    customList.forEach(q => {
-      const modeKey = q.mode || q.subMode || 'kanji-n5';
-      const isKanji = modeKey.includes('kanji');
-      list.push({
-        id: 'cfg_' + (q.id || Math.random().toString(36).substr(2, 9)),
-        char: q.char,
-        romaji: q.romaji,
-        type: modeKey,
-        typeLabel: isKanji ? 'Kanji' : modeKey.toUpperCase(),
-        badgeClass: isKanji ? 'kanji' : 'hiragana',
-        category: 'Bank Soal Guru',
-        group: q.mean || q.meaning || '',
-        example: q.example || (q.mean ? `${q.char} = ${q.mean}` : ''),
-        meaning: q.mean || q.meaning || '',
-        speech: q.char
       });
     });
   }
@@ -1758,34 +1993,26 @@ function startMemoryMatch(mode = null) {
   const m = memState.mode;
   let poolSource = [];
 
-  if (m === 'katakana') {
-    poolSource = KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }));
-  } else if (m === 'kanji-n5' || m.includes('kanji')) {
-    if (typeof GameConfigManager !== 'undefined') {
-      const q = GameConfigManager.getQuestions('memory-match', m);
-      if (q && q.length > 0) {
-        poolSource = q.map(item => ({ char: item.char, romaji: item.romaji }));
-      }
+  if (typeof GameConfigManager !== 'undefined') {
+    const q = GameConfigManager.getQuestions('memory-match', m);
+    if (q && q.length > 0) {
+      poolSource = q.map(item => ({ char: item.char, romaji: item.romaji }));
     }
-    if (!poolSource || poolSource.length === 0) {
+  }
+
+  if (!poolSource || poolSource.length === 0) {
+    if (m === 'katakana') {
+      poolSource = KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }));
+    } else if (m === 'all') {
       poolSource = [
-        { char: '日', romaji: 'hi' },
-        { char: '月', romaji: 'tsuki' },
-        { char: '木', romaji: 'ki' },
-        { char: '山', romaji: 'yama' },
-        { char: '川', romaji: 'kawa' },
-        { char: '火', romaji: 'hi' },
-        { char: '水', romaji: 'mizu' },
-        { char: '人', romaji: 'hito' }
+        ...HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji })),
+        ...KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }))
       ];
+    } else if (m === 'kanji-n5' || m.includes('kanji')) {
+      poolSource = PRESET_KANJI_N5.map(k => ({ char: k.char, romaji: k.romaji }));
+    } else {
+      poolSource = HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji }));
     }
-  } else if (m === 'all') {
-    poolSource = [
-      ...HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji })),
-      ...KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }))
-    ];
-  } else {
-    poolSource = HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji }));
   }
 
   const pool = shuffle(poolSource).slice(0, 8);
@@ -1942,41 +2169,25 @@ function startSpeedQuiz(mode = null) {
   const m = speedState.mode;
   let combined = [];
 
-  if (m === 'hiragana') {
-    combined = HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji }));
-  } else if (m === 'katakana') {
-    combined = KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }));
-  } else if (m === 'kanji-n5' || m.includes('kanji')) {
-    if (typeof GameConfigManager !== 'undefined') {
-      const q = GameConfigManager.getQuestions('speed-quiz', m);
-      if (q && q.length > 0) {
-        combined = q.map(item => ({ char: item.char, romaji: item.romaji }));
-      }
+  if (typeof GameConfigManager !== 'undefined') {
+    const q = GameConfigManager.getQuestions('speed-quiz', m);
+    if (q && q.length > 0) {
+      combined = q.map(item => ({ char: item.char, romaji: item.romaji }));
     }
-    if (!combined || combined.length === 0) {
+  }
+
+  if (!combined || combined.length === 0) {
+    if (m === 'hiragana') {
+      combined = HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji }));
+    } else if (m === 'katakana') {
+      combined = KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }));
+    } else if (m === 'kanji-n5' || m.includes('kanji')) {
+      combined = PRESET_KANJI_N5.map(k => ({ char: k.char, romaji: k.romaji }));
+    } else {
       combined = [
-        { char: '日', romaji: 'hi' },
-        { char: '月', romaji: 'tsuki' },
-        { char: '木', romaji: 'ki' },
-        { char: '山', romaji: 'yama' },
-        { char: '川', romaji: 'kawa' },
-        { char: '田', romaji: 'ta' },
-        { char: '人', romaji: 'hito' },
-        { char: '車', romaji: 'kuruma' },
-        { char: '本', romaji: 'hon' }
+        ...HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji })),
+        ...KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }))
       ];
-    }
-  } else {
-    // All modes combined
-    combined = [
-      ...HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji })),
-      ...KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }))
-    ];
-    if (typeof GameConfigManager !== 'undefined') {
-      const extra = GameConfigManager.getQuestions('speed-quiz');
-      if (extra && extra.length) {
-        extra.forEach(item => combined.push({ char: item.char, romaji: item.romaji }));
-      }
     }
   }
 
@@ -2684,38 +2895,22 @@ function setBlastDuration(sec) {
 }
 
 function getBlastPool() {
+  if (typeof GameConfigManager !== 'undefined') {
+    const q = GameConfigManager.getQuestions('kana-blast', blastState.mode);
+    if (q && q.length > 0) return q;
+  }
   if (blastState.mode === 'vocab-hiragana') return BLAST_VOCAB_HIRAGANA;
   if (blastState.mode === 'vocab-katakana') return BLAST_VOCAB_KATAKANA;
   if (blastState.mode === 'kanji-n5' || blastState.mode.includes('kanji')) {
-    if (typeof GameConfigManager !== 'undefined') {
-      const q = GameConfigManager.getQuestions('kana-blast', blastState.mode);
-      if (q && q.length > 0) return q;
-    }
-    return [
-      { char: '日', romaji: 'hi', mean: 'Matahari' },
-      { char: '月', romaji: 'tsuki', mean: 'Bulan' },
-      { char: '木', romaji: 'ki', mean: 'Pohon' },
-      { char: '山', romaji: 'yama', mean: 'Gunung' },
-      { char: '川', romaji: 'kawa', mean: 'Sungai' },
-      { char: '田', romaji: 'ta', mean: 'Sawah' },
-      { char: '人', romaji: 'hito', mean: 'Orang' },
-      { char: '口', romaji: 'kuchi', mean: 'Mulut' },
-      { char: '車', romaji: 'kuruma', mean: 'Mobil' },
-      { char: '門', romaji: 'mon', mean: 'Gerbang' },
-      { char: '火', romaji: 'hi', mean: 'Api' },
-      { char: '水', romaji: 'mizu', mean: 'Air' },
-      { char: '金', romaji: 'kane', mean: 'Emas' },
-      { char: '土', romaji: 'tsuchi', mean: 'Tanah' },
-      { char: '本', romaji: 'hon', mean: 'Buku' }
-    ];
+    return PRESET_KANJI_N5;
   }
-  if (blastState.mode === 'kana-hiragana') {
-    return HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji, mean: h.category + ' (' + h.group + ')' }));
+  if (blastState.mode === 'kana-hiragana' || blastState.mode === 'hiragana') {
+    return PRESET_HIRAGANA_46;
   }
-  if (blastState.mode === 'kana-katakana') {
-    return KATAKANA.map(k => ({ char: k.char, romaji: k.romaji, mean: k.category + ' (' + k.group + ')' }));
+  if (blastState.mode === 'kana-katakana' || blastState.mode === 'katakana') {
+    return PRESET_KATAKANA_46;
   }
-  return [...BLAST_VOCAB_HIRAGANA, ...BLAST_VOCAB_KATAKANA];
+  return [...PRESET_VOCAB_HIRAGANA, ...PRESET_VOCAB_KATAKANA];
 }
 
 function initBlastBattle() {
@@ -3678,6 +3873,13 @@ const MONSTER_PROFILES = [
 ];
 
 function getRandomKanaItem() {
+  if (typeof GameConfigManager !== 'undefined') {
+    const qList = GameConfigManager.getQuestions('sky-defense', msState.mode);
+    if (qList && qList.length > 0) {
+      const item = qList[Math.floor(Math.random() * qList.length)];
+      return { char: item.char, romaji: item.romaji, type: item.mode || msState.mode };
+    }
+  }
   if (msState.mode === 'hiragana') return HIRAGANA[Math.floor(Math.random() * HIRAGANA.length)];
   if (msState.mode === 'katakana') return KATAKANA[Math.floor(Math.random() * KATAKANA.length)];
   if (msState.mode === 'kanji-n5' || msState.mode.includes('kanji')) {
