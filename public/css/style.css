@@ -4,52 +4,61 @@
    ==================================================== */
 
 :root {
-  /* Warm Japanese Lacquer / Vermilion (Akane & Shu-iro) - Soft, rich, pleasing to eyes */
-  --red: #BA3D27;
-  --red-light: #CF4E36;
-  --red-dark: #8E2B1A;
-  --red-pale: #FBF0EB;
+  /* Warm Japanese Terracotta (Akane-iro) - Soft, organic, gentle on eyes */
+  --red: #BA5444;
+  --red-light: #CA6757;
+  --red-dark: #9A3F31;
+  --red-pale: #FAF1EE;
+  --red-border: #F1D6CF;
 
-  /* Warm Tea-Indigo / Soft Navy (Aizome) */
-  --blue: #2A6496;
-  --blue-light: #3D7CB4;
-  --blue-pale: #F0F5FA;
+  /* Warm Muted Indigo (Aizome / Asagi) - Serene, balanced */
+  --blue: #3E6B89;
+  --blue-light: #5281A1;
+  --blue-dark: #2E5169;
+  --blue-pale: #EFF4F8;
+  --blue-border: #D1DFE9;
 
-  /* Warm Golden Amber / Persimmon (Kohaku & Yamabuki) */
-  --yellow: #C27608;
-  --yellow-light: #DE8E16;
-  --yellow-pale: #FEF7EC;
+  /* Warm Golden Amber / Apricot (Yamabuki & Anzu) - Cheerful yet gentle */
+  --yellow: #BA7635;
+  --yellow-light: #CC8A49;
+  --yellow-dark: #985D25;
+  --yellow-pale: #FDF5ED;
+  --yellow-border: #F3E0CC;
 
-  /* Warm Tea / Matcha Green (Matcha & Moegi) */
-  --green: #2B7A4F;
-  --green-light: #3A9663;
-  --green-pale: #EFF8F3;
+  /* Warm Herbal Matcha (Moegi / Matcha) - Soothing & natural */
+  --green: #437856;
+  --green-light: #578F6D;
+  --green-dark: #325D42;
+  --green-pale: #F0F6F2;
+  --green-border: #D0E4D7;
 
-  /* Warm Japanese Plum / Wisteria (Ebizome) */
-  --purple: #7C467C;
-  --purple-light: #945994;
-  --purple-pale: #F9F2F9;
+  /* Warm Soft Plum & Wisteria (Fuji & Ebizome) */
+  --purple: #74567A;
+  --purple-light: #8A6A91;
+  --purple-dark: #583D5F;
+  --purple-pale: #F7F1F8;
+  --purple-border: #E5D6E8;
 
-  /* Deep Warm Charcoal Espresso (Eye-friendly, no harsh glare) */
-  --dark: #2B241F;
+  /* Deep Warm Espresso Charcoal (Comfortable text contrast, zero glare) */
+  --dark: #2F2620;
   --card: #FAF6F0;
   --card-warm: #F4EFE6;
   --card-inner: #EDE6DA;
 
-  /* Warm Off-White with Light Brownish/Linen Hue (Kinari / 生成り - Terang tapi Lembut) */
-  --bg: #F4EFE6;
-  --bg-warm: #EDE6DA;
+  /* Warm Washi Off-White (Kinari / 生成り - Warm, cozy, soft) */
+  --bg: #F8F4EC;
+  --bg-warm: #EFE8DC;
   --border: #DFD7C8;
   --border-light: #EBE4D8;
 
-  --text: #2D2520;
+  --text: #2F2620;
   --text-soft: #6E6157;
   --text-light: #A3968B;
 
   /* Warm Soft Shadows */
-  --shadow-sm: 0 1px 3px rgba(60, 45, 30, 0.05), 0 1px 2px rgba(60, 45, 30, 0.03);
-  --shadow: 0 4px 20px -2px rgba(60, 45, 30, 0.07);
-  --shadow-hover: 0 12px 28px -4px rgba(60, 45, 30, 0.11);
+  --shadow-sm: 0 1px 3px rgba(60, 45, 30, 0.04), 0 1px 2px rgba(60, 45, 30, 0.02);
+  --shadow: 0 4px 18px -2px rgba(60, 45, 30, 0.06);
+  --shadow-hover: 0 10px 24px -4px rgba(60, 45, 30, 0.09);
   --radius: 18px;
   --radius-sm: 10px;
   --radius-pill: 9999px;
@@ -267,12 +276,14 @@ body {
 }
 
 .nav-btn.active {
-  background: var(--red);
-  color: white;
+  background: var(--red-pale);
+  color: var(--red);
+  border-color: var(--red-border);
+  font-weight: 700;
 }
 
 .nav-btn.active .svg-icon {
-  stroke: white;
+  stroke: var(--red);
 }
 
 .nav-btn-special {
@@ -345,9 +356,9 @@ body {
 
 .sakura-petal {
   position: absolute;
-  background: linear-gradient(135deg, #FBCFE8, #F472B6);
+  background: linear-gradient(135deg, #FBE6E8, #F3C4C9);
   border-radius: 100% 0 100% 40%;
-  opacity: 0.65;
+  opacity: 0.55;
   animation: petalFall linear infinite;
 }
 
@@ -409,7 +420,7 @@ body {
   font-weight: 900;
   letter-spacing: 0.04em;
   display: inline-block;
-  background: linear-gradient(135deg, var(--red), #DC2626);
+  background: linear-gradient(135deg, var(--red), var(--red-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -429,7 +440,7 @@ body {
 }
 
 .btn-primary {
-  background: var(--red);
+  background: linear-gradient(135deg, #BE5544 0%, #CB6756 100%);
   color: white;
   border: none;
   padding: 13px 26px;
@@ -442,12 +453,12 @@ body {
   align-items: center;
   gap: 9px;
   transition: var(--transition);
-  box-shadow: 0 4px 14px rgba(217, 56, 58, 0.3);
+  box-shadow: 0 4px 14px rgba(190, 85, 68, 0.22);
 }
 .btn-primary:hover {
-  background: var(--red-dark);
+  background: linear-gradient(135deg, #AF4939 0%, #BC5A4A 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(217, 56, 58, 0.4);
+  box-shadow: 0 6px 18px rgba(190, 85, 68, 0.28);
 }
 
 .btn-secondary {
@@ -972,11 +983,11 @@ body {
   margin-bottom: 24px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
-.red-header { background: linear-gradient(135deg, #991B1B 0%, #D9383A 100%); color: white; }
-.blue-header { background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%); color: white; }
-.yellow-header { background: linear-gradient(135deg, #B45309 0%, #D97706 100%); color: white; }
-.green-header { background: linear-gradient(135deg, #065F46 0%, #059669 100%); color: white; }
-.purple-header { background: linear-gradient(135deg, #1E1B4B 0%, #4338CA 100%); color: white; }
+.red-header { background: linear-gradient(135deg, #B55242 0%, #C86959 100%); color: white; }
+.blue-header { background: linear-gradient(135deg, #3C6682 0%, #4F7B98 100%); color: white; }
+.yellow-header { background: linear-gradient(135deg, #B57434 0%, #C98949 100%); color: white; }
+.green-header { background: linear-gradient(135deg, #3E6F50 0%, #518464 100%); color: white; }
+.purple-header { background: linear-gradient(135deg, #6E5174 0%, #836489 100%); color: white; }
 
 .page-header-content {
   display: flex;

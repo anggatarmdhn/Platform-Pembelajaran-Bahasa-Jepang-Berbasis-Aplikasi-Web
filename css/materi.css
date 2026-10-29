@@ -618,7 +618,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #BA3D27;
+  background: linear-gradient(135deg, #BE5544 0%, #CB6756 100%);
   color: #FFFFFF;
   border: none;
   padding: 14px 24px;
@@ -628,14 +628,14 @@
   font-family: inherit;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 4px 14px rgba(186, 61, 39, 0.25);
+  box-shadow: 0 4px 14px rgba(190, 85, 68, 0.22);
   width: 100%;
 }
 
 .btn-celebrate-primary:hover {
-  background: #9E321E;
+  background: linear-gradient(135deg, #AF4939 0%, #BC5A4A 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(186, 61, 39, 0.35);
+  box-shadow: 0 6px 18px rgba(190, 85, 68, 0.3);
 }
 
 .celebrate-sub-actions {
@@ -663,8 +663,8 @@
 
 .btn-celebrate-secondary:hover {
   background: #E5DDD0;
-  border-color: #BA3D27;
-  color: #BA3D27;
+  border-color: var(--red);
+  color: var(--red);
   transform: translateY(-1px);
 }
 

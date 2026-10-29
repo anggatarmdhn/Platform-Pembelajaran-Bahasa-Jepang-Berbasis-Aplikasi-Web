@@ -6,29 +6,29 @@
 
 /* ===== 1. ROOT VIBRANT PALETTE & TACTILE TOKENS ===== */
 :root {
-  --pop-pink: #BA3D27;
-  --pop-pink-soft: #FBF0EB;
-  --pop-pink-border: #F3D9D0;
+  --pop-pink: #BA5444;
+  --pop-pink-soft: #FAF1EE;
+  --pop-pink-border: #F1D6CF;
 
-  --pop-orange: #C27608;
-  --pop-orange-soft: #FEF7EC;
-  --pop-orange-border: #FBE6C2;
+  --pop-orange: #BA7635;
+  --pop-orange-soft: #FDF5ED;
+  --pop-orange-border: #F3E0CC;
 
-  --pop-cyan: #2A6496;
-  --pop-cyan-soft: #F0F5FA;
-  --pop-cyan-border: #C8DCEE;
+  --pop-cyan: #3E6B89;
+  --pop-cyan-soft: #EFF4F8;
+  --pop-cyan-border: #D1DFE9;
 
-  --pop-green: #2B7A4F;
-  --pop-green-soft: #EFF8F3;
-  --pop-green-border: #BCE2CC;
+  --pop-green: #437856;
+  --pop-green-soft: #F0F6F2;
+  --pop-green-border: #D0E4D7;
 
-  --pop-purple: #7C467C;
-  --pop-purple-soft: #F9F2F9;
-  --pop-purple-border: #E8D3E8;
+  --pop-purple: #74567A;
+  --pop-purple-soft: #F7F1F8;
+  --pop-purple-border: #E5D6E8;
 
-  --pop-red: #BA3D27;
-  --pop-dark: #2B241F;
-  --pop-shadow-3d: 0 4px 0 rgba(60, 45, 30, 0.10), 0 8px 18px rgba(60, 45, 30, 0.05);
+  --pop-red: #BA5444;
+  --pop-dark: #2F2620;
+  --pop-shadow-3d: 0 3px 0 rgba(60, 45, 30, 0.08), 0 6px 14px rgba(60, 45, 30, 0.04);
 }
 
 /* ===== 2. GLOBAL MOBILE FOUNDATION ===== */
@@ -197,10 +197,10 @@ body {
   }
 
   .mob-nav-btn[data-page="katakana"].active {
-    color: #2563EB !important;
+    color: var(--pop-cyan) !important;
   }
   .mob-nav-btn[data-page="katakana"].active .mob-kana-badge {
-    background: #2563EB !important;
+    background: var(--pop-cyan) !important;
     color: #FFFFFF !important;
   }
 
@@ -293,14 +293,20 @@ body {
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
-    box-shadow: 0 4px 12px rgba(186, 61, 39, 0.12) !important;
+  }
+
+  .hero-cta .btn-primary {
+    background: linear-gradient(135deg, #BE5544 0%, #CB6756 100%) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(190, 85, 68, 0.2) !important;
   }
 
   .hero-cta .btn-secondary {
     background: #FFFFFF !important;
     border: 1.5px solid var(--border-light, #EBE4D8) !important;
     color: var(--text, #2D2520) !important;
-    box-shadow: 0 2px 8px rgba(60, 45, 30, 0.05) !important;
+    box-shadow: 0 2px 8px rgba(60, 45, 30, 0.04) !important;
   }
 
   .hero-stats {

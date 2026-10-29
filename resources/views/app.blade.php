@@ -46,7 +46,7 @@
       <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer" title="Beranda SIJapanese">
         <span class="logo-crest">
           <svg viewBox="0 0 32 32" class="svg-crest">
-            <circle cx="16" cy="16" r="14" fill="#BA3D27"/>
+            <circle cx="16" cy="16" r="14" fill="#BE5544"/>
             <path d="M8 11h16M9 8v15M23 8v15M7 14h18" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </span>
@@ -151,7 +151,7 @@
           </div>
           <div class="hero-mascot-art" onclick="speakJapanese('にほんご')" title="SIJapanese - にほんご" style="cursor:pointer">
             <svg class="mascot-emblem-svg" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="54" fill="#C82333" opacity="0.95"/>
+              <circle cx="60" cy="60" r="54" fill="#BE5544" opacity="0.95"/>
               <circle cx="60" cy="60" r="46" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"/>
               <!-- Torii Gate Silhouette -->
               <path d="M30 46Q60 41 90 46" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" fill="none"/>
