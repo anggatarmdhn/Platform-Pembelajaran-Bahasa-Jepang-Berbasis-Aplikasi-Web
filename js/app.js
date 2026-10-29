@@ -4709,14 +4709,19 @@ function initFloatingCards() {
 
   const cards = container.querySelectorAll('.float-card');
   cards.forEach(card => {
+    // Bersihkan posisi inline lama yang sebelumnya merusak layout kartu
+    card.style.left = '';
+    card.style.top = '';
+    card.style.bottom = '';
+    card.style.right = '';
+    card.style.transform = '';
+
     let isDragging = false;
     let startX = 0;
     let startY = 0;
-    let initialLeft = 0;
-    let initialTop = 0;
     let hasMoved = false;
 
-    // Prevent default browser drag image/ghost
+    // Cegah ghost drag bawaan browser
     card.addEventListener('dragstart', (e) => e.preventDefault());
 
     card.addEventListener('pointerdown', (e) => {
@@ -4726,17 +4731,8 @@ function initFloatingCards() {
       startX = e.clientX;
       startY = e.clientY;
 
-      const rect = card.getBoundingClientRect();
-      const parentRect = container.getBoundingClientRect();
-      initialLeft = rect.left - parentRect.left;
-      initialTop = rect.top - parentRect.top;
-
-      // Lock to current pixel position
-      card.style.left = `${initialLeft}px`;
-      card.style.top = `${initialTop}px`;
-      card.style.bottom = 'auto';
-      card.style.right = 'auto';
       card.classList.add('is-dragging');
+      card.style.transition = 'none';
 
       try {
         card.setPointerCapture(e.pointerId);
@@ -4748,40 +4744,47 @@ function initFloatingCards() {
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
 
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
         hasMoved = true;
       }
 
-      const parentRect = container.getBoundingClientRect();
-      const cardWidth = card.offsetWidth;
-      const cardHeight = card.offsetHeight;
-
-      // Restrict within bounding box
-      const maxLeft = parentRect.width - cardWidth + 24;
-      const minLeft = -24;
-      const maxTop = parentRect.height - cardHeight + 24;
-      const minTop = -24;
-
-      const newLeft = Math.max(minLeft, Math.min(maxLeft, initialLeft + dx));
-      const newTop = Math.max(minTop, Math.min(maxTop, initialTop + dy));
-
-      card.style.left = `${newLeft}px`;
-      card.style.top = `${newTop}px`;
+      if (hasMoved) {
+        // Gunakan transform translate3d saat digeser sehingga posisi CSS asli (top, bottom, left, right) tidak rusak
+        card.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(1.12)`;
+      }
     });
 
     const endDrag = (e) => {
       if (!isDragging) return;
       isDragging = false;
       card.classList.remove('is-dragging');
+
       try {
         card.releasePointerCapture(e.pointerId);
       } catch (_) {}
 
-      // Click event without significant drag: pronounce kana
-      if (!hasMoved) {
+      if (hasMoved) {
+        // Jika kartu digeser, kembalikan secara halus ke posisi semula (spring back)
+        card.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        card.style.transform = '';
+        setTimeout(() => {
+          card.style.transition = '';
+        }, 400);
+      } else {
+        // Jika hanya diklik/ditekan: beri efek bounce dan ucapkan pelafalan kana
+        card.style.transform = '';
+        card.classList.remove('card-bounce');
+        void card.offsetWidth; // trigger reflow
+        card.classList.add('card-bounce');
+        setTimeout(() => {
+          card.classList.remove('card-bounce');
+        }, 500);
+
         const kana = card.getAttribute('data-kana') || card.querySelector('.card-jp')?.textContent?.trim();
         if (kana) {
-          speakJapanese(kana);
+          try {
+            speakJapanese(kana);
+          } catch (_) {}
         }
       }
     };
