@@ -348,6 +348,23 @@
       <div id="hiragana-quiz-mode" class="quiz-container hidden">
         <div class="quiz-card-wrap" id="hiragana-quiz-wrap"></div>
       </div>
+
+      <!-- AJAKAN LATIHAN MINI GAMES -->
+      <div class="kana-minigames-cta">
+        <div class="kana-cta-text-wrap">
+          <span class="kana-cta-badge">Latihan Interaktif</span>
+          <h3 class="kana-cta-title">Lanjut Menghafal dengan Mini Games</h3>
+          <p class="kana-cta-desc">Sudah mengenali bentuk huruf Hiragana di atas? Uji daya ingatmu dan pertajam ingatan lewat Flash Card atau kuis interaktif.</p>
+        </div>
+        <div class="kana-cta-btn-wrap">
+          <button class="kana-cta-btn-primary" onclick="showPage('games'); startGame('flash-card'); setFlashMode('hiragana');">
+            <span>Mulai Flash Card Hiragana</span>
+          </button>
+          <button class="kana-cta-btn-secondary" onclick="showPage('games');">
+            <span>Buka Menu Mini Games</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- KATAKANA PAGE -->
@@ -381,6 +398,23 @@
       <div id="katakana-learn-mode" class="char-grid-container"></div>
       <div id="katakana-quiz-mode" class="quiz-container hidden">
         <div class="quiz-card-wrap" id="katakana-quiz-wrap"></div>
+      </div>
+
+      <!-- AJAKAN LATIHAN MINI GAMES -->
+      <div class="kana-minigames-cta">
+        <div class="kana-cta-text-wrap">
+          <span class="kana-cta-badge">Latihan Interaktif</span>
+          <h3 class="kana-cta-title">Lanjut Menghafal dengan Mini Games</h3>
+          <p class="kana-cta-desc">Sudah mengenali bentuk huruf Katakana di atas? Uji daya ingatmu dan pertajam ingatan lewat Flash Card atau kuis interaktif.</p>
+        </div>
+        <div class="kana-cta-btn-wrap">
+          <button class="kana-cta-btn-primary" onclick="showPage('games'); startGame('flash-card'); setFlashMode('katakana');">
+            <span>Mulai Flash Card Katakana</span>
+          </button>
+          <button class="kana-cta-btn-secondary" onclick="showPage('games');">
+            <span>Buka Menu Mini Games</span>
+          </button>
+        </div>
       </div>
     </div>
 

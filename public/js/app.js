@@ -1048,11 +1048,10 @@ function startGame(type) {
   else if (type === 'kana-blast') startKanaBlast();
 }
 
-// ==== 1. FLASH CARD GAME (ENHANCED WITH FILTERS, STAR BOOKMARKS & HARD CARDS) ====
+// ==== 1. FLASH CARD GAME (HIRAGANA, KATAKANA, & HURUF BERBINTANG) ====
 const FLASH_STARRED_KEY = 'sijapanese_flashcard_starred';
-const FLASH_HARD_KEY = 'sijapanese_flashcard_hard';
 
-function getFlashStoredIds(key) {
+function getFlashStoredIds(key = FLASH_STARRED_KEY) {
   try {
     const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : [];
@@ -1071,10 +1070,6 @@ function isFlashCardStarred(cardId) {
   return getFlashStoredIds(FLASH_STARRED_KEY).includes(cardId);
 }
 
-function isFlashCardHard(cardId) {
-  return getFlashStoredIds(FLASH_HARD_KEY).includes(cardId);
-}
-
 function toggleFlashCardStar(cardId, event) {
   if (event) {
     event.stopPropagation();
@@ -1085,49 +1080,13 @@ function toggleFlashCardStar(cardId, event) {
   const isNowStarred = idx === -1;
   if (isNowStarred) {
     starred.push(cardId);
-    showToast('Disimpan ke Kartu Berbintang ⭐', 'success');
+    showToast('Huruf ditandai untuk dihafalkan.', 'success');
   } else {
     starred.splice(idx, 1);
-    showToast('Dihapus dari Bintang ⭐', 'info');
+    showToast('Tanda bintang dihapus dari huruf.', 'info');
   }
   saveFlashStoredIds(FLASH_STARRED_KEY, starred);
   renderFlashCard();
-}
-
-function toggleFlashCardHard(cardId, event) {
-  if (event) {
-    event.stopPropagation();
-    event.preventDefault();
-  }
-  let hard = getFlashStoredIds(FLASH_HARD_KEY);
-  const idx = hard.indexOf(cardId);
-  const isNowHard = idx === -1;
-  if (isNowHard) {
-    hard.push(cardId);
-    showToast('Ditandai sebagai Paling Susah 🔥', 'error');
-  } else {
-    hard.splice(idx, 1);
-    showToast('Dihapus dari daftar Paling Susah 🔥', 'info');
-  }
-  saveFlashStoredIds(FLASH_HARD_KEY, hard);
-  renderFlashCard();
-}
-
-function addCardToHardList(cardId) {
-  let hard = getFlashStoredIds(FLASH_HARD_KEY);
-  if (!hard.includes(cardId)) {
-    hard.push(cardId);
-    saveFlashStoredIds(FLASH_HARD_KEY, hard);
-  }
-}
-
-function removeCardFromHardList(cardId) {
-  let hard = getFlashStoredIds(FLASH_HARD_KEY);
-  const idx = hard.indexOf(cardId);
-  if (idx !== -1) {
-    hard.splice(idx, 1);
-    saveFlashStoredIds(FLASH_HARD_KEY, hard);
-  }
 }
 
 function getFlashMasterList() {
@@ -1171,38 +1130,6 @@ function getFlashMasterList() {
     });
   }
 
-  // 3. Vocabulary
-  if (typeof VOCABULARY !== 'undefined' && typeof VOCABULARY === 'object') {
-    const categoryLabels = {
-      numbers: 'Angka',
-      colors: 'Warna',
-      family: 'Keluarga',
-      food: 'Makanan',
-      greetings: 'Salam'
-    };
-    Object.keys(VOCABULARY).forEach(cat => {
-      const items = VOCABULARY[cat];
-      const catLabel = categoryLabels[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
-      if (Array.isArray(items)) {
-        items.forEach((v, idx) => {
-          list.push({
-            id: 'v_' + (v.jp || idx),
-            char: v.jp,
-            romaji: v.reading,
-            type: 'vocab',
-            typeLabel: 'Kosakata',
-            badgeClass: 'vocab',
-            category: catLabel,
-            group: 'Kosakata',
-            example: (v.emoji ? v.emoji + ' ' : '') + v.id,
-            meaning: v.id,
-            speech: v.jp
-          });
-        });
-      }
-    });
-  }
-
   return list;
 }
 
@@ -1211,18 +1138,15 @@ let flashState = {
   cards: [],
   current: 0,
   know: 0,
-  hesitate: 0,
-  hardCount: 0,
+  dontknow: 0,
   revealed: false,
 };
 
 function getFlashModeLabel(mode) {
-  if (mode === 'hiragana') return 'Aksara Hiragana';
-  if (mode === 'katakana') return 'Aksara Katakana';
-  if (mode === 'vocab') return 'Kosakata Praktis';
-  if (mode === 'starred') return 'Kartu Berbintang ⭐';
-  if (mode === 'hard') return 'Kartu Paling Susah 🔥';
-  return 'Semua Aksara';
+  if (mode === 'hiragana') return 'Hiragana';
+  if (mode === 'katakana') return 'Katakana';
+  if (mode === 'starred') return 'Huruf Berbintang';
+  return 'Semua Huruf';
 }
 
 function startFlashCard(mode = null) {
@@ -1243,23 +1167,17 @@ function startFlashCard(mode = null) {
     filtered = master.filter(c => c.type === 'hiragana');
   } else if (currentMode === 'katakana') {
     filtered = master.filter(c => c.type === 'katakana');
-  } else if (currentMode === 'vocab') {
-    filtered = master.filter(c => c.type === 'vocab');
   } else if (currentMode === 'starred') {
     const starredIds = new Set(getFlashStoredIds(FLASH_STARRED_KEY));
     filtered = master.filter(c => starredIds.has(c.id));
-  } else if (currentMode === 'hard') {
-    const hardIds = new Set(getFlashStoredIds(FLASH_HARD_KEY));
-    filtered = master.filter(c => hardIds.has(c.id));
   } else {
-    filtered = master.filter(c => c.type === 'hiragana' || c.type === 'katakana');
+    filtered = master;
   }
 
   flashState.cards = shuffle([...filtered]);
   flashState.current = 0;
   flashState.know = 0;
-  flashState.hesitate = 0;
-  flashState.hardCount = 0;
+  flashState.dontknow = 0;
   flashState.revealed = false;
 
   renderFlashCard();
@@ -1275,30 +1193,22 @@ function renderFlashCard() {
   const fs = flashState;
 
   const starredIds = getFlashStoredIds(FLASH_STARRED_KEY);
-  const hardIds = getFlashStoredIds(FLASH_HARD_KEY);
   const starredCount = starredIds.length;
-  const hardCount = hardIds.length;
 
   const filterTabsHtml = `
     <div class="flash-filter-container">
       <div class="flash-filter-scroll">
         <button class="flash-filter-chip ${fs.mode === 'all' ? 'active' : ''}" onclick="setFlashMode('all')">
-          <span>🎴 Semua Aksara</span>
+          <span>Semua Huruf</span>
         </button>
         <button class="flash-filter-chip ${fs.mode === 'hiragana' ? 'active' : ''}" onclick="setFlashMode('hiragana')">
-          <span>🌸 Hiragana</span>
+          <span>Hiragana</span>
         </button>
         <button class="flash-filter-chip ${fs.mode === 'katakana' ? 'active' : ''}" onclick="setFlashMode('katakana')">
-          <span>⚡ Katakana</span>
-        </button>
-        <button class="flash-filter-chip ${fs.mode === 'vocab' ? 'active' : ''}" onclick="setFlashMode('vocab')">
-          <span>📖 Kosakata</span>
+          <span>Katakana</span>
         </button>
         <button class="flash-filter-chip star-chip ${fs.mode === 'starred' ? 'active' : ''}" onclick="setFlashMode('starred')">
-          <span>⭐ Berbintang (${starredCount})</span>
-        </button>
-        <button class="flash-filter-chip hard-chip ${fs.mode === 'hard' ? 'active' : ''}" onclick="setFlashMode('hard')">
-          <span>🔥 Paling Susah (${hardCount})</span>
+          <span>Huruf Berbintang (${starredCount})</span>
         </button>
       </div>
     </div>
@@ -1307,23 +1217,22 @@ function renderFlashCard() {
   // Case 1: Empty deck in filtered mode
   if (!fs.cards || fs.cards.length === 0) {
     const isStarredMode = fs.mode === 'starred';
-    const isHardMode = fs.mode === 'hard';
     
     screen.innerHTML = `
       <div class="flash-game-container">
         ${filterTabsHtml}
         <div class="flash-empty-card">
-          <div class="flash-empty-icon">${isStarredMode ? '⭐' : isHardMode ? '🔥' : '🎴'}</div>
-          <h3>${isStarredMode ? 'Belum Ada Kartu Berbintang' : isHardMode ? 'Belum Ada Kartu Paling Susah' : 'Kartu Kosong'}</h3>
+          <div class="flash-empty-crest">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <h3>${isStarredMode ? 'Belum Ada Huruf Berbintang' : 'Kartu Kosong'}</h3>
           <p>
             ${isStarredMode 
-              ? 'Tandai kartu yang ingin kamu prioritaskan dengan mengklik ikon ⭐ saat berlatih. Kartu pilihanmu akan tersimpan rapi di sini.'
-              : isHardMode 
-              ? 'Luar biasa! Belum ada kartu yang ditandai paling sulit. Saat berlatih, klik tombol 🔥 atau pilih "Paling Susah" untuk mengumpulkan kartu sulit di sini.'
-              : 'Pilih kategori aksara lain di atas untuk mulai berlatih flash card.'}
+              ? 'Tandai huruf yang paling susah dihafal dengan tombol bintang saat latihan. Huruf pilihanmu akan tersimpan rapi di sini.'
+              : 'Pilih kategori huruf lain di atas untuk mulai berlatih.'}
           </p>
           <div class="flash-empty-actions">
-            <button class="flash-empty-btn primary" onclick="setFlashMode('all')">Mulai Semua Aksara</button>
+            <button class="flash-empty-btn primary" onclick="setFlashMode('all')">Mulai Semua Huruf</button>
             <button class="flash-empty-btn secondary" onclick="setFlashMode('hiragana')">Latihan Hiragana</button>
             <button class="flash-empty-btn secondary" onclick="setFlashMode('katakana')">Latihan Katakana</button>
           </div>
@@ -1345,21 +1254,15 @@ function renderFlashCard() {
               <polyline points="20 32 28 40 44 24" stroke="#BA5444" stroke-width="4" stroke-linecap="round" fill="none"/>
             </svg>
           </div>
-          <div class="quiz-result-title">Sesi Flash Card Selesai!</div>
-          <p style="margin:8px 0; color:var(--text-soft);">Mode: <strong>${getFlashModeLabel(fs.mode)}</strong> • ${fs.cards.length} kartu telah dipelajari.</p>
+          <div class="quiz-result-title">Sesi Flash Card Selesai</div>
+          <p style="margin:8px 0; color:var(--text-soft);">Mode: <strong>${getFlashModeLabel(fs.mode)}</strong> • ${fs.cards.length} huruf telah dipelajari.</p>
           
           <div class="flash-result-stats">
             <div class="flash-stat-pill green">
-              <span>🟢</span>
               <span>Sudah Hafal: <strong>${fs.know}</strong></span>
             </div>
-            <div class="flash-stat-pill yellow">
-              <span>🟡</span>
-              <span>Masih Ragu: <strong>${fs.hesitate}</strong></span>
-            </div>
             <div class="flash-stat-pill red">
-              <span>🔴</span>
-              <span>Paling Susah: <strong>${fs.hardCount}</strong></span>
+              <span>Perlu Diulang: <strong>${fs.dontknow}</strong></span>
             </div>
           </div>
 
@@ -1368,18 +1271,13 @@ function renderFlashCard() {
               <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
               <span>Ulangi Sesi Ini</span>
             </button>
-            ${hardCount > 0 ? `
-              <button class="flash-result-btn hard" onclick="setFlashMode('hard')">
-                <span>🔥 Latih Ulang Kartu Paling Susah (${hardCount})</span>
-              </button>
-            ` : ''}
             ${starredCount > 0 ? `
               <button class="flash-result-btn star" onclick="setFlashMode('starred')">
-                <span>⭐ Latih Kartu Berbintang (${starredCount})</span>
+                <span>Latih Huruf Berbintang (${starredCount})</span>
               </button>
             ` : ''}
             <button class="flash-result-btn secondary" onclick="setFlashMode('all')">
-              <span>🎴 Kembali ke Semua Aksara</span>
+              <span>Kembali ke Semua Huruf</span>
             </button>
           </div>
         </div>
@@ -1391,8 +1289,6 @@ function renderFlashCard() {
   // Case 3: Active Card
   const card = fs.cards[fs.current];
   const isStarred = isFlashCardStarred(card.id);
-  const isHard = isFlashCardHard(card.id);
-  const isVocab = card.type === 'vocab';
 
   screen.innerHTML = `
     <div class="flash-game-container">
@@ -1401,9 +1297,8 @@ function renderFlashCard() {
       <div class="flash-progress-info">
         <span class="flash-count">Kartu ${fs.current + 1} / ${fs.cards.length}</span>
         <div class="flash-counters">
-          <span class="count-know" title="Sudah Hafal">🟢 ${fs.know}</span>
-          <span class="count-hesitate" title="Masih Ragu">🟡 ${fs.hesitate}</span>
-          <span class="count-dont" title="Paling Susah">🔴 ${fs.hardCount}</span>
+          <span class="count-know" title="Sudah Hafal">Hafal: ${fs.know}</span>
+          <span class="count-dont" title="Perlu Diulang">Ulang: ${fs.dontknow}</span>
         </div>
       </div>
 
@@ -1415,26 +1310,22 @@ function renderFlashCard() {
           </div>
           <div class="flash-card-actions">
             <button class="flash-action-btn audio-btn" title="Dengarkan pelafalan" onclick="event.stopPropagation(); speakJapanese('${card.speech}')">
-              🔊
+              <svg viewBox="0 0 24 24" class="svg-icon-mini"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
             </button>
-            <button class="flash-action-btn star-btn ${isStarred ? 'active' : ''}" title="${isStarred ? 'Hapus bintang' : 'Bintang kartu ini (Favorit)'}" onclick="toggleFlashCardStar('${card.id}', event)">
-              ${isStarred ? '⭐' : '☆'}
-            </button>
-            <button class="flash-action-btn hard-btn ${isHard ? 'active' : ''}" title="${isHard ? 'Hapus dari paling susah' : 'Tandai paling susah'}" onclick="toggleFlashCardHard('${card.id}', event)">
-              🔥
+            <button class="flash-action-btn star-btn ${isStarred ? 'active' : ''}" title="${isStarred ? 'Hapus dari huruf berbintang' : 'Tandai sebagai huruf yang susah dihafal'}" onclick="toggleFlashCardStar('${card.id}', event)">
+              <svg viewBox="0 0 24 24" class="svg-star-icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             </button>
           </div>
         </div>
 
         <div class="flash-card-body">
-          <span class="flash-char ${isVocab ? 'is-vocab' : ''}">${card.char}</span>
+          <span class="flash-char">${card.char}</span>
           <div class="flash-answer" id="flash-answer" style="display:none;">
             <span class="flash-romaji">${card.romaji}</span>
-            ${card.meaning ? `<span class="flash-meaning">${card.meaning}</span>` : ''}
-            ${card.example && card.example !== card.meaning ? `<span class="flash-example">${card.example}</span>` : ''}
+            ${card.example ? `<span class="flash-example">${card.example}</span>` : ''}
           </div>
           <p class="flash-hint" id="flash-hint">
-            <span>👆 Ketuk kartu untuk membuka bacaan</span>
+            <span>Klik kartu untuk membuka bacaan</span>
           </p>
         </div>
       </div>
@@ -1466,38 +1357,23 @@ function revealFlash() {
 
   if (btns) {
     btns.innerHTML = `
-      <button class="flash-btn know" onclick="flashAnswer('know')">
+      <button class="flash-btn know" onclick="flashAnswer(true)">
         <svg viewBox="0 0 24 24" class="svg-icon-mini"><polyline points="20 6 9 17 4 12"/></svg>
-        <span>Sudah Hafal (+2)</span>
+        <span>Sudah Hafal (+2 Poin)</span>
       </button>
-      <button class="flash-btn hesitate" onclick="flashAnswer('hesitate')">
-        <span>Masih Ragu (+1)</span>
-      </button>
-      <button class="flash-btn dontknow" onclick="flashAnswer('hard')">
-        <span>🔥 Paling Susah</span>
+      <button class="flash-btn dontknow" onclick="flashAnswer(false)">
+        <span>Belum Hafal</span>
       </button>
     `;
   }
 }
 
-function flashAnswer(level) {
-  const card = flashState.cards[flashState.current];
-  if (!card) return;
-
-  if (level === 'know') {
+function flashAnswer(know) {
+  if (know) {
     flashState.know++;
     addScore(2);
-    if (flashState.mode === 'hard') {
-      removeCardFromHardList(card.id);
-      showToast(`Hebat! "${card.char}" dihapus dari daftar Paling Susah ✨`, 'success');
-    }
-  } else if (level === 'hesitate') {
-    flashState.hesitate++;
-    addScore(1);
-  } else if (level === 'hard') {
-    flashState.hardCount++;
-    addCardToHardList(card.id);
-    showToast(`"${card.char}" dicatat ke daftar Paling Susah 🔥`, 'error');
+  } else {
+    flashState.dontknow++;
   }
 
   flashState.current++;
