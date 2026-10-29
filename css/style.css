@@ -1912,12 +1912,33 @@ body {
   font-size: 0.86rem;
   font-weight: 700;
 }
+.flash-progress-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.flash-reset-inline-btn {
+  background: var(--card-inner);
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.flash-reset-inline-btn:hover {
+  color: var(--red);
+  border-color: #F5D5CE;
+  background: #FAF1EE;
+}
 .flash-counters {
   display: flex;
   gap: 12px;
 }
 .count-know { color: var(--green); }
-.count-hesitate { color: #BA7635; }
 .count-dont { color: var(--red); }
 
 /* Flash Filter Bar */

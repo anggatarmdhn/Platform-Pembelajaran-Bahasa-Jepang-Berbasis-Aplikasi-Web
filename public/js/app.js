@@ -1139,6 +1139,9 @@ let flashState = {
   current: 0,
   know: 0,
   dontknow: 0,
+  knowCards: [],
+  unlearnedCards: [],
+  round: 1,
   revealed: false,
 };
 
@@ -1178,6 +1181,9 @@ function startFlashCard(mode = null) {
   flashState.current = 0;
   flashState.know = 0;
   flashState.dontknow = 0;
+  flashState.knowCards = [];
+  flashState.unlearnedCards = [];
+  flashState.round = 1;
   flashState.revealed = false;
 
   renderFlashCard();
@@ -1185,6 +1191,27 @@ function startFlashCard(mode = null) {
 
 function setFlashMode(newMode) {
   startFlashCard(newMode);
+}
+
+function continueUnlearnedFlashCards() {
+  if (!flashState.unlearnedCards || flashState.unlearnedCards.length === 0) return;
+
+  flashState.cards = shuffle([...flashState.unlearnedCards]);
+  flashState.current = 0;
+  flashState.know = 0;
+  flashState.dontknow = 0;
+  flashState.knowCards = [];
+  flashState.unlearnedCards = [];
+  flashState.round++;
+  flashState.revealed = false;
+
+  showToast(`Melanjutkan ${flashState.cards.length} huruf yang belum hafal`, 'info');
+  renderFlashCard();
+}
+
+function resetFlashCardSession() {
+  startFlashCard(flashState.mode);
+  showToast('Sesi flash card direset ke awal.', 'info');
 }
 
 function renderFlashCard() {
@@ -1244,6 +1271,8 @@ function renderFlashCard() {
 
   // Case 2: Session finished
   if (fs.current >= fs.cards.length) {
+    const hasUnlearned = fs.unlearnedCards && fs.unlearnedCards.length > 0;
+
     screen.innerHTML = `
       <div class="flash-game-container">
         ${filterTabsHtml}
@@ -1254,28 +1283,43 @@ function renderFlashCard() {
               <polyline points="20 32 28 40 44 24" stroke="#BA5444" stroke-width="4" stroke-linecap="round" fill="none"/>
             </svg>
           </div>
-          <div class="quiz-result-title">Sesi Flash Card Selesai</div>
-          <p style="margin:8px 0; color:var(--text-soft);">Mode: <strong>${getFlashModeLabel(fs.mode)}</strong> • ${fs.cards.length} huruf telah dipelajari.</p>
+          <div class="quiz-result-title">
+            ${hasUnlearned ? 'Putaran Flash Card Selesai' : 'Semua Huruf Berhasil Dihafal!'}
+          </div>
+          <p style="margin:8px 0; color:var(--text-soft);">
+            Mode: <strong>${getFlashModeLabel(fs.mode)}</strong>${fs.round > 1 ? ` • Putaran ${fs.round}` : ''} • ${fs.cards.length} huruf telah dipelajari.
+          </p>
           
           <div class="flash-result-stats">
             <div class="flash-stat-pill green">
               <span>Sudah Hafal: <strong>${fs.know}</strong></span>
             </div>
             <div class="flash-stat-pill red">
-              <span>Perlu Diulang: <strong>${fs.dontknow}</strong></span>
+              <span>Belum Hafal: <strong>${fs.dontknow}</strong></span>
             </div>
           </div>
 
           <div class="flash-result-buttons">
-            <button class="flash-result-btn primary" onclick="startFlashCard()">
-              <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-              <span>Ulangi Sesi Ini</span>
+            ${hasUnlearned ? `
+              <button class="flash-result-btn primary" onclick="continueUnlearnedFlashCards()">
+                <span>Lanjut Huruf yang Belum Hafal (${fs.unlearnedCards.length})</span>
+              </button>
+            ` : `
+              <button class="flash-result-btn primary" onclick="resetFlashCardSession()">
+                <span>Mulai Ulang dari Awal</span>
+              </button>
+            `}
+
+            <button class="flash-result-btn secondary" onclick="resetFlashCardSession()">
+              <span>Reset Sesi ke Awal</span>
             </button>
-            ${starredCount > 0 ? `
+
+            ${starredCount > 0 && fs.mode !== 'starred' ? `
               <button class="flash-result-btn star" onclick="setFlashMode('starred')">
                 <span>Latih Huruf Berbintang (${starredCount})</span>
               </button>
             ` : ''}
+
             <button class="flash-result-btn secondary" onclick="setFlashMode('all')">
               <span>Kembali ke Semua Huruf</span>
             </button>
@@ -1295,10 +1339,13 @@ function renderFlashCard() {
       ${filterTabsHtml}
 
       <div class="flash-progress-info">
-        <span class="flash-count">Kartu ${fs.current + 1} / ${fs.cards.length}</span>
+        <div class="flash-progress-left">
+          <span class="flash-count">Kartu ${fs.current + 1} / ${fs.cards.length}${fs.round > 1 ? ` (Putaran ${fs.round})` : ''}</span>
+          <button class="flash-reset-inline-btn" title="Reset sesi ini ke awal" onclick="resetFlashCardSession()">Reset Sesi</button>
+        </div>
         <div class="flash-counters">
           <span class="count-know" title="Sudah Hafal">Hafal: ${fs.know}</span>
-          <span class="count-dont" title="Perlu Diulang">Ulang: ${fs.dontknow}</span>
+          <span class="count-dont" title="Belum Hafal">Belum: ${fs.dontknow}</span>
         </div>
       </div>
 
@@ -1369,11 +1416,16 @@ function revealFlash() {
 }
 
 function flashAnswer(know) {
+  const card = flashState.cards[flashState.current];
+  if (!card) return;
+
   if (know) {
     flashState.know++;
+    flashState.knowCards.push(card);
     addScore(2);
   } else {
     flashState.dontknow++;
+    flashState.unlearnedCards.push(card);
   }
 
   flashState.current++;
