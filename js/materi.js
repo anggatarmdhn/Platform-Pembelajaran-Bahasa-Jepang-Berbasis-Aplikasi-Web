@@ -3276,15 +3276,33 @@ function renderLessonListFromDb(lessons, level) {
 
   container.innerHTML = lessons.map((les) => {
     const isDone = completedLessons.includes(les.id);
-    const accent = les.accent_color || level.accent_color || '#2563EB';
-    const numBg = les.num_bg || '#EFF6FF';
+    let accent = (les.accent_color || level.accent_color || '#3E6B89').toUpperCase();
+    let numBg = les.num_bg || '#FAF1EE';
+
+    // Map harsh saturated colors to soft warm Japanese tones
+    if (accent.includes('D9383A') || accent.includes('BA3D27') || accent.includes('EF4444') || accent.includes('RED')) {
+      accent = '#BA5444';
+      numBg = '#FAF1EE';
+    } else if (accent.includes('2563EB') || accent.includes('1E3A8A') || accent.includes('3B82F6') || accent.includes('BLUE')) {
+      accent = '#3E6B89';
+      numBg = '#EFF4F8';
+    } else if (accent.includes('D97706') || accent.includes('C27608') || accent.includes('F59E0B') || accent.includes('AMBER') || accent.includes('YELLOW')) {
+      accent = '#BA7635';
+      numBg = '#FDF5ED';
+    } else if (accent.includes('059669') || accent.includes('2B7A4F') || accent.includes('10B981') || accent.includes('GREEN')) {
+      accent = '#437856';
+      numBg = '#F0F6F2';
+    } else if (accent.includes('7C467C') || accent.includes('4338CA') || accent.includes('PURPLE')) {
+      accent = '#74567A';
+      numBg = '#F7F1F8';
+    }
 
     return `
       <div class="materi-lesson-card ${isDone ? 'completed' : ''}" 
            style="--card-accent:${accent}; --card-num-bg:${numBg};"
            onclick="openLesson(${les.id})">
         <div class="materi-card-num">
-          ${isDone ? '' : les.lesson_number}
+          ${isDone ? '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#437856;fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>' : les.lesson_number}
         </div>
         <div class="materi-card-body">
           <div class="materi-card-top">

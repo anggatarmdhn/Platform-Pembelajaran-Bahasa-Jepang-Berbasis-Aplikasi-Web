@@ -440,7 +440,6 @@
                   <span class="badge-pill-sub">Kurikulum Siswa Terstruktur</span>
                 </div>
                 <h1 class="materi-banner-title">
-                  <span class="materi-banner-jp">さくらクエスト</span><br/>
                   Petualangan Kenji &amp; Kiko
                 </h1>
                 <p class="materi-banner-desc">
@@ -465,25 +464,25 @@
                 <svg viewBox="0 0 200 160" style="width:100%;height:100%;">
                   <defs>
                     <linearGradient id="sakuraBrandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#FEE2E2"/>
-                      <stop offset="50%" stop-color="#DBEAFE"/>
-                      <stop offset="100%" stop-color="#DCFCE7"/>
+                      <stop offset="0%" stop-color="#FAF1EE"/>
+                      <stop offset="50%" stop-color="#EFF4F8"/>
+                      <stop offset="100%" stop-color="#F0F6F2"/>
                     </linearGradient>
                   </defs>
-                  <circle cx="100" cy="80" r="70" fill="url(#sakuraBrandGrad)" opacity="0.6"/>
+                  <circle cx="100" cy="80" r="70" fill="url(#sakuraBrandGrad)" opacity="0.8"/>
                   <!-- Torii Gate Silhouette -->
-                  <rect x="70" y="38" width="60" height="7" rx="3" fill="#D9383A"/>
-                  <rect x="65" y="32" width="70" height="6" rx="2" fill="#D9383A"/>
-                  <line x1="78" y1="38" x2="78" y2="100" stroke="#D9383A" stroke-width="5" stroke-linecap="round"/>
-                  <line x1="122" y1="38" x2="122" y2="100" stroke="#D9383A" stroke-width="5" stroke-linecap="round"/>
+                  <rect x="70" y="38" width="60" height="7" rx="3" fill="#BA5444"/>
+                  <rect x="65" y="32" width="70" height="6" rx="2" fill="#BA5444"/>
+                  <line x1="78" y1="38" x2="78" y2="100" stroke="#BA5444" stroke-width="5" stroke-linecap="round"/>
+                  <line x1="122" y1="38" x2="122" y2="100" stroke="#BA5444" stroke-width="5" stroke-linecap="round"/>
                   <!-- Mascot Character Emblem -->
-                  <circle cx="100" cy="95" r="30" fill="#2563EB" stroke="#1E3A8A" stroke-width="2.5"/>
+                  <circle cx="100" cy="95" r="30" fill="#3E6B89" stroke="#2E5169" stroke-width="2.5"/>
                   <circle cx="100" cy="95" r="24" fill="#FFFFFF"/>
-                  <text x="100" y="103" font-size="20" font-family="'Noto Sans JP', sans-serif" font-weight="900" fill="#D9383A" text-anchor="middle">日</text>
+                  <text x="100" y="103" font-size="20" font-family="'Noto Sans JP', sans-serif" font-weight="900" fill="#BA5444" text-anchor="middle">日</text>
                   <!-- Cherry Blossom Petals -->
-                  <circle cx="50" cy="50" r="6" fill="#F472B6" opacity="0.8"/>
-                  <circle cx="155" cy="65" r="7" fill="#F472B6" opacity="0.8"/>
-                  <circle cx="140" cy="120" r="5" fill="#F472B6" opacity="0.8"/>
+                  <circle cx="50" cy="50" r="6" fill="#F3C4C9" opacity="0.7"/>
+                  <circle cx="155" cy="65" r="7" fill="#F3C4C9" opacity="0.7"/>
+                  <circle cx="140" cy="120" r="5" fill="#F3C4C9" opacity="0.7"/>
                 </svg>
               </div>
             </div>
