@@ -1857,7 +1857,6 @@
 
       <div id="game-menu" class="game-menu">
         <div class="game-card game-card-featured" onclick="startGame('kana-blast')">
-          <div class="featured-badge-blast">MODE BARU </div>
           <div class="game-icon-wrap icon-cyan-blast">
             <svg viewBox="0 0 24 24" class="svg-icon-large">
               <circle cx="12" cy="17" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -1954,6 +1953,13 @@
       <div class="monster-arena-wrapper">
         <!-- LOBBY / SETTINGS SCREEN -->
         <div id="ms-lobby" class="ms-lobby-card">
+          <div class="game-top-bar" style="margin-bottom:1.2rem; background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.12);">
+            <button class="btn-game-back" onclick="exitMonsterGame()" style="background:rgba(15,23,42,0.8); color:#F8FAFC; border-color:#475569;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Kembali ke Menu Game</span>
+            </button>
+            <span class="game-top-title" style="color:#F8FAFC;">Sky Atk Defense</span>
+          </div>
           <div class="ms-lobby-hero">
             <div class="ms-lobby-mascot-art">
               <svg class="lobby-banner-svg" viewBox="0 0 140 100">
@@ -1976,6 +1982,7 @@
               <div class="ms-pill-selector">
                 <button class="ms-pill active" data-mode="hiragana" onclick="setMonsterMode('hiragana')">Hiragana (ひらがな)</button>
                 <button class="ms-pill" data-mode="katakana" onclick="setMonsterMode('katakana')">Katakana (カタカナ)</button>
+                <button class="ms-pill" data-mode="kanji-n5" onclick="setMonsterMode('kanji-n5')">Kanji N5 (漢字)</button>
                 <button class="ms-pill" data-mode="mix" onclick="setMonsterMode('mix')">Campuran (Kana)</button>
                 <button class="ms-pill" data-mode="words" onclick="setMonsterMode('words')">Kata Pendek (単語)</button>
               </div>
@@ -2016,6 +2023,10 @@
         <div id="ms-battle" class="ms-battle-card hidden">
           <!-- TOP HUD -->
           <div class="ms-hud">
+            <button class="btn-game-back" onclick="exitMonsterGame()" style="padding:0.35rem 0.85rem; font-size:0.8rem; background:rgba(15,23,42,0.7); color:#F8FAFC; border-color:#475569;" title="Kembali ke Menu Game">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Keluar</span>
+            </button>
             <div class="ms-hud-lives" id="ms-lives">
               <!-- Dynamically rendered SVG hearts -->
             </div>

@@ -4854,3 +4854,191 @@ body {
     gap: 10px;
   }
 }
+
+/* ====================================================
+   MINIGAMES TOP BAR NAVIGATION (BACK BUTTON TO MENU)
+   ==================================================== */
+.game-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px;
+  margin-bottom: 20px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+.btn-game-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-game-back:hover {
+  background: #BE5544;
+  color: white;
+  border-color: #BE5544;
+  transform: translateX(-3px);
+  box-shadow: 0 4px 12px rgba(190, 85, 68, 0.25);
+}
+.btn-game-back svg {
+  stroke-width: 2.2;
+}
+.game-top-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ====================================================
+   GURU DASHBOARD MINIGAMES MANAGEMENT
+   ==================================================== */
+.admin-minigames-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.admin-games-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--border);
+}
+.admin-game-chip {
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-game-chip:hover {
+  border-color: #BE5544;
+  color: #BE5544;
+}
+.admin-game-chip.active {
+  background: #BE5544;
+  border-color: #BE5544;
+  color: white;
+  box-shadow: 0 4px 14px rgba(190, 85, 68, 0.3);
+}
+.admin-game-details {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.admin-settings-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.admin-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.admin-card-head h4 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-card-head p {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin: 4px 0 0 0;
+}
+.admin-submodes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.admin-submode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.admin-submode-badge.is-active {
+  border-color: #10B981;
+  background: #ECFDF5;
+  color: #065F46;
+}
+.admin-submode-badge.is-inactive {
+  border-color: #94A3B8;
+  background: #F1F5F9;
+  color: #64748B;
+  opacity: 0.7;
+}
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.admin-soal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: left;
+}
+.admin-soal-table th {
+  background: var(--surface);
+  padding: 12px 14px;
+  font-weight: 800;
+  color: var(--text);
+  border-bottom: 1.5px solid var(--border);
+  white-space: nowrap;
+}
+.admin-soal-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.admin-soal-table tr:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+.char-preview-pill {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #0284C7;
+  display: inline-block;
+  min-width: 34px;
+  text-align: center;
+}

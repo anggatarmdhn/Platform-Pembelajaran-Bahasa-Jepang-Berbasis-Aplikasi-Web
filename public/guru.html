@@ -631,6 +631,9 @@
       <button class="guru-tab-btn" onclick="switchGuruTab('students')">
         <span>Pantauan Siswa &amp; Nilai</span>
       </button>
+      <button class="guru-tab-btn" onclick="switchGuruTab('minigames')">
+        <span>Kelola Mini Games &amp; Bank Soal</span>
+      </button>
     </div>
 
     <!-- ==============================================
@@ -752,6 +755,55 @@
               <!-- Rendered via JS -->
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==============================================
+         TAB 5: KELOLA MINI GAMES & BANK SOAL GAME
+         ============================================== -->
+    <div class="guru-tab-content" id="guru-tab-minigames">
+      <div class="master-card">
+        <div class="master-card-header">
+          <div class="master-card-title">
+            <h3>Pusat Pengaturan Mini Games &amp; Bank Soal Aksara</h3>
+            <p>Kelola durasi waktu permainan, tambah sub-mode baru (seperti <strong>Kanji N5 Dasar, Kanji N4 Wisata</strong>), dan kelola bank soal atau kosakata untuk masing-masing game murid.</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            <button type="button" class="btn-preset" onclick="loadAdminPresetKanji()" title="Muat paket 15 Kanji N5 standar">+ Paket Kanji N5</button>
+            <button type="button" class="btn-guru-primary" onclick="openAddGameQuestionModal()">
+              <span>+ Tambah Soal / Karakter</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-minigames-wrap">
+          <!-- Game Selection Chips -->
+          <div class="admin-games-selector" id="admin-games-selector">
+            <button type="button" class="admin-game-chip active" id="chip-game-kana-blast" onclick="switchAdminGameTab('kana-blast')">
+              <span>Kana Blast (Turret Blaster)</span>
+            </button>
+            <button type="button" class="admin-game-chip" id="chip-game-sky-defense" onclick="switchAdminGameTab('sky-defense')">
+              <span>Sky Atk Defense</span>
+            </button>
+            <button type="button" class="admin-game-chip" id="chip-game-flash-card" onclick="switchAdminGameTab('flash-card')">
+              <span>Flash Card</span>
+            </button>
+            <button type="button" class="admin-game-chip" id="chip-game-memory-match" onclick="switchAdminGameTab('memory-match')">
+              <span>Memory Match</span>
+            </button>
+            <button type="button" class="admin-game-chip" id="chip-game-speed-quiz" onclick="switchAdminGameTab('speed-quiz')">
+              <span>Speed Quiz</span>
+            </button>
+            <button type="button" class="admin-game-chip" id="chip-game-word-builder" onclick="switchAdminGameTab('word-builder')">
+              <span>Word Builder</span>
+            </button>
+          </div>
+
+          <!-- Game Dynamic Details Panel -->
+          <div id="admin-game-details" class="admin-game-details">
+            <!-- Dynamically populated via JS -->
+          </div>
         </div>
       </div>
     </div>
@@ -1314,6 +1366,87 @@
     </div>
   </div>
 
+  <!-- ==============================================
+       MODAL: TAMBAH SUB-MODE MINIGAME
+       ============================================== -->
+  <div class="guru-modal-backdrop" id="modal-add-submode">
+    <div class="guru-modal-box">
+      <div class="guru-modal-header">
+        <h3>Tambah Sub-Mode Game Baru</h3>
+        <button type="button" class="btn-close-modal" onclick="closeModal('modal-add-submode')">&times;</button>
+      </div>
+      <form onsubmit="submitAddSubMode(event)">
+        <div class="form-group">
+          <label>Game Tujuan:</label>
+          <input type="text" id="submode-target-game" class="form-control" readonly style="background:#F1F5F9; font-weight:700;" />
+        </div>
+        <div class="form-group">
+          <label>ID Sub-Mode (Unik, huruf kecil tanpa spasi):</label>
+          <input type="text" id="submode-id" class="form-control" placeholder="contoh: kanji-n5, kanji-n4, tema-hewan" required />
+          <small style="color:#64748B;">Digunakan sebagai pengenal teknis sub-mode.</small>
+        </div>
+        <div class="form-group">
+          <label>Nama Tampilan Sub-Mode (Muncul di layar siswa):</label>
+          <input type="text" id="submode-name" class="form-control" placeholder="contoh: Kanji N5 Dasar (日, 月, dll.)" required />
+        </div>
+        <div class="modal-btn-row">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-add-submode')">Batal</button>
+          <button type="submit" class="btn-guru-primary">Tambahkan Sub-Mode</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==============================================
+       MODAL: TAMBAH / EDIT SOAL MINIGAME
+       ============================================== -->
+  <div class="guru-modal-backdrop" id="modal-add-game-question">
+    <div class="guru-modal-box">
+      <div class="guru-modal-header">
+        <h3 id="modal-game-q-title">Tambah Soal / Karakter Game</h3>
+        <button type="button" class="btn-close-modal" onclick="closeModal('modal-add-game-question')">&times;</button>
+      </div>
+      <form onsubmit="submitAddGameQuestion(event)">
+        <input type="hidden" id="game-q-edit-id" value="" />
+        <div class="form-group">
+          <label>Game Tujuan:</label>
+          <select id="game-q-target" class="form-control" onchange="updateSubmodeDropdownForModal()">
+            <option value="kana-blast">Kana Blast (Turret Blaster)</option>
+            <option value="sky-defense">Sky Atk Defense (Gerbang Desa)</option>
+            <option value="flash-card">Flash Card</option>
+            <option value="memory-match">Memory Match</option>
+            <option value="speed-quiz">Speed Quiz</option>
+            <option value="word-builder">Word Builder</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Sub-Mode / Kategori Soal:</label>
+          <select id="game-q-submode" class="form-control" required>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Karakter / Kata Aksara Jepang:</label>
+          <input type="text" id="game-q-char" class="form-control" placeholder="contoh: 日 atau 山 atau ねこ" required style="font-size:1.15rem; font-family:'Noto Sans JP', sans-serif;" />
+        </div>
+        <div class="form-group">
+          <label>Romaji / Cara Baca Latin:</label>
+          <input type="text" id="game-q-romaji" class="form-control" placeholder="contoh: hi / nichi atau yama atau neko" required />
+        </div>
+        <div class="form-group">
+          <label>Arti Bahasa Indonesia:</label>
+          <input type="text" id="game-q-mean" class="form-control" placeholder="contoh: Matahari / Hari" required />
+        </div>
+        <div class="modal-btn-row">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-add-game-question')">Batal</button>
+          <button type="submit" class="btn-guru-primary">Simpan ke Bank Soal Game</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
   <script>
     function escapeHtml(str) {
       if (str === null || str === undefined) return '';
@@ -1369,13 +1502,16 @@
       document.querySelectorAll('.guru-tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.guru-tab-content').forEach(c => c.classList.remove('active'));
 
-      const tabs = ['levels', 'lessons', 'quests', 'students'];
+      const tabs = ['levels', 'lessons', 'quests', 'students', 'minigames'];
       const idx = tabs.indexOf(tabName);
       if (idx !== -1) {
         const btns = document.querySelectorAll('.guru-tab-btn');
         if (btns[idx]) btns[idx].classList.add('active');
         const target = document.getElementById('guru-tab-' + tabName);
         if (target) target.classList.add('active');
+      }
+      if (tabName === 'minigames') {
+        renderAdminGameView();
       }
     }
 
@@ -2278,6 +2414,307 @@
         window.location.href = dir ? (dir + 'index.html') : 'index.html';
       }
       return false;
+    }
+
+    // ==========================================
+    // MINIGAMES MASTER ADMINISTRATION LOGIC
+    // ==========================================
+    let currentAdminGame = 'kana-blast';
+
+    function switchAdminGameTab(gameKey) {
+      currentAdminGame = gameKey;
+      document.querySelectorAll('.admin-game-chip').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('chip-game-' + gameKey);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderAdminGameView();
+    }
+
+    function renderAdminGameView() {
+      const container = document.getElementById('admin-game-details');
+      if (!container || typeof GameConfigManager === 'undefined') return;
+
+      const g = GameConfigManager.getGame(currentAdminGame);
+      if (!g) return;
+
+      const subModes = GameConfigManager.getAllSubModes(currentAdminGame);
+      const questions = GameConfigManager.getQuestions(currentAdminGame);
+      const duration = GameConfigManager.getDuration(currentAdminGame, 60);
+
+      container.innerHTML = `
+        <!-- CARD 1: PENGATURAN DURASI / WAKTU PERMAINAN -->
+        <div class="admin-settings-card">
+          <div class="admin-card-head">
+            <div>
+              <h4>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#BE5544" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                <span>Pengaturan Waktu &amp; Kecepatan (${g.title})</span>
+              </h4>
+              <p>Atur limit waktu bermain siswa agar latihan membaca aksara lebih menantang atau santai.</p>
+            </div>
+            <button type="button" class="btn-guru-primary" onclick="saveAdminGameDuration()">
+              <span>Simpan Pengaturan Waktu</span>
+            </button>
+          </div>
+          
+          <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <label style="font-weight:700; font-size:0.9rem;">Waktu Standar Permainan:</label>
+              <input type="number" id="admin-game-duration-input" class="form-control" style="width:110px; font-weight:800; font-size:1.1rem; text-align:center;" value="${duration < 900 ? duration : 60}" min="10" max="300" step="5" />
+              <span style="font-weight:700; color:#64748B;">Detik</span>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <span style="font-size:0.8rem; color:#64748B; font-weight:700;">Preset Cepat:</span>
+              <button type="button" class="btn-preset" onclick="document.getElementById('admin-game-duration-input').value = 30">30s (Blitz)</button>
+              <button type="button" class="btn-preset" onclick="document.getElementById('admin-game-duration-input').value = 45">45s</button>
+              <button type="button" class="btn-preset" onclick="document.getElementById('admin-game-duration-input').value = 60">60s (Standar)</button>
+              <button type="button" class="btn-preset" onclick="document.getElementById('admin-game-duration-input').value = 90">90s (Maraton)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: KELOLA SUB-MODE PERMAINAN (HIRAGANA, KATAKANA, KANJI, DLL) -->
+        <div class="admin-settings-card">
+          <div class="admin-card-head">
+            <div>
+              <h4>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563EB" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                <span>Sub-Mode Permainan (${subModes.length} Mode Tersedia)</span>
+              </h4>
+              <p>Aktifkan, nonaktifkan, atau tambah sub-mode baru (contoh: <strong>Kanji N5 Dasar, Kanji N4 Wisata</strong>) untuk game ini.</p>
+            </div>
+            <button type="button" class="btn-preset" style="color:#2563EB; border-color:#BFDBFE;" onclick="openAddSubModeModal()">
+              <span>+ Tambah Sub-Mode Baru</span>
+            </button>
+          </div>
+
+          <div class="admin-submodes-list">
+            ${subModes.map(sm => `
+              <div class="admin-submode-badge ${sm.active !== false ? 'is-active' : 'is-inactive'}">
+                <span>${sm.name}</span>
+                <button type="button" onclick="toggleAdminSubMode('${sm.id}')" style="background:transparent; border:none; cursor:pointer; font-weight:800; font-size:0.8rem; color:${sm.active !== false ? '#10B981' : '#64748B'};" title="Ubah Status">
+                  ${sm.active !== false ? 'Aktif' : 'Nonaktif'}
+                </button>
+                ${(sm.id.startsWith('custom') || sm.id === 'kanji-n5' || sm.id === 'kanji-n4') ? `
+                  <button type="button" onclick="deleteAdminSubMode('${sm.id}')" style="background:transparent; border:none; cursor:pointer; color:#DC2626; font-size:1rem; line-height:1;" title="Hapus Sub-Mode">&times;</button>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- CARD 3: BANK SOAL / KOSAKATA GAME -->
+        <div class="admin-settings-card">
+          <div class="admin-card-head">
+            <div>
+              <h4>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#059669" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span>Bank Soal &amp; Karakter Aksara (${questions.length} Butir Soal Terpasang)</span>
+              </h4>
+              <p>Kelola karakter aksara Jepang, romaji cara baca, dan arti bahasa Indonesia yang akan muncul saat siswa bermain.</p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-preset" onclick="loadAdminPresetKanji()" title="Muat paket 15 Kanji N5 standar">+ Paket Kanji N5</button>
+              <button type="button" class="btn-guru-primary" onclick="openAddGameQuestionModal()">
+                <span>+ Tambah Soal Baru</span>
+              </button>
+              <button type="button" class="btn-preset" style="color:#DC2626; border-color:#FECACA;" onclick="resetAdminGameDefault()">
+                <span>Reset Awal</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-soal-table">
+              <thead>
+                <tr>
+                  <th style="width:40px;">#</th>
+                  <th style="width:120px;">Karakter / Aksara</th>
+                  <th>Romaji (Cara Baca)</th>
+                  <th>Arti Bahasa Indonesia</th>
+                  <th>Sub-Mode Target</th>
+                  <th style="width:120px; text-align:center;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${questions.length === 0 ? `
+                  <tr>
+                    <td colspan="6" style="text-align:center; padding:2rem; color:#94A3B8;">Belum ada soal kustom di game ini. Silakan klik "+ Tambah Soal Baru" atau "+ Paket Kanji N5".</td>
+                  </tr>
+                ` : questions.map((q, idx) => `
+                  <tr>
+                    <td><strong>${idx + 1}</strong></td>
+                    <td><span class="char-preview-pill">${q.char}</span></td>
+                    <td><strong>${q.romaji}</strong></td>
+                    <td>${q.mean || '-'}</td>
+                    <td><span style="font-size:0.75rem; padding:3px 10px; border-radius:12px; background:#EFF6FF; color:#1D4ED8; font-weight:700;">${q.mode || 'Semua'}</span></td>
+                    <td style="text-align:center;">
+                      <button type="button" class="btn-preset" style="padding:4px 8px; font-size:0.78rem;" onclick="editAdminGameQuestion('${q.id}')">Edit</button>
+                      <button type="button" class="btn-preset" style="padding:4px 8px; font-size:0.78rem; color:#DC2626; border-color:#FECACA;" onclick="deleteAdminGameQuestion('${q.id}')">Hapus</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function saveAdminGameDuration() {
+      const input = document.getElementById('admin-game-duration-input');
+      if (!input) return;
+      const sec = parseInt(input.value, 10);
+      if (isNaN(sec) || sec < 5) {
+        alert('Masukkan durasi detik yang valid (minimal 5 detik).');
+        return;
+      }
+      GameConfigManager.setDuration(currentAdminGame, sec);
+      alert(`Durasi waktu bermain untuk ${currentAdminGame} berhasil disimpan: ${sec} detik!`);
+      renderAdminGameView();
+    }
+
+    function openAddSubModeModal() {
+      const targetInput = document.getElementById('submode-target-game');
+      const idInput = document.getElementById('submode-id');
+      const nameInput = document.getElementById('submode-name');
+      if (targetInput) targetInput.value = currentAdminGame;
+      if (idInput) idInput.value = '';
+      if (nameInput) nameInput.value = '';
+      openModal('modal-add-submode');
+    }
+
+    function submitAddSubMode(e) {
+      e.preventDefault();
+      const id = document.getElementById('submode-id').value.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
+      const name = document.getElementById('submode-name').value.trim();
+      if (!id || !name) return;
+
+      GameConfigManager.addSubMode(currentAdminGame, { id, name, active: true });
+      closeModal('modal-add-submode');
+      alert(`Sub-mode "${name}" berhasil ditambahkan!`);
+      renderAdminGameView();
+    }
+
+    function toggleAdminSubMode(modeId) {
+      GameConfigManager.toggleSubMode(currentAdminGame, modeId);
+      renderAdminGameView();
+    }
+
+    function deleteAdminSubMode(modeId) {
+      if (!confirm('Hapus sub-mode ini?')) return;
+      GameConfigManager.deleteSubMode(currentAdminGame, modeId);
+      renderAdminGameView();
+    }
+
+    function updateSubmodeDropdownForModal() {
+      const targetGame = document.getElementById('game-q-target').value;
+      const subSelect = document.getElementById('game-q-submode');
+      if (!subSelect) return;
+      const subModes = GameConfigManager.getAllSubModes(targetGame);
+      subSelect.innerHTML = subModes.map(sm => `<option value="${sm.id}">${sm.name}</option>`).join('');
+    }
+
+    function openAddGameQuestionModal() {
+      document.getElementById('modal-game-q-title').textContent = 'Tambah Soal / Karakter Game';
+      document.getElementById('game-q-edit-id').value = '';
+      document.getElementById('game-q-target').value = currentAdminGame;
+      document.getElementById('game-q-char').value = '';
+      document.getElementById('game-q-romaji').value = '';
+      document.getElementById('game-q-mean').value = '';
+      updateSubmodeDropdownForModal();
+      openModal('modal-add-game-question');
+    }
+
+    function submitAddGameQuestion(e) {
+      e.preventDefault();
+      const targetGame = document.getElementById('game-q-target').value;
+      const editId = document.getElementById('game-q-edit-id').value;
+      const submode = document.getElementById('game-q-submode').value;
+      const char = document.getElementById('game-q-char').value.trim();
+      const romaji = document.getElementById('game-q-romaji').value.trim();
+      const mean = document.getElementById('game-q-mean').value.trim();
+
+      if (!char || !romaji) return;
+
+      if (editId) {
+        GameConfigManager.updateQuestion(targetGame, editId, { char, romaji, mean, mode: submode });
+        alert('Soal / karakter berhasil diperbarui!');
+      } else {
+        const newId = 'q_' + Date.now();
+        GameConfigManager.addQuestion(targetGame, { id: newId, char, romaji, mean, mode: submode });
+        alert('Soal / karakter baru berhasil ditambahkan ke bank soal!');
+      }
+
+      closeModal('modal-add-game-question');
+      renderAdminGameView();
+    }
+
+    function editAdminGameQuestion(qId) {
+      const questions = GameConfigManager.getQuestions(currentAdminGame);
+      const q = questions.find(item => item.id === qId);
+      if (!q) return;
+
+      document.getElementById('modal-game-q-title').textContent = 'Edit Soal / Karakter Game';
+      document.getElementById('game-q-edit-id').value = q.id;
+      document.getElementById('game-q-target').value = currentAdminGame;
+      updateSubmodeDropdownForModal();
+      document.getElementById('game-q-submode').value = q.mode || '';
+      document.getElementById('game-q-char').value = q.char || '';
+      document.getElementById('game-q-romaji').value = q.romaji || '';
+      document.getElementById('game-q-mean').value = q.mean || '';
+
+      openModal('modal-add-game-question');
+    }
+
+    function deleteAdminGameQuestion(qId) {
+      if (!confirm('Hapus butir soal / karakter ini dari bank game?')) return;
+      GameConfigManager.deleteQuestion(currentAdminGame, qId);
+      renderAdminGameView();
+    }
+
+    function loadAdminPresetKanji() {
+      const presetKanji = [
+        { char: '日', romaji: 'hi', mean: 'Matahari / Hari', mode: 'kanji-n5' },
+        { char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
+        { char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
+        { char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
+        { char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
+        { char: '田', romaji: 'ta', mean: 'Sawah', mode: 'kanji-n5' },
+        { char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
+        { char: '口', romaji: 'kuchi', mean: 'Mulut', mode: 'kanji-n5' },
+        { char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' },
+        { char: '門', romaji: 'mon', mean: 'Gerbang', mode: 'kanji-n5' },
+        { char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
+        { char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
+        { char: '金', romaji: 'kane', mean: 'Emas / Uang', mode: 'kanji-n5' },
+        { char: '土', romaji: 'tsuchi', mean: 'Tanah', mode: 'kanji-n5' },
+        { char: '本', romaji: 'hon', mean: 'Buku / Asal', mode: 'kanji-n5' }
+      ];
+
+      const existingSubModes = GameConfigManager.getAllSubModes(currentAdminGame);
+      if (!existingSubModes.some(m => m.id === 'kanji-n5')) {
+        GameConfigManager.addSubMode(currentAdminGame, { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, dll.)', active: true });
+      }
+
+      presetKanji.forEach(k => {
+        GameConfigManager.addQuestion(currentAdminGame, {
+          id: 'k_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+          char: k.char,
+          romaji: k.romaji,
+          mean: k.mean,
+          mode: 'kanji-n5'
+        });
+      });
+
+      alert('Paket 15 Kanji N5 Dasar berhasil dimuat ke dalam bank game ' + currentAdminGame + '!');
+      renderAdminGameView();
+    }
+
+    function resetAdminGameDefault() {
+      if (!confirm('Kembalikan konfigurasi dan bank soal game ' + currentAdminGame + ' ke pengaturan awal bawaan?')) return;
+      GameConfigManager.resetToDefault(currentAdminGame);
+      alert('Pengaturan game ' + currentAdminGame + ' berhasil direset ke default.');
+      renderAdminGameView();
     }
 
     // Initialize all views

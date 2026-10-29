@@ -1005,6 +1005,268 @@ function showVocabCategory(cat) {
   });
 }
 
+// ====================================================
+// MASTER GAME CONFIGURATION & QUESTION BANK MANAGER
+// ====================================================
+const GAME_CONFIG_STORAGE_KEY = 'sijapanese_minigames_config';
+
+const DEFAULT_GAME_CONFIG = {
+  'kana-blast': {
+    title: 'Kana Blast (Turret Blaster)',
+    durations: [30, 45, 60, 90, 999],
+    defaultDuration: 60,
+    subModes: [
+      { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ, dll.)', active: true },
+      { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ, dll.)', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
+      { id: 'kana-hiragana', name: 'Aksara Hiragana (104 Huruf)', active: true },
+      { id: 'kana-katakana', name: 'Aksara Katakana (104 Huruf)', active: true },
+      { id: 'mix', name: 'Campuran Ekstrem (Kana & Kata)', active: true }
+    ],
+    customQuestions: [
+      { id: 'kb_k1', char: '日', romaji: 'hi', mean: 'Matahari / Hari', mode: 'kanji-n5' },
+      { id: 'kb_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
+      { id: 'kb_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
+      { id: 'kb_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
+      { id: 'kb_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
+      { id: 'kb_k6', char: '田', romaji: 'ta', mean: 'Sawah', mode: 'kanji-n5' },
+      { id: 'kb_k7', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
+      { id: 'kb_k8', char: '口', romaji: 'kuchi', mean: 'Mulut', mode: 'kanji-n5' },
+      { id: 'kb_k9', char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' },
+      { id: 'kb_k10', char: '門', romaji: 'mon', mean: 'Gerbang', mode: 'kanji-n5' },
+      { id: 'kb_k11', char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
+      { id: 'kb_k12', char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
+      { id: 'kb_k13', char: '金', romaji: 'kane', mean: 'Emas / Uang', mode: 'kanji-n5' },
+      { id: 'kb_k14', char: '土', romaji: 'tsuchi', mean: 'Tanah', mode: 'kanji-n5' },
+      { id: 'kb_k15', char: '本', romaji: 'hon', mean: 'Buku / Asal', mode: 'kanji-n5' }
+    ]
+  },
+  'sky-defense': {
+    title: 'Sky Atk Defense (Gerbang Desa)',
+    speeds: ['slow', 'normal', 'fast'],
+    defaultSpeed: 'normal',
+    subModes: [
+      { id: 'hiragana', name: 'Hiragana Saja', active: true },
+      { id: 'katakana', name: 'Katakana Saja', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
+      { id: 'mix', name: 'Campuran Hiragana & Katakana', active: true },
+      { id: 'words', name: 'Kosakata Mini (ねこ, いぬ, dll.)', active: true }
+    ],
+    customQuestions: [
+      { id: 'sd_k1', char: '日', romaji: 'hi', mean: 'Matahari', mode: 'kanji-n5' },
+      { id: 'sd_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
+      { id: 'sd_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
+      { id: 'sd_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
+      { id: 'sd_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
+      { id: 'sd_k6', char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
+      { id: 'sd_k7', char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
+      { id: 'sd_k8', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
+      { id: 'sd_k9', char: '本', romaji: 'hon', mean: 'Buku', mode: 'kanji-n5' },
+      { id: 'sd_k10', char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' }
+    ]
+  },
+  'flash-card': {
+    title: 'Flash Card Aksara & Kanji',
+    subModes: [
+      { id: 'all', name: 'Semua Huruf', active: true },
+      { id: 'hiragana', name: 'Hiragana', active: true },
+      { id: 'katakana', name: 'Katakana', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true },
+      { id: 'starred', name: 'Huruf Berbintang', active: true }
+    ],
+    customQuestions: [
+      { id: 'fc_k1', char: '日', romaji: 'hi / nichi', mean: 'Matahari, hari', mode: 'kanji-n5', example: '日曜日 (Nichiyōbi)' },
+      { id: 'fc_k2', char: '月', romaji: 'tsuki / getsu', mean: 'Bulan', mode: 'kanji-n5', example: '月曜日 (Getsuyōbi)' },
+      { id: 'fc_k3', char: '木', romaji: 'ki / moku', mean: 'Pohon, kayu', mode: 'kanji-n5', example: '木曜日 (Mokuyōbi)' },
+      { id: 'fc_k4', char: '山', romaji: 'yama / san', mean: 'Gunung', mode: 'kanji-n5', example: '富士山 (Fujisan)' },
+      { id: 'fc_k5', char: '川', romaji: 'kawa / gawa', mean: 'Sungai', mode: 'kanji-n5', example: '小川 (Ogawa)' },
+      { id: 'fc_k6', char: '田', romaji: 'ta / da', mean: 'Sawah padi', mode: 'kanji-n5', example: '田中 (Tanaka)' },
+      { id: 'fc_k7', char: '人', romaji: 'hito / jin', mean: 'Orang, manusia', mode: 'kanji-n5', example: '日本人 (Nihonjin)' },
+      { id: 'fc_k8', char: '口', romaji: 'kuchi / guchi', mean: 'Mulut, pintu masuk', mode: 'kanji-n5', example: '出口 (Deguchi)' },
+      { id: 'fc_k9', char: '車', romaji: 'kuruma / sha', mean: 'Mobil, kendaraan', mode: 'kanji-n5', example: '電車 (Densha)' },
+      { id: 'fc_k10', char: '門', romaji: 'mon', mean: 'Gerbang', mode: 'kanji-n5', example: '校門 (Kōmon)' }
+    ]
+  },
+  'memory-match': {
+    title: 'Memory Match',
+    pairsCount: 8,
+    subModes: [
+      { id: 'all', name: 'Campuran Hiragana & Katakana', active: true },
+      { id: 'hiragana', name: 'Hiragana Saja', active: true },
+      { id: 'katakana', name: 'Katakana Saja', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
+    ],
+    customQuestions: [
+      { id: 'mm_k1', char: '日', romaji: 'hi', mean: 'Matahari', mode: 'kanji-n5' },
+      { id: 'mm_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
+      { id: 'mm_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
+      { id: 'mm_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
+      { id: 'mm_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
+      { id: 'mm_k6', char: '火', romaji: 'hi', mean: 'Api', mode: 'kanji-n5' },
+      { id: 'mm_k7', char: '水', romaji: 'mizu', mean: 'Air', mode: 'kanji-n5' },
+      { id: 'mm_k8', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' }
+    ]
+  },
+  'speed-quiz': {
+    title: 'Speed Quiz Mode',
+    duration: 30,
+    subModes: [
+      { id: 'all', name: 'Semua Aksara & Kanji', active: true },
+      { id: 'hiragana', name: 'Hiragana Saja', active: true },
+      { id: 'katakana', name: 'Katakana Saja', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
+    ],
+    customQuestions: [
+      { id: 'sq_k1', char: '日', romaji: 'hi', mean: 'Matahari', mode: 'kanji-n5' },
+      { id: 'sq_k2', char: '月', romaji: 'tsuki', mean: 'Bulan', mode: 'kanji-n5' },
+      { id: 'sq_k3', char: '木', romaji: 'ki', mean: 'Pohon', mode: 'kanji-n5' },
+      { id: 'sq_k4', char: '山', romaji: 'yama', mean: 'Gunung', mode: 'kanji-n5' },
+      { id: 'sq_k5', char: '川', romaji: 'kawa', mean: 'Sungai', mode: 'kanji-n5' },
+      { id: 'sq_k6', char: '田', romaji: 'ta', mean: 'Sawah', mode: 'kanji-n5' },
+      { id: 'sq_k7', char: '人', romaji: 'hito', mean: 'Orang', mode: 'kanji-n5' },
+      { id: 'sq_k8', char: '口', romaji: 'kuchi', mean: 'Mulut', mode: 'kanji-n5' },
+      { id: 'sq_k9', char: '車', romaji: 'kuruma', mean: 'Mobil', mode: 'kanji-n5' },
+      { id: 'sq_k10', char: '本', romaji: 'hon', mean: 'Buku', mode: 'kanji-n5' }
+    ]
+  },
+  'word-builder': {
+    title: 'Word Builder',
+    customQuestions: [
+      { id: 'wb_c1', meaning: 'Tokyo (Ibu kota)', romaji: 't-o-u-k-y-o-u', answer: ['と','う','き','ょ','う'], chars: ['と','う','き','ょ','う','か','さ','ね'] },
+      { id: 'wb_c2', meaning: 'Gunung Fuji', romaji: 'f-u-j-i-s-a-n', answer: ['ふ','じ','さ','ん'], chars: ['ふ','じ','さ','ん','や','ま','て','ら'] },
+      { id: 'wb_c3', meaning: 'Terima Kasih', romaji: 'a-r-i-g-a-t-o-u', answer: ['あ','り','が','と','う'], chars: ['あ','り','が','と','う','こ','そ','ね'] }
+    ]
+  }
+};
+
+const GameConfigManager = {
+  get() {
+    try {
+      const raw = localStorage.getItem(GAME_CONFIG_STORAGE_KEY);
+      if (!raw) return JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+      const parsed = JSON.parse(raw);
+      const merged = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+      for (const k in parsed) {
+        if (merged[k]) {
+          merged[k] = Object.assign(merged[k], parsed[k]);
+        } else {
+          merged[k] = parsed[k];
+        }
+      }
+      return merged;
+    } catch (e) {
+      return JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+    }
+  },
+  save(config) {
+    try {
+      localStorage.setItem(GAME_CONFIG_STORAGE_KEY, JSON.stringify(config));
+    } catch (e) {}
+  },
+  getGame(gameId) {
+    const all = this.get();
+    return all[gameId] || DEFAULT_GAME_CONFIG[gameId] || null;
+  },
+  getSubModes(gameId) {
+    const g = this.getGame(gameId);
+    return (g && g.subModes) ? g.subModes.filter(m => m.active !== false) : [];
+  },
+  getAllSubModes(gameId) {
+    const g = this.getGame(gameId);
+    return (g && g.subModes) ? g.subModes : [];
+  },
+  getDurations(gameId) {
+    const g = this.getGame(gameId);
+    return (g && g.durations) ? g.durations : [30, 45, 60, 90, 999];
+  },
+  getDuration(gameId, fallback = 30) {
+    const g = this.getGame(gameId);
+    return (g && g.duration) ? g.duration : (g && g.defaultDuration ? g.defaultDuration : fallback);
+  },
+  getQuestions(gameId, mode = null) {
+    const g = this.getGame(gameId);
+    if (!g || !g.customQuestions) return [];
+    if (!mode || mode === 'all') return g.customQuestions;
+    return g.customQuestions.filter(q => q.mode === mode);
+  },
+  setDuration(gameId, duration) {
+    const all = this.get();
+    if (all[gameId]) {
+      all[gameId].duration = parseInt(duration, 10);
+      all[gameId].defaultDuration = parseInt(duration, 10);
+      this.save(all);
+    }
+  },
+  setDurationsList(gameId, durationsArr) {
+    const all = this.get();
+    if (all[gameId]) {
+      all[gameId].durations = durationsArr.map(n => parseInt(n, 10));
+      this.save(all);
+    }
+  },
+  addSubMode(gameId, modeObj) {
+    const all = this.get();
+    if (all[gameId]) {
+      if (!all[gameId].subModes) all[gameId].subModes = [];
+      all[gameId].subModes.push(modeObj);
+      this.save(all);
+    }
+  },
+  toggleSubMode(gameId, modeId) {
+    const all = this.get();
+    if (all[gameId] && all[gameId].subModes) {
+      const target = all[gameId].subModes.find(m => m.id === modeId);
+      if (target) {
+        target.active = !target.active;
+        this.save(all);
+      }
+    }
+  },
+  deleteSubMode(gameId, modeId) {
+    const all = this.get();
+    if (all[gameId] && all[gameId].subModes) {
+      all[gameId].subModes = all[gameId].subModes.filter(m => m.id !== modeId);
+      this.save(all);
+    }
+  },
+  addQuestion(gameId, questionObj) {
+    const all = this.get();
+    if (all[gameId]) {
+      if (!all[gameId].customQuestions) all[gameId].customQuestions = [];
+      all[gameId].customQuestions.push(questionObj);
+      this.save(all);
+    }
+  },
+  updateQuestion(gameId, questionId, updatedObj) {
+    const all = this.get();
+    if (all[gameId] && all[gameId].customQuestions) {
+      const idx = all[gameId].customQuestions.findIndex(q => q.id === questionId);
+      if (idx !== -1) {
+        all[gameId].customQuestions[idx] = Object.assign(all[gameId].customQuestions[idx], updatedObj);
+        this.save(all);
+      }
+    }
+  },
+  deleteQuestion(gameId, questionId) {
+    const all = this.get();
+    if (all[gameId] && all[gameId].customQuestions) {
+      all[gameId].customQuestions = all[gameId].customQuestions.filter(q => q.id !== questionId);
+      this.save(all);
+    }
+  },
+  resetToDefault(gameId = null) {
+    if (!gameId) {
+      this.save(DEFAULT_GAME_CONFIG);
+    } else {
+      const all = this.get();
+      all[gameId] = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG[gameId]));
+      this.save(all);
+    }
+  }
+};
+
+window.GameConfigManager = GameConfigManager;
+
 // ===== MINI GAMES =====
 let currentGame = null;
 let gameTimer = null;
@@ -1136,6 +1398,28 @@ function getFlashMasterList() {
     });
   }
 
+  // 3. Custom / Kanji from GameConfigManager
+  if (typeof GameConfigManager !== 'undefined') {
+    const customList = GameConfigManager.getQuestions('flash-card');
+    customList.forEach(q => {
+      const modeKey = q.mode || q.subMode || 'kanji-n5';
+      const isKanji = modeKey.includes('kanji');
+      list.push({
+        id: 'cfg_' + (q.id || Math.random().toString(36).substr(2, 9)),
+        char: q.char,
+        romaji: q.romaji,
+        type: modeKey,
+        typeLabel: isKanji ? 'Kanji' : modeKey.toUpperCase(),
+        badgeClass: isKanji ? 'kanji' : 'hiragana',
+        category: 'Bank Soal Guru',
+        group: q.mean || q.meaning || '',
+        example: q.example || (q.mean ? `${q.char} = ${q.mean}` : ''),
+        meaning: q.mean || q.meaning || '',
+        speech: q.char
+      });
+    });
+  }
+
   return list;
 }
 
@@ -1155,6 +1439,7 @@ function getFlashModeLabel(mode) {
   if (mode === 'hiragana') return 'Hiragana';
   if (mode === 'katakana') return 'Katakana';
   if (mode === 'starred') return 'Huruf Berbintang';
+  if (mode === 'kanji-n5') return 'Kanji N5 Dasar';
   return 'Semua Huruf';
 }
 
@@ -1172,15 +1457,13 @@ function startFlashCard(mode = null) {
   let filtered = [];
   const currentMode = flashState.mode;
 
-  if (currentMode === 'hiragana') {
-    filtered = master.filter(c => c.type === 'hiragana');
-  } else if (currentMode === 'katakana') {
-    filtered = master.filter(c => c.type === 'katakana');
+  if (currentMode === 'all') {
+    filtered = master;
   } else if (currentMode === 'starred') {
     const starredIds = new Set(getFlashStoredIds(FLASH_STARRED_KEY));
     filtered = master.filter(c => starredIds.has(c.id));
   } else {
-    filtered = master;
+    filtered = master.filter(c => c.type === currentMode);
   }
 
   flashState.cards = shuffle([...filtered]);
@@ -1228,18 +1511,35 @@ function renderFlashCard() {
   const starredIds = getFlashStoredIds(FLASH_STARRED_KEY);
   const starredCount = starredIds.length;
 
+  const topBarHtml = `
+    <div class="game-top-bar">
+      <button class="btn-game-back" onclick="showGameMenu()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Kembali ke Menu Game</span>
+      </button>
+      <span class="game-top-title">Flash Card Mode</span>
+    </div>
+  `;
+
+  const activeSubModes = (typeof GameConfigManager !== 'undefined')
+    ? GameConfigManager.getSubModes('flash-card')
+    : [
+        { id: 'all', name: 'Semua Huruf' },
+        { id: 'hiragana', name: 'Hiragana' },
+        { id: 'katakana', name: 'Katakana' },
+        { id: 'kanji-n5', name: 'Kanji N5' }
+      ];
+
+  const subChipsHtml = activeSubModes.map(sm => `
+    <button class="flash-filter-chip ${fs.mode === sm.id ? 'active' : ''}" onclick="setFlashMode('${sm.id}')">
+      <span>${sm.name}</span>
+    </button>
+  `).join('');
+
   const filterTabsHtml = `
     <div class="flash-filter-container">
       <div class="flash-filter-scroll">
-        <button class="flash-filter-chip ${fs.mode === 'all' ? 'active' : ''}" onclick="setFlashMode('all')">
-          <span>Semua Huruf</span>
-        </button>
-        <button class="flash-filter-chip ${fs.mode === 'hiragana' ? 'active' : ''}" onclick="setFlashMode('hiragana')">
-          <span>Hiragana</span>
-        </button>
-        <button class="flash-filter-chip ${fs.mode === 'katakana' ? 'active' : ''}" onclick="setFlashMode('katakana')">
-          <span>Katakana</span>
-        </button>
+        ${subChipsHtml}
         <button class="flash-filter-chip star-chip ${fs.mode === 'starred' ? 'active' : ''}" onclick="setFlashMode('starred')">
           <span>Huruf Berbintang (${starredCount})</span>
         </button>
@@ -1253,6 +1553,7 @@ function renderFlashCard() {
     
     screen.innerHTML = `
       <div class="flash-game-container">
+        ${topBarHtml}
         ${filterTabsHtml}
         <div class="flash-empty-card">
           <div class="flash-empty-crest">
@@ -1281,6 +1582,7 @@ function renderFlashCard() {
 
     screen.innerHTML = `
       <div class="flash-game-container">
+        ${topBarHtml}
         ${filterTabsHtml}
         <div class="quiz-result-card flash-result-card">
           <div class="quiz-result-crest">
@@ -1329,6 +1631,9 @@ function renderFlashCard() {
             <button class="flash-result-btn secondary" onclick="setFlashMode('all')">
               <span>Kembali ke Semua Huruf</span>
             </button>
+            <button class="flash-result-btn secondary" onclick="showGameMenu()">
+              <span>Kembali ke Menu Game</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1342,6 +1647,7 @@ function renderFlashCard() {
 
   screen.innerHTML = `
     <div class="flash-game-container">
+      ${topBarHtml}
       ${filterTabsHtml}
 
       <div class="flash-progress-info">
@@ -1442,17 +1748,54 @@ function flashAnswer(know) {
 // ==== 2. MEMORY MATCH GAME ====
 let memState = {};
 
-function startMemoryMatch() {
+function startMemoryMatch(mode = null) {
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Memory Match Mode';
 
-  const pool = shuffle(HIRAGANA).slice(0, 8);
+  if (mode) memState.mode = mode;
+  else if (!memState.mode) memState.mode = 'hiragana';
+
+  const m = memState.mode;
+  let poolSource = [];
+
+  if (m === 'katakana') {
+    poolSource = KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }));
+  } else if (m === 'kanji-n5' || m.includes('kanji')) {
+    if (typeof GameConfigManager !== 'undefined') {
+      const q = GameConfigManager.getQuestions('memory-match', m);
+      if (q && q.length > 0) {
+        poolSource = q.map(item => ({ char: item.char, romaji: item.romaji }));
+      }
+    }
+    if (!poolSource || poolSource.length === 0) {
+      poolSource = [
+        { char: '日', romaji: 'hi' },
+        { char: '月', romaji: 'tsuki' },
+        { char: '木', romaji: 'ki' },
+        { char: '山', romaji: 'yama' },
+        { char: '川', romaji: 'kawa' },
+        { char: '火', romaji: 'hi' },
+        { char: '水', romaji: 'mizu' },
+        { char: '人', romaji: 'hito' }
+      ];
+    }
+  } else if (m === 'all') {
+    poolSource = [
+      ...HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji })),
+      ...KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }))
+    ];
+  } else {
+    poolSource = HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji }));
+  }
+
+  const pool = shuffle(poolSource).slice(0, 8);
   const pairs = shuffle([
     ...pool.map((c, i) => ({ id: i, type: 'jp', val: c.char, match: i, audio: c.char })),
     ...pool.map((c, i) => ({ id: i + 8, type: 'ro', val: c.romaji, match: i, audio: c.char })),
   ]);
 
   memState = {
+    mode: m,
     cards: pairs,
     flipped: [],
     matched: new Set(),
@@ -1464,13 +1807,47 @@ function startMemoryMatch() {
 
 function renderMemoryGrid() {
   const screen = document.getElementById('game-screen');
+  if (!screen) return;
   const ms = memState;
-  const allMatched = ms.matched.size === 8;
+  const allMatched = ms.matched.size === (ms.cards.length / 2);
+
+  const topBarHtml = `
+    <div class="game-top-bar">
+      <button class="btn-game-back" onclick="showGameMenu()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Kembali ke Menu Game</span>
+      </button>
+      <span class="game-top-title">Memory Match Mode</span>
+    </div>
+  `;
+
+  const activeSubModes = (typeof GameConfigManager !== 'undefined')
+    ? GameConfigManager.getSubModes('memory-match')
+    : [
+        { id: 'hiragana', name: 'Hiragana Saja' },
+        { id: 'katakana', name: 'Katakana Saja' },
+        { id: 'kanji-n5', name: 'Kanji N5 Dasar' },
+        { id: 'all', name: 'Campuran' }
+      ];
+
+  const subChipsHtml = `
+    <div class="flash-filter-container" style="margin-bottom:14px;">
+      <div class="flash-filter-scroll">
+        ${activeSubModes.map(sm => `
+          <button class="flash-filter-chip ${ms.mode === sm.id ? 'active' : ''}" onclick="startMemoryMatch('${sm.id}')">
+            <span>${sm.name}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
 
   screen.innerHTML = `
+    ${topBarHtml}
+    ${subChipsHtml}
     <div class="memory-stats">
       <div class="mem-stat">Langkah: ${ms.moves}</div>
-      <div class="mem-stat">Cocok: ${ms.matched.size} / 8</div>
+      <div class="mem-stat">Cocok: ${ms.matched.size} / ${ms.cards.length / 2}</div>
       <div class="mem-stat">Total Skor: ${state.score} poin</div>
     </div>
     <div class="memory-grid" id="memory-grid">
@@ -1503,10 +1880,15 @@ function renderMemoryGrid() {
         </div>
         <div class="quiz-result-title">Selesai! Seluruh Kartu Cocok!</div>
         <p style="color:var(--text-soft);">Berhasil diselesaikan dalam ${ms.moves} kali tebakan.</p>
-        <button class="quiz-result-restart" onclick="startMemoryMatch()">
-          <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-          <span>Mainkan Lagi</span>
-        </button>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px;">
+          <button class="quiz-result-restart" onclick="startMemoryMatch(memState.mode)">
+            <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+            <span>Mainkan Lagi</span>
+          </button>
+          <button class="quiz-result-restart" style="background:#F1F5F9; color:#334155;" onclick="showGameMenu()">
+            <span>Kembali ke Menu Game</span>
+          </button>
+        </div>
       </div>
     ` : ''}
   `;
@@ -1548,18 +1930,68 @@ function flipMemory(idx) {
 // ==== 3. SPEED QUIZ GAME ====
 let speedState = {};
 
-function startSpeedQuiz() {
+function startSpeedQuiz(mode = null) {
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Speed Quiz Mode';
 
   clearInterval(gameTimer);
-  const combined = shuffle([...HIRAGANA, ...KATAKANA]);
+
+  if (mode) speedState.mode = mode;
+  else if (!speedState.mode) speedState.mode = 'all';
+
+  const m = speedState.mode;
+  let combined = [];
+
+  if (m === 'hiragana') {
+    combined = HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji }));
+  } else if (m === 'katakana') {
+    combined = KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }));
+  } else if (m === 'kanji-n5' || m.includes('kanji')) {
+    if (typeof GameConfigManager !== 'undefined') {
+      const q = GameConfigManager.getQuestions('speed-quiz', m);
+      if (q && q.length > 0) {
+        combined = q.map(item => ({ char: item.char, romaji: item.romaji }));
+      }
+    }
+    if (!combined || combined.length === 0) {
+      combined = [
+        { char: '日', romaji: 'hi' },
+        { char: '月', romaji: 'tsuki' },
+        { char: '木', romaji: 'ki' },
+        { char: '山', romaji: 'yama' },
+        { char: '川', romaji: 'kawa' },
+        { char: '田', romaji: 'ta' },
+        { char: '人', romaji: 'hito' },
+        { char: '車', romaji: 'kuruma' },
+        { char: '本', romaji: 'hon' }
+      ];
+    }
+  } else {
+    // All modes combined
+    combined = [
+      ...HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji })),
+      ...KATAKANA.map(k => ({ char: k.char, romaji: k.romaji }))
+    ];
+    if (typeof GameConfigManager !== 'undefined') {
+      const extra = GameConfigManager.getQuestions('speed-quiz');
+      if (extra && extra.length) {
+        extra.forEach(item => combined.push({ char: item.char, romaji: item.romaji }));
+      }
+    }
+  }
+
+  const configuredDuration = (typeof GameConfigManager !== 'undefined')
+    ? GameConfigManager.getDuration('speed-quiz', 30)
+    : 30;
+
   speedState = {
-    questions: combined,
+    mode: m,
+    questions: shuffle(combined),
     current: 0,
     correct: 0,
     wrong: 0,
-    timeLeft: 30,
+    maxTime: configuredDuration,
+    timeLeft: configuredDuration,
     running: true,
   };
 
@@ -1581,12 +2013,47 @@ function startSpeedQuiz() {
 function renderSpeedQuiz() {
   const ss = speedState;
   const q = ss.questions[ss.current % ss.questions.length];
-  const allChars = [...HIRAGANA, ...KATAKANA];
+  const allChars = ss.questions;
   const wrong = shuffle(allChars.filter(c => c.romaji !== q.romaji)).slice(0, 3).map(c => c.romaji);
   const options = shuffle([q.romaji, ...wrong]);
 
+  const topBarHtml = `
+    <div class="game-top-bar">
+      <button class="btn-game-back" onclick="clearInterval(gameTimer); showGameMenu();">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Kembali ke Menu Game</span>
+      </button>
+      <span class="game-top-title">Speed Quiz Mode</span>
+    </div>
+  `;
+
+  const activeSubModes = (typeof GameConfigManager !== 'undefined')
+    ? GameConfigManager.getSubModes('speed-quiz')
+    : [
+        { id: 'all', name: 'Semua Huruf' },
+        { id: 'hiragana', name: 'Hiragana Saja' },
+        { id: 'katakana', name: 'Katakana Saja' },
+        { id: 'kanji-n5', name: 'Kanji N5 Dasar' }
+      ];
+
+  const subChipsHtml = `
+    <div class="flash-filter-container" style="margin-bottom:14px;">
+      <div class="flash-filter-scroll">
+        ${activeSubModes.map(sm => `
+          <button class="flash-filter-chip ${ss.mode === sm.id ? 'active' : ''}" onclick="startSpeedQuiz('${sm.id}')">
+            <span>${sm.name}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
   const screen = document.getElementById('game-screen');
+  if (!screen) return;
+
   screen.innerHTML = `
+    ${topBarHtml}
+    ${subChipsHtml}
     <div class="speed-header">
       <div class="speed-timer-block">
         <div class="speed-timer" id="speed-timer">${ss.timeLeft}s</div>
@@ -1598,7 +2065,7 @@ function renderSpeedQuiz() {
       </div>
     </div>
     <div class="timer-bar-wrap">
-      <div class="timer-bar" id="timer-bar" style="width:${ss.timeLeft / 30 * 100}%"></div>
+      <div class="timer-bar" id="timer-bar" style="width:${(ss.timeLeft / ss.maxTime) * 100}%"></div>
     </div>
     <div class="quiz-question-card">
       <div class="quiz-char-row">
@@ -1625,9 +2092,11 @@ function updateTimerDisplay() {
   const el = document.getElementById('speed-timer');
   const bar = document.getElementById('timer-bar');
   if (el) el.textContent = speedState.timeLeft + 's';
-  if (bar) bar.style.width = (speedState.timeLeft / 30 * 100) + '%';
+  if (bar) bar.style.width = ((speedState.timeLeft / speedState.maxTime) * 100) + '%';
   if (speedState.timeLeft <= 8 && el) {
     el.style.color = '#EF4444';
+  } else if (el) {
+    el.style.color = '';
   }
 }
 
@@ -1637,7 +2106,7 @@ function answerSpeed(chosen, correct) {
 
   if (isCorrect) {
     speedState.correct++;
-    speedState.timeLeft = Math.min(speedState.timeLeft + 2, 30);
+    speedState.timeLeft = Math.min(speedState.timeLeft + 2, speedState.maxTime);
     addScore(5);
     showToast('Tepat! +5 Poin & Tambah 2 Detik', 'success');
   } else {
@@ -1653,10 +2122,22 @@ function answerSpeed(chosen, correct) {
 function renderSpeedResult() {
   const ss = speedState;
   const screen = document.getElementById('game-screen');
+  if (!screen) return;
   const total = ss.correct + ss.wrong;
   const pct = total > 0 ? Math.round(ss.correct / total * 100) : 0;
 
+  const topBarHtml = `
+    <div class="game-top-bar">
+      <button class="btn-game-back" onclick="showGameMenu()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Kembali ke Menu Game</span>
+      </button>
+      <span class="game-top-title">Speed Quiz Selesai</span>
+    </div>
+  `;
+
   screen.innerHTML = `
+    ${topBarHtml}
     <div class="quiz-result-card">
       <div class="quiz-result-crest">
         <svg viewBox="0 0 64 64" class="svg-crest-large">
@@ -1671,10 +2152,15 @@ function renderSpeedResult() {
         <div class="stat-pill red-pill">Salah: ${ss.wrong}</div>
       </div>
       <p style="color:var(--text-soft);">Akurasi Jawaban: ${pct}%</p>
-      <button class="quiz-result-restart" onclick="startSpeedQuiz()">
-        <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-        <span>Main Lagi</span>
-      </button>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px;">
+        <button class="quiz-result-restart" onclick="startSpeedQuiz(speedState.mode)">
+          <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          <span>Main Lagi</span>
+        </button>
+        <button class="quiz-result-restart" style="background:#F1F5F9; color:#334155;" onclick="showGameMenu()">
+          <span>Kembali ke Menu Game</span>
+        </button>
+      </div>
     </div>
   `;
 }
@@ -1686,9 +2172,31 @@ function startWordBuilder() {
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Word Builder Mode';
 
-  const words = shuffle([...WORD_BUILDER_WORDS]);
+  let words = [...WORD_BUILDER_WORDS];
+  if (typeof GameConfigManager !== 'undefined') {
+    const extra = GameConfigManager.getQuestions('word-builder');
+    if (extra && extra.length > 0) {
+      extra.forEach(item => {
+        if (item.answer && item.chars) {
+          words.push(item);
+        } else if (item.char) {
+          // auto build word builder structure from single char/word
+          const charsArr = item.char.split('');
+          const dummyDistractors = ['あ','い','う','え','お','か','さ','た','な','は'];
+          const dist = shuffle(dummyDistractors.filter(d => !charsArr.includes(d))).slice(0, 3);
+          words.push({
+            meaning: item.mean || item.meaning || item.romaji,
+            hint: item.romaji,
+            answer: charsArr,
+            chars: shuffle([...charsArr, ...dist])
+          });
+        }
+      });
+    }
+  }
+
   wbState = {
-    words,
+    words: shuffle(words),
     current: 0,
     score: 0,
     currentAnswer: [],
@@ -1700,9 +2208,21 @@ function startWordBuilder() {
 function renderWordBuilder() {
   const ws = wbState;
   const screen = document.getElementById('game-screen');
+  if (!screen) return;
+
+  const topBarHtml = `
+    <div class="game-top-bar">
+      <button class="btn-game-back" onclick="showGameMenu()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Kembali ke Menu Game</span>
+      </button>
+      <span class="game-top-title">Word Builder Mode</span>
+    </div>
+  `;
 
   if (ws.current >= ws.words.length) {
     screen.innerHTML = `
+      ${topBarHtml}
       <div class="quiz-result-card">
         <div class="quiz-result-crest">
           <svg viewBox="0 0 64 64" class="svg-crest-large">
@@ -1712,10 +2232,15 @@ function renderWordBuilder() {
         </div>
         <div class="quiz-result-title">Latihan Word Builder Selesai!</div>
         <p style="color:var(--text-soft); margin:8px 0;">Skor akhir penyusunan kata: <b>${ws.score} / ${ws.words.length}</b></p>
-        <button class="quiz-result-restart" onclick="startWordBuilder()">
-          <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-          <span>Ulangi Tantangan</span>
-        </button>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px;">
+          <button class="quiz-result-restart" onclick="startWordBuilder()">
+            <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+            <span>Ulangi Tantangan</span>
+          </button>
+          <button class="quiz-result-restart" style="background:#F1F5F9; color:#334155;" onclick="showGameMenu()">
+            <span>Kembali ke Menu Game</span>
+          </button>
+        </div>
       </div>
     `;
     return;
@@ -1725,6 +2250,7 @@ function renderWordBuilder() {
   const shuffledChars = shuffle([...word.chars]);
 
   screen.innerHTML = `
+    ${topBarHtml}
     <div class="wb-header-bar">
       <span>Kata ${ws.current + 1} dari ${ws.words.length}</span>
       <span>${ws.score} Kata Berhasil Disusun</span>
@@ -1736,7 +2262,7 @@ function renderWordBuilder() {
           <svg viewBox="0 0 24 24" class="svg-icon-mini"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
         </button>
       </div>
-      <div class="wb-hint">${word.hint}</div>
+      <div class="wb-hint">${word.hint || word.romaji || ''}</div>
       <div class="wb-answer-slots" id="wb-slots">
         ${word.answer.map((_, i) => `
           <div class="wb-slot" id="wb-slot-${i}" onclick="removeFromSlot(${i})">_</div>
@@ -2030,7 +2556,39 @@ function renderBlastLobby() {
   const screen = document.getElementById('game-screen');
   if (!screen) return;
 
+  const topBarHtml = `
+    <div class="game-top-bar">
+      <button class="btn-game-back" onclick="showGameMenu()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Kembali ke Menu Game</span>
+      </button>
+      <span class="game-top-title">Kana Blast (Turret Blaster)</span>
+    </div>
+  `;
+
+  const activeBlastSubModes = (typeof GameConfigManager !== 'undefined')
+    ? GameConfigManager.getSubModes('kana-blast')
+    : [
+        { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ, dll.)' },
+        { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ, dll.)' },
+        { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)' },
+        { id: 'kana-hiragana', name: 'Aksara Hiragana (104 Huruf)' },
+        { id: 'kana-katakana', name: 'Aksara Katakana (104 Huruf)' },
+        { id: 'mix', name: 'Campuran Ekstrem (Kana & Kata)' }
+      ];
+
+  const subModePillsHtml = activeBlastSubModes.map(sm => `
+    <button class="blast-pill ${blastState.mode === sm.id ? 'active' : ''}" onclick="setBlastMode('${sm.id}')">
+      <span>${sm.name}</span>
+    </button>
+  `).join('');
+
+  const defaultSec = (typeof GameConfigManager !== 'undefined')
+    ? GameConfigManager.getDuration('kana-blast', 60)
+    : 60;
+
   screen.innerHTML = `
+    ${topBarHtml}
     <div class="blast-lobby-card">
       <div class="blast-lobby-hero">
         <div class="blast-hero-art">
@@ -2072,29 +2630,15 @@ function renderBlastLobby() {
         <div class="blast-setting-group">
           <label class="blast-setting-label">Pilihan Materi:</label>
           <div class="blast-pill-grid">
-            <button class="blast-pill ${blastState.mode === 'vocab-hiragana' ? 'active' : ''}" onclick="setBlastMode('vocab-hiragana')">
-              <span class="pill-badge">Rekomendasi</span>
-              <span>Kosakata Hiragana (かさ, ねこ, dll.)</span>
-            </button>
-            <button class="blast-pill ${blastState.mode === 'vocab-katakana' ? 'active' : ''}" onclick="setBlastMode('vocab-katakana')">
-              <span>Kosakata Katakana (パン, テレビ, dll.)</span>
-            </button>
-            <button class="blast-pill ${blastState.mode === 'kana-hiragana' ? 'active' : ''}" onclick="setBlastMode('kana-hiragana')">
-              <span>Aksara Hiragana (104 Huruf)</span>
-            </button>
-            <button class="blast-pill ${blastState.mode === 'kana-katakana' ? 'active' : ''}" onclick="setBlastMode('kana-katakana')">
-              <span>Aksara Katakana (104 Huruf)</span>
-            </button>
-            <button class="blast-pill ${blastState.mode === 'mix' ? 'active' : ''}" onclick="setBlastMode('mix')">
-              <span>Campuran Ekstrem (Kana &amp; Kata)</span>
-            </button>
+            ${subModePillsHtml}
           </div>
         </div>
 
         <div class="blast-setting-group">
           <label class="blast-setting-label">Durasi Waktu:</label>
           <div class="blast-pill-grid blast-duration-grid">
-            <button class="blast-pill ${blastState.duration === 45 ? 'active' : ''}" onclick="setBlastDuration(45)">45 Detik (Blitz)</button>
+            <button class="blast-pill ${blastState.duration === 30 ? 'active' : ''}" onclick="setBlastDuration(30)">30 Detik (Blitz)</button>
+            <button class="blast-pill ${blastState.duration === 45 ? 'active' : ''}" onclick="setBlastDuration(45)">45 Detik</button>
             <button class="blast-pill ${blastState.duration === 60 ? 'active' : ''}" onclick="setBlastDuration(60)">60 Detik (Standar)</button>
             <button class="blast-pill ${blastState.duration === 90 ? 'active' : ''}" onclick="setBlastDuration(90)">90 Detik (Maraton)</button>
             <button class="blast-pill ${blastState.duration === 999 ? 'active' : ''}" onclick="setBlastDuration(999)">Santai (Tanpa Batas)</button>
@@ -2142,6 +2686,29 @@ function setBlastDuration(sec) {
 function getBlastPool() {
   if (blastState.mode === 'vocab-hiragana') return BLAST_VOCAB_HIRAGANA;
   if (blastState.mode === 'vocab-katakana') return BLAST_VOCAB_KATAKANA;
+  if (blastState.mode === 'kanji-n5' || blastState.mode.includes('kanji')) {
+    if (typeof GameConfigManager !== 'undefined') {
+      const q = GameConfigManager.getQuestions('kana-blast', blastState.mode);
+      if (q && q.length > 0) return q;
+    }
+    return [
+      { char: '日', romaji: 'hi', mean: 'Matahari' },
+      { char: '月', romaji: 'tsuki', mean: 'Bulan' },
+      { char: '木', romaji: 'ki', mean: 'Pohon' },
+      { char: '山', romaji: 'yama', mean: 'Gunung' },
+      { char: '川', romaji: 'kawa', mean: 'Sungai' },
+      { char: '田', romaji: 'ta', mean: 'Sawah' },
+      { char: '人', romaji: 'hito', mean: 'Orang' },
+      { char: '口', romaji: 'kuchi', mean: 'Mulut' },
+      { char: '車', romaji: 'kuruma', mean: 'Mobil' },
+      { char: '門', romaji: 'mon', mean: 'Gerbang' },
+      { char: '火', romaji: 'hi', mean: 'Api' },
+      { char: '水', romaji: 'mizu', mean: 'Air' },
+      { char: '金', romaji: 'kane', mean: 'Emas' },
+      { char: '土', romaji: 'tsuchi', mean: 'Tanah' },
+      { char: '本', romaji: 'hon', mean: 'Buku' }
+    ];
+  }
   if (blastState.mode === 'kana-hiragana') {
     return HIRAGANA.map(h => ({ char: h.char, romaji: h.romaji, mean: h.category + ' (' + h.group + ')' }));
   }
@@ -2168,6 +2735,7 @@ function initBlastBattle() {
 
   const modeLabel = blastState.mode === 'vocab-hiragana' ? 'Kosakata Hiragana' :
                     blastState.mode === 'vocab-katakana' ? 'Kosakata Katakana' :
+                    blastState.mode === 'kanji-n5' ? 'Kanji N5 Dasar' :
                     blastState.mode === 'kana-hiragana' ? 'Aksara Hiragana' :
                     blastState.mode === 'kana-katakana' ? 'Aksara Katakana' : 'Campuran';
 
@@ -2177,6 +2745,10 @@ function initBlastBattle() {
       <div class="blast-hud">
         <div class="blast-hud-row-top">
           <div class="blast-hud-left">
+            <button class="blast-hud-btn" onclick="stopBlastGame(); showGameMenu();" title="Kembali ke Menu Game">
+              <svg viewBox="0 0 24 24" class="svg-icon-mini"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Menu Game</span>
+            </button>
             <button class="blast-hud-btn" onclick="renderBlastLobby()" title="Kembali ke Pengaturan">
               <svg viewBox="0 0 24 24" class="svg-icon-mini"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
               <span>Lobi</span>
@@ -3108,6 +3680,25 @@ const MONSTER_PROFILES = [
 function getRandomKanaItem() {
   if (msState.mode === 'hiragana') return HIRAGANA[Math.floor(Math.random() * HIRAGANA.length)];
   if (msState.mode === 'katakana') return KATAKANA[Math.floor(Math.random() * KATAKANA.length)];
+  if (msState.mode === 'kanji-n5' || msState.mode.includes('kanji')) {
+    if (typeof GameConfigManager !== 'undefined') {
+      const q = GameConfigManager.getQuestions('sky-defense', msState.mode);
+      if (q && q.length > 0) return q[Math.floor(Math.random() * q.length)];
+    }
+    const kanjiList = [
+      { char: '日', romaji: 'hi' },
+      { char: '月', romaji: 'tsuki' },
+      { char: '木', romaji: 'ki' },
+      { char: '山', romaji: 'yama' },
+      { char: '川', romaji: 'kawa' },
+      { char: '火', romaji: 'hi' },
+      { char: '水', romaji: 'mizu' },
+      { char: '人', romaji: 'hito' },
+      { char: '本', romaji: 'hon' },
+      { char: '車', romaji: 'kuruma' }
+    ];
+    return kanjiList[Math.floor(Math.random() * kanjiList.length)];
+  }
   if (msState.mode === 'mix') {
     const pool = [...HIRAGANA, ...KATAKANA];
     return pool[Math.floor(Math.random() * pool.length)];
