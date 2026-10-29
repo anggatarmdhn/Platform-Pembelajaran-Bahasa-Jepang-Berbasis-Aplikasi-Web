@@ -2805,6 +2805,7 @@ let blastState = {
   timerInterval: null,
   highScore: 0,
   soundEnabled: true,
+  autoVoice: false, // Default: Hening tanpa suara TTS otomatis di game Kana Blast
   barrelAngle: 0,
 };
 
@@ -3000,6 +3001,14 @@ function renderBlastLobby() {
             <button class="blast-pill ${blastState.duration === 999 ? 'active' : ''}" onclick="setBlastDuration(999)">Santai (Tanpa Batas)</button>
           </div>
         </div>
+
+        <div class="blast-setting-group">
+          <label class="blast-setting-label">Suara Soal (TTS Pelafalan):</label>
+          <div class="blast-pill-grid">
+            <button class="blast-pill ${!blastState.autoVoice ? 'active' : ''}" onclick="setBlastAutoVoice(false)">Hening / Tanpa Suara TTS</button>
+            <button class="blast-pill ${blastState.autoVoice ? 'active' : ''}" onclick="setBlastAutoVoice(true)">Ucapkan Saat Target Muncul</button>
+          </div>
+        </div>
       </div>
 
       <div class="blast-lobby-stats-row">
@@ -3036,6 +3045,11 @@ function setBlastDuration(sec) {
   document.querySelectorAll('.blast-duration-grid .blast-pill').forEach(btn => {
     btn.classList.remove('active');
   });
+  renderBlastLobby();
+}
+
+function setBlastAutoVoice(val) {
+  blastState.autoVoice = !!val;
   renderBlastLobby();
 }
 
@@ -3126,7 +3140,12 @@ function initBlastBattle() {
           <!-- Prominent Holographic Target Banner in HUD -->
           <div class="blast-holo-target-box">
             <span class="holo-target-label">TARGET:</span>
-            <span class="holo-target-romaji" id="blast-target-romaji">---</span>
+            <div style="display:inline-flex; align-items:center; gap:8px;">
+              <span class="holo-target-romaji" id="blast-target-romaji">---</span>
+              <button type="button" class="blast-target-speaker-btn" id="blast-target-speaker" onclick="speakCurrentBlastTarget()" title="Dengarkan pelafalan target">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+            </div>
             <span class="holo-target-sub" id="blast-target-sub">Memuat target...</span>
           </div>
 
@@ -3334,6 +3353,19 @@ function pickNextBlastTarget() {
   if (subEl) {
     subEl.textContent = target.mean ? target.mean : (blastState.mode.includes('hiragana') ? 'Hiragana' : 'Katakana');
   }
+
+  // Jika opsi autoVoice diaktifkan, baru berbicara saat target soal muncul (bukan saat nembak)
+  if (blastState.autoVoice && target && target.char) {
+    try {
+      speakJapanese(target.char);
+    } catch (e) {}
+  }
+}
+
+function speakCurrentBlastTarget() {
+  if (blastState.targetItem && blastState.targetItem.char) {
+    speakJapanese(blastState.targetItem.char);
+  }
 }
 
 function blastGameLoop() {
@@ -3464,7 +3496,7 @@ function shootBlastBubble(bubbleId, event) {
     if (blastState.combo > 1) {
       setTimeout(() => playBlastSfx('combo'), 70);
     }
-    speakJapanese(bubble.char);
+    // Suara bicara ditiadakan saat menembak (jangan pas nembak baru ngomong)
 
     spawnBlastPopParticles(bubbleCenterX, bubbleCenterY, bubble.theme);
     spawnBlastShockwave(bubbleCenterX, bubbleCenterY, bubble.theme);

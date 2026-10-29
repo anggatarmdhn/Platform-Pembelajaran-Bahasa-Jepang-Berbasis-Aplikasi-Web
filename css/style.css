@@ -4193,6 +4193,27 @@ body {
   color: #CBD5E1;
   font-weight: 700;
 }
+.blast-target-speaker-btn {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38BDF8;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  vertical-align: middle;
+}
+.blast-target-speaker-btn:hover {
+  background: #38BDF8;
+  color: #0F172A;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
 .blast-hud-hint {
   font-size: 0.72rem;
   color: #64748B;
