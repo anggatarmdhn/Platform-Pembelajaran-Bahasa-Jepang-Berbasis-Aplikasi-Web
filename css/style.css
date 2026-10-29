@@ -3204,11 +3204,14 @@ body {
     height: 58px;
   }
   #app {
+    padding-top: 0;
+  }
+  .page {
     padding-top: 58px;
   }
   .hero {
     flex-direction: column;
-    padding: 28px 5% 24px;
+    padding: 20px 5% 20px;
     text-align: center;
     min-height: auto;
   }

@@ -586,45 +586,40 @@
 
           <!-- STEP 1: MULAI -->
           <div class="lesson-step-content active" id="step-content-mulai">
-            <div class="badge-pill-brand" style="margin-bottom:0.8rem;">N5 • Pelajaran 1 • Estimasi 12 Menit</div>
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1.5rem; margin-bottom:1.5rem;">
+            <div class="badge-pill-brand" style="margin-bottom:0.8rem;">N5 • Pelajaran 1 • Pengantar Pemula</div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
               <div>
                 <h2 style="font-size:1.85rem; font-weight:800; color:var(--text); line-height:1.25; margin-bottom:0.4rem;">
-                  Misteri 3 Aksara: Kanji, Hiragana, &amp; Katakana
+                  Selamat Datang di Jepang! Pengantar Bahasa, Budaya &amp; Sopan Santun (Aisatsu)
                 </h2>
-                <p style="color:var(--text-soft); font-size:1.05rem; font-weight:500;">
-                  Memahami fungsi, bentuk visual, dan cara kerja ketiga aksara dalam kehidupan sekolah dan sehari-hari
+                <p style="color:var(--text-soft); font-size:1.02rem; line-height:1.5; max-width:680px;">
+                  Jepang adalah negeri yang memadukan keindahan tradisi kuno dengan teknologi modern. Di modul pengantar awal ini, kita akan mempelajari pengetahuan umum tentang Jepang, etika salam dasar, dan memahami gambaran besar 3 jenis tulisan Jepang sebelum belajar membaca.
                 </p>
               </div>
-              <div style="font-size:3.5rem; flex-shrink:0;"></div>
+              <div class="reward-tag-pill" style="background:#FFFBEB; border:1.5px solid #FDE68A; padding:0.6rem 1rem; border-radius:12px; display:inline-flex; align-items:center; gap:0.5rem; color:#B45309; font-weight:700;">
+                <span>Reward Selesai: +50 Poin</span>
+              </div>
             </div>
 
-            <div style="background:#F8FAFC; border:1.5px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.6rem;">
-              <h4 style="color:var(--blue); font-size:1rem; font-weight:800; margin-bottom:0.8rem;"> Target Pembelajaranmu Hari Ini:</h4>
-              <ul style="list-style:none; display:flex; flex-direction:column; gap:0.65rem;">
-                <li style="display:flex; align-items:center; gap:0.6rem; font-size:0.92rem; color:var(--text);">
-                  <span style="color:var(--green); font-weight:800;"></span>
-                  <span>Mengenali secara visual perbedaan bentuk <strong>Kanji</strong> (simbolik), <strong>Hiragana</strong> (melengkung), dan <strong>Katakana</strong> (tegas/kaku).</span>
-                </li>
-                <li style="display:flex; align-items:center; gap:0.6rem; font-size:0.92rem; color:var(--text);">
-                  <span style="color:var(--green); font-weight:800;"></span>
-                  <span>Memahami fungsi kata serapan asing menggunakan Katakana (seperti nama minuman, makanan barat, dsb).</span>
-                </li>
-                <li style="display:flex; align-items:center; gap:0.6rem; font-size:0.92rem; color:var(--text);">
-                  <span style="color:var(--green); font-weight:800;"></span>
-                  <span>Mengetahui peran krusial Hiragana untuk partikel tata bahasa dan kata asli Jepang.</span>
-                </li>
-              </ul>
+            <div class="intro-dialog-card" style="background:var(--card); border:1.5px solid var(--border); border-radius:18px; padding:1.4rem; box-shadow:var(--shadow-sm); margin-bottom:2rem;">
+              <div style="display:flex; gap:1.2rem; align-items:center;">
+                <img src="img/avatar_tanaka.svg" style="width:52px; height:52px; border-radius:50%; border:2px solid #2563EB; flex-shrink:0;" alt="Sensei Tanaka" />
+                <div>
+                  <h4 style="font-size:1.02rem; font-weight:800; color:var(--text); margin-bottom:0.25rem;">Petunjuk dari Sensei Tanaka &amp; Kiko:</h4>
+                  <p style="font-size:0.92rem; color:var(--text-soft); line-height:1.5;">
+                    Konnichiwa, Kenji! Selamat datang di Jepang! Sebagai langkah awal pemula, kita berkenalan dulu dengan kebudayaan Jepang, etika dasar, serta 3 aksara tulisan. Kita fokus dulu memahami fondasi Hiragana &amp; Katakana. Untuk Kanji, cukup ketahui fungsinya sebagai lambang makna, nanti akan kita pelajari bertahap di akhir modul!
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <p style="color:var(--text-soft); line-height:1.6; margin-bottom:1.8rem;">
-              Jangan khawatir jika kamu belum pernah belajar bahasa Jepang sebelumnya! Pelajaran ini tidak menuntutmu langsung menghafal huruf, melainkan mengasah kepekaan matamu. Yuk, ikuti kisah Kenji dan Kiko di komik berikut!
-            </p>
-
-            <button class="btn-step-next" style="display:flex; margin:0 auto;" onclick="setLessonStep('komik')">
-              <span>Mulai Petualangan Komik</span>
-              <svg viewBox="0 0 24 24" class="svg-icon-mini"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+            <div class="step-bottom-nav">
+              <div></div>
+              <button type="button" class="btn-step-next" onclick="setLessonStep('komik')">
+                <span>Lanjut ke Langkah 2: Komik Cerita </span>
+                <svg viewBox="0 0 24 24" class="svg-icon-mini"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
           </div>
 
           <!-- STEP 2: KOMIK CERITA (SEDERHANA & BERSIH) -->

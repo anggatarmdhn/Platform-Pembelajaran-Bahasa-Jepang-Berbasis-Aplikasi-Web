@@ -74,6 +74,9 @@ body {
    ==================================================== */
 @media (max-width: 768px) {
   /* Set exact page top padding to match mobile navbar height (56px) */
+  #app {
+    padding-top: 0 !important;
+  }
   .page {
     padding-top: 56px !important;
   }
@@ -230,58 +233,135 @@ body {
   }
 
   /* ===== HERO & BERANDA ON MOBILE ===== */
-  .hero-section {
-    padding: 14px 14px 20px !important;
+  .hero {
+    min-height: auto !important;
+    padding: 16px 14px 22px !important;
+    gap: 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
   }
 
-  .hero-card {
-    padding: 20px 16px !important;
-    border-radius: 20px !important;
-    background: var(--card) !important;
-    border: 1.5px solid var(--border) !important;
-    box-shadow: 0 8px 24px rgba(186, 61, 39, 0.08) !important;
+  .hero-content {
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 0 !important;
+  }
+
+  .hero-badge {
+    margin-bottom: 10px !important;
+    padding: 5px 12px !important;
+    font-size: 0.8rem !important;
   }
 
   .hero-title {
-    font-size: 1.85rem !important;
-    line-height: 1.22 !important;
-    margin-bottom: 0.6rem !important;
+    font-size: 1.65rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 8px !important;
+    letter-spacing: -0.01em !important;
   }
 
   .hero-subtitle {
-    font-size: 0.92rem !important;
-    line-height: 1.5 !important;
-    margin-bottom: 1.2rem !important;
+    font-size: 0.88rem !important;
+    line-height: 1.48 !important;
+    margin-bottom: 14px !important;
+    max-width: 440px !important;
   }
 
   .hero-cta {
     flex-direction: column !important;
     width: 100% !important;
+    max-width: 360px !important;
     gap: 10px !important;
+    margin: 0 auto !important;
   }
 
   .hero-cta button,
-  .hero-cta .cta-btn {
+  .hero-cta .btn-primary,
+  .hero-cta .btn-secondary {
     width: 100% !important;
+    min-height: 48px !important;
     height: 48px !important;
     justify-content: center !important;
-    font-size: 0.92rem !important;
+    font-size: 0.94rem !important;
+    font-weight: 700 !important;
     border-radius: 14px !important;
-  }
-
-  .hero-stats-strip {
-    grid-template-columns: repeat(2, 1fr) !important;
+    display: inline-flex !important;
+    align-items: center !important;
     gap: 8px !important;
-    margin-top: 14px !important;
+    box-shadow: 0 4px 12px rgba(186, 61, 39, 0.12) !important;
   }
 
-  .stat-card {
+  .hero-cta .btn-secondary {
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--border-light, #EBE4D8) !important;
+    color: var(--text, #2D2520) !important;
+    box-shadow: 0 2px 8px rgba(60, 45, 30, 0.05) !important;
+  }
+
+  .hero-stats {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+    max-width: 380px !important;
+    margin: 16px auto 0 !important;
     padding: 12px 10px !important;
-    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1.5px solid var(--border-light, #EBE4D8) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 14px rgba(60, 45, 30, 0.05) !important;
+  }
+
+  .stat-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    flex: 1 !important;
+    padding: 2px 4px !important;
   }
 
   .stat-number {
-    font-size: 1.45rem !important;
+    font-size: 1.35rem !important;
+    font-weight: 900 !important;
+    color: var(--red, #BA3D27) !important;
+    line-height: 1.1 !important;
+  }
+
+  .stat-label {
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    color: #786C62 !important;
+    margin-top: 3px !important;
+    text-align: center !important;
+  }
+
+  .stat-divider {
+    width: 1px !important;
+    height: 26px !important;
+    background: #E5DEC9 !important;
+  }
+
+  .hero-visual {
+    margin-top: 10px !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 140px !important;
+    min-height: 140px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+  }
+
+  .floating-cards {
+    transform: scale(0.68) !important;
+    transform-origin: center center !important;
   }
 
   /* ===== MISI BELAJAR CARD (100% MOBILE THUMB-FRIENDLY) ===== */
