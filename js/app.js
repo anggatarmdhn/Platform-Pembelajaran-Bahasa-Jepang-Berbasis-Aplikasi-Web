@@ -1048,78 +1048,399 @@ function startGame(type) {
   else if (type === 'kana-blast') startKanaBlast();
 }
 
-// ==== 1. FLASH CARD GAME ====
-let flashState = {};
+// ==== 1. FLASH CARD GAME (ENHANCED WITH FILTERS, STAR BOOKMARKS & HARD CARDS) ====
+const FLASH_STARRED_KEY = 'sijapanese_flashcard_starred';
+const FLASH_HARD_KEY = 'sijapanese_flashcard_hard';
 
-function startFlashCard() {
+function getFlashStoredIds(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveFlashStoredIds(key, ids) {
+  try {
+    localStorage.setItem(key, JSON.stringify(ids));
+  } catch (e) {}
+}
+
+function isFlashCardStarred(cardId) {
+  return getFlashStoredIds(FLASH_STARRED_KEY).includes(cardId);
+}
+
+function isFlashCardHard(cardId) {
+  return getFlashStoredIds(FLASH_HARD_KEY).includes(cardId);
+}
+
+function toggleFlashCardStar(cardId, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  let starred = getFlashStoredIds(FLASH_STARRED_KEY);
+  const idx = starred.indexOf(cardId);
+  const isNowStarred = idx === -1;
+  if (isNowStarred) {
+    starred.push(cardId);
+    showToast('Disimpan ke Kartu Berbintang ⭐', 'success');
+  } else {
+    starred.splice(idx, 1);
+    showToast('Dihapus dari Bintang ⭐', 'info');
+  }
+  saveFlashStoredIds(FLASH_STARRED_KEY, starred);
+  renderFlashCard();
+}
+
+function toggleFlashCardHard(cardId, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  let hard = getFlashStoredIds(FLASH_HARD_KEY);
+  const idx = hard.indexOf(cardId);
+  const isNowHard = idx === -1;
+  if (isNowHard) {
+    hard.push(cardId);
+    showToast('Ditandai sebagai Paling Susah 🔥', 'error');
+  } else {
+    hard.splice(idx, 1);
+    showToast('Dihapus dari daftar Paling Susah 🔥', 'info');
+  }
+  saveFlashStoredIds(FLASH_HARD_KEY, hard);
+  renderFlashCard();
+}
+
+function addCardToHardList(cardId) {
+  let hard = getFlashStoredIds(FLASH_HARD_KEY);
+  if (!hard.includes(cardId)) {
+    hard.push(cardId);
+    saveFlashStoredIds(FLASH_HARD_KEY, hard);
+  }
+}
+
+function removeCardFromHardList(cardId) {
+  let hard = getFlashStoredIds(FLASH_HARD_KEY);
+  const idx = hard.indexOf(cardId);
+  if (idx !== -1) {
+    hard.splice(idx, 1);
+    saveFlashStoredIds(FLASH_HARD_KEY, hard);
+  }
+}
+
+function getFlashMasterList() {
+  const list = [];
+  
+  // 1. Hiragana
+  if (typeof HIRAGANA !== 'undefined' && Array.isArray(HIRAGANA)) {
+    HIRAGANA.forEach((h, idx) => {
+      list.push({
+        id: 'h_' + (h.char || idx),
+        char: h.char,
+        romaji: h.romaji,
+        type: 'hiragana',
+        typeLabel: 'Hiragana',
+        badgeClass: 'hiragana',
+        category: h.category || 'Dasar',
+        group: h.group || '',
+        example: h.example || '',
+        meaning: h.mnemonic || '',
+        speech: h.char
+      });
+    });
+  }
+
+  // 2. Katakana
+  if (typeof KATAKANA !== 'undefined' && Array.isArray(KATAKANA)) {
+    KATAKANA.forEach((k, idx) => {
+      list.push({
+        id: 'k_' + (k.char || idx),
+        char: k.char,
+        romaji: k.romaji,
+        type: 'katakana',
+        typeLabel: 'Katakana',
+        badgeClass: 'katakana',
+        category: k.category || 'Dasar',
+        group: k.group || '',
+        example: k.example || '',
+        meaning: k.mnemonic || '',
+        speech: k.char
+      });
+    });
+  }
+
+  // 3. Vocabulary
+  if (typeof VOCABULARY !== 'undefined' && typeof VOCABULARY === 'object') {
+    const categoryLabels = {
+      numbers: 'Angka',
+      colors: 'Warna',
+      family: 'Keluarga',
+      food: 'Makanan',
+      greetings: 'Salam'
+    };
+    Object.keys(VOCABULARY).forEach(cat => {
+      const items = VOCABULARY[cat];
+      const catLabel = categoryLabels[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
+      if (Array.isArray(items)) {
+        items.forEach((v, idx) => {
+          list.push({
+            id: 'v_' + (v.jp || idx),
+            char: v.jp,
+            romaji: v.reading,
+            type: 'vocab',
+            typeLabel: 'Kosakata',
+            badgeClass: 'vocab',
+            category: catLabel,
+            group: 'Kosakata',
+            example: (v.emoji ? v.emoji + ' ' : '') + v.id,
+            meaning: v.id,
+            speech: v.jp
+          });
+        });
+      }
+    });
+  }
+
+  return list;
+}
+
+let flashState = {
+  mode: 'all',
+  cards: [],
+  current: 0,
+  know: 0,
+  hesitate: 0,
+  hardCount: 0,
+  revealed: false,
+};
+
+function getFlashModeLabel(mode) {
+  if (mode === 'hiragana') return 'Aksara Hiragana';
+  if (mode === 'katakana') return 'Aksara Katakana';
+  if (mode === 'vocab') return 'Kosakata Praktis';
+  if (mode === 'starred') return 'Kartu Berbintang ⭐';
+  if (mode === 'hard') return 'Kartu Paling Susah 🔥';
+  return 'Semua Aksara';
+}
+
+function startFlashCard(mode = null) {
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Flash Card Mode';
-  const combined = shuffle([...HIRAGANA, ...KATAKANA]);
-  flashState = {
-    cards: combined,
-    current: 0,
-    know: 0,
-    dontknow: 0,
-    revealed: false,
-  };
+
+  if (mode) {
+    flashState.mode = mode;
+  } else if (!flashState.mode) {
+    flashState.mode = 'all';
+  }
+
+  const master = getFlashMasterList();
+  let filtered = [];
+  const currentMode = flashState.mode;
+
+  if (currentMode === 'hiragana') {
+    filtered = master.filter(c => c.type === 'hiragana');
+  } else if (currentMode === 'katakana') {
+    filtered = master.filter(c => c.type === 'katakana');
+  } else if (currentMode === 'vocab') {
+    filtered = master.filter(c => c.type === 'vocab');
+  } else if (currentMode === 'starred') {
+    const starredIds = new Set(getFlashStoredIds(FLASH_STARRED_KEY));
+    filtered = master.filter(c => starredIds.has(c.id));
+  } else if (currentMode === 'hard') {
+    const hardIds = new Set(getFlashStoredIds(FLASH_HARD_KEY));
+    filtered = master.filter(c => hardIds.has(c.id));
+  } else {
+    filtered = master.filter(c => c.type === 'hiragana' || c.type === 'katakana');
+  }
+
+  flashState.cards = shuffle([...filtered]);
+  flashState.current = 0;
+  flashState.know = 0;
+  flashState.hesitate = 0;
+  flashState.hardCount = 0;
+  flashState.revealed = false;
+
   renderFlashCard();
+}
+
+function setFlashMode(newMode) {
+  startFlashCard(newMode);
 }
 
 function renderFlashCard() {
   const screen = document.getElementById('game-screen');
+  if (!screen) return;
   const fs = flashState;
 
-  if (fs.current >= fs.cards.length) {
-    screen.innerHTML = `
-      <div class="quiz-result-card">
-        <div class="quiz-result-crest">
-          <svg viewBox="0 0 64 64" class="svg-crest-large">
-            <circle cx="32" cy="32" r="28" fill="#1E293B"/>
-            <polyline points="20 32 28 40 44 24" stroke="#10B981" stroke-width="4" stroke-linecap="round" fill="none"/>
-          </svg>
-        </div>
-        <div class="quiz-result-title">Sesi Flash Card Selesai!</div>
-        <p style="margin:8px 0; color:var(--text-soft);">Semua kartu aksara telah kamu lalui.</p>
-        <div style="display:flex; gap:16px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
-          <div class="stat-pill green-pill">Sudah Hafal: ${fs.know}</div>
-          <div class="stat-pill red-pill">Perlu Diulang: ${fs.dontknow}</div>
-        </div>
-        <button class="quiz-result-restart" onclick="startFlashCard()">
-          <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-          <span>Ulangi Sesi</span>
+  const starredIds = getFlashStoredIds(FLASH_STARRED_KEY);
+  const hardIds = getFlashStoredIds(FLASH_HARD_KEY);
+  const starredCount = starredIds.length;
+  const hardCount = hardIds.length;
+
+  const filterTabsHtml = `
+    <div class="flash-filter-container">
+      <div class="flash-filter-scroll">
+        <button class="flash-filter-chip ${fs.mode === 'all' ? 'active' : ''}" onclick="setFlashMode('all')">
+          <span>🎴 Semua Aksara</span>
         </button>
+        <button class="flash-filter-chip ${fs.mode === 'hiragana' ? 'active' : ''}" onclick="setFlashMode('hiragana')">
+          <span>🌸 Hiragana</span>
+        </button>
+        <button class="flash-filter-chip ${fs.mode === 'katakana' ? 'active' : ''}" onclick="setFlashMode('katakana')">
+          <span>⚡ Katakana</span>
+        </button>
+        <button class="flash-filter-chip ${fs.mode === 'vocab' ? 'active' : ''}" onclick="setFlashMode('vocab')">
+          <span>📖 Kosakata</span>
+        </button>
+        <button class="flash-filter-chip star-chip ${fs.mode === 'starred' ? 'active' : ''}" onclick="setFlashMode('starred')">
+          <span>⭐ Berbintang (${starredCount})</span>
+        </button>
+        <button class="flash-filter-chip hard-chip ${fs.mode === 'hard' ? 'active' : ''}" onclick="setFlashMode('hard')">
+          <span>🔥 Paling Susah (${hardCount})</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Case 1: Empty deck in filtered mode
+  if (!fs.cards || fs.cards.length === 0) {
+    const isStarredMode = fs.mode === 'starred';
+    const isHardMode = fs.mode === 'hard';
+    
+    screen.innerHTML = `
+      <div class="flash-game-container">
+        ${filterTabsHtml}
+        <div class="flash-empty-card">
+          <div class="flash-empty-icon">${isStarredMode ? '⭐' : isHardMode ? '🔥' : '🎴'}</div>
+          <h3>${isStarredMode ? 'Belum Ada Kartu Berbintang' : isHardMode ? 'Belum Ada Kartu Paling Susah' : 'Kartu Kosong'}</h3>
+          <p>
+            ${isStarredMode 
+              ? 'Tandai kartu yang ingin kamu prioritaskan dengan mengklik ikon ⭐ saat berlatih. Kartu pilihanmu akan tersimpan rapi di sini.'
+              : isHardMode 
+              ? 'Luar biasa! Belum ada kartu yang ditandai paling sulit. Saat berlatih, klik tombol 🔥 atau pilih "Paling Susah" untuk mengumpulkan kartu sulit di sini.'
+              : 'Pilih kategori aksara lain di atas untuk mulai berlatih flash card.'}
+          </p>
+          <div class="flash-empty-actions">
+            <button class="flash-empty-btn primary" onclick="setFlashMode('all')">Mulai Semua Aksara</button>
+            <button class="flash-empty-btn secondary" onclick="setFlashMode('hiragana')">Latihan Hiragana</button>
+            <button class="flash-empty-btn secondary" onclick="setFlashMode('katakana')">Latihan Katakana</button>
+          </div>
+        </div>
       </div>
     `;
     return;
   }
 
+  // Case 2: Session finished
+  if (fs.current >= fs.cards.length) {
+    screen.innerHTML = `
+      <div class="flash-game-container">
+        ${filterTabsHtml}
+        <div class="quiz-result-card flash-result-card">
+          <div class="quiz-result-crest">
+            <svg viewBox="0 0 64 64" class="svg-crest-large">
+              <circle cx="32" cy="32" r="28" fill="#FAF1EE"/>
+              <polyline points="20 32 28 40 44 24" stroke="#BA5444" stroke-width="4" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="quiz-result-title">Sesi Flash Card Selesai!</div>
+          <p style="margin:8px 0; color:var(--text-soft);">Mode: <strong>${getFlashModeLabel(fs.mode)}</strong> • ${fs.cards.length} kartu telah dipelajari.</p>
+          
+          <div class="flash-result-stats">
+            <div class="flash-stat-pill green">
+              <span>🟢</span>
+              <span>Sudah Hafal: <strong>${fs.know}</strong></span>
+            </div>
+            <div class="flash-stat-pill yellow">
+              <span>🟡</span>
+              <span>Masih Ragu: <strong>${fs.hesitate}</strong></span>
+            </div>
+            <div class="flash-stat-pill red">
+              <span>🔴</span>
+              <span>Paling Susah: <strong>${fs.hardCount}</strong></span>
+            </div>
+          </div>
+
+          <div class="flash-result-buttons">
+            <button class="flash-result-btn primary" onclick="startFlashCard()">
+              <svg viewBox="0 0 24 24" class="svg-icon-mini"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+              <span>Ulangi Sesi Ini</span>
+            </button>
+            ${hardCount > 0 ? `
+              <button class="flash-result-btn hard" onclick="setFlashMode('hard')">
+                <span>🔥 Latih Ulang Kartu Paling Susah (${hardCount})</span>
+              </button>
+            ` : ''}
+            ${starredCount > 0 ? `
+              <button class="flash-result-btn star" onclick="setFlashMode('starred')">
+                <span>⭐ Latih Kartu Berbintang (${starredCount})</span>
+              </button>
+            ` : ''}
+            <button class="flash-result-btn secondary" onclick="setFlashMode('all')">
+              <span>🎴 Kembali ke Semua Aksara</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Case 3: Active Card
   const card = fs.cards[fs.current];
-  const isHiragana = HIRAGANA.some(h => h.char === card.char);
+  const isStarred = isFlashCardStarred(card.id);
+  const isHard = isFlashCardHard(card.id);
+  const isVocab = card.type === 'vocab';
 
   screen.innerHTML = `
     <div class="flash-game-container">
+      ${filterTabsHtml}
+
       <div class="flash-progress-info">
         <span class="flash-count">Kartu ${fs.current + 1} / ${fs.cards.length}</span>
         <div class="flash-counters">
-          <span class="count-know">Hafal: ${fs.know}</span>
-          <span class="count-dont">Belum: ${fs.dontknow}</span>
+          <span class="count-know" title="Sudah Hafal">🟢 ${fs.know}</span>
+          <span class="count-hesitate" title="Masih Ragu">🟡 ${fs.hesitate}</span>
+          <span class="count-dont" title="Paling Susah">🔴 ${fs.hardCount}</span>
         </div>
-        <span class="flash-type-badge ${isHiragana ? 'hiragana' : 'katakana'}">
-          ${isHiragana ? 'Hiragana' : 'Katakana'}
-        </span>
       </div>
 
       <div class="flash-card" id="flash-card-el" onclick="revealFlash()">
-        <span class="flash-char">${card.char}</span>
-        <div class="flash-answer" id="flash-answer" style="display:none;">
-          <span class="flash-romaji">${card.romaji}</span>
-          <span class="flash-example">${card.example || ''}</span>
+        <div class="flash-card-topbar">
+          <div class="flash-card-badges">
+            <span class="flash-type-badge ${card.badgeClass}">${card.typeLabel}</span>
+            ${card.category ? `<span class="flash-sub-badge">${card.category}</span>` : ''}
+          </div>
+          <div class="flash-card-actions">
+            <button class="flash-action-btn audio-btn" title="Dengarkan pelafalan" onclick="event.stopPropagation(); speakJapanese('${card.speech}')">
+              🔊
+            </button>
+            <button class="flash-action-btn star-btn ${isStarred ? 'active' : ''}" title="${isStarred ? 'Hapus bintang' : 'Bintang kartu ini (Favorit)'}" onclick="toggleFlashCardStar('${card.id}', event)">
+              ${isStarred ? '⭐' : '☆'}
+            </button>
+            <button class="flash-action-btn hard-btn ${isHard ? 'active' : ''}" title="${isHard ? 'Hapus dari paling susah' : 'Tandai paling susah'}" onclick="toggleFlashCardHard('${card.id}', event)">
+              🔥
+            </button>
+          </div>
         </div>
-        <p class="flash-hint" id="flash-hint">Klik kartu untuk membuka bacaan</p>
+
+        <div class="flash-card-body">
+          <span class="flash-char ${isVocab ? 'is-vocab' : ''}">${card.char}</span>
+          <div class="flash-answer" id="flash-answer" style="display:none;">
+            <span class="flash-romaji">${card.romaji}</span>
+            ${card.meaning ? `<span class="flash-meaning">${card.meaning}</span>` : ''}
+            ${card.example && card.example !== card.meaning ? `<span class="flash-example">${card.example}</span>` : ''}
+          </div>
+          <p class="flash-hint" id="flash-hint">
+            <span>👆 Ketuk kartu untuk membuka bacaan</span>
+          </p>
+        </div>
       </div>
 
       <div class="flash-btn-row" id="flash-btns">
-        <button class="flash-btn audio-listen" onclick="speakJapanese('${card.char}')">
+        <button class="flash-btn audio-listen" onclick="speakJapanese('${card.speech}')">
           <svg viewBox="0 0 24 24" class="svg-icon-mini"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
           <span>Dengarkan Suara</span>
         </button>
@@ -1130,7 +1451,7 @@ function renderFlashCard() {
     </div>
   `;
 
-  speakJapanese(card.char);
+  speakJapanese(card.speech);
 }
 
 function revealFlash() {
@@ -1145,24 +1466,40 @@ function revealFlash() {
 
   if (btns) {
     btns.innerHTML = `
-      <button class="flash-btn know" onclick="flashAnswer(true)">
+      <button class="flash-btn know" onclick="flashAnswer('know')">
         <svg viewBox="0 0 24 24" class="svg-icon-mini"><polyline points="20 6 9 17 4 12"/></svg>
-        <span>Sudah Hafal (+2 Poin)</span>
+        <span>Sudah Hafal (+2)</span>
       </button>
-      <button class="flash-btn dontknow" onclick="flashAnswer(false)">
-        <span>Belum Hafal</span>
+      <button class="flash-btn hesitate" onclick="flashAnswer('hesitate')">
+        <span>Masih Ragu (+1)</span>
+      </button>
+      <button class="flash-btn dontknow" onclick="flashAnswer('hard')">
+        <span>🔥 Paling Susah</span>
       </button>
     `;
   }
 }
 
-function flashAnswer(know) {
-  if (know) {
+function flashAnswer(level) {
+  const card = flashState.cards[flashState.current];
+  if (!card) return;
+
+  if (level === 'know') {
     flashState.know++;
     addScore(2);
-  } else {
-    flashState.dontknow++;
+    if (flashState.mode === 'hard') {
+      removeCardFromHardList(card.id);
+      showToast(`Hebat! "${card.char}" dihapus dari daftar Paling Susah ✨`, 'success');
+    }
+  } else if (level === 'hesitate') {
+    flashState.hesitate++;
+    addScore(1);
+  } else if (level === 'hard') {
+    flashState.hardCount++;
+    addCardToHardList(card.id);
+    showToast(`"${card.char}" dicatat ke daftar Paling Susah 🔥`, 'error');
   }
+
   flashState.current++;
   flashState.revealed = false;
   renderFlashCard();

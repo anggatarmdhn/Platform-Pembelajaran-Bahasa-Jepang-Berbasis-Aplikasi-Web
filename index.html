@@ -1857,8 +1857,8 @@
             <svg viewBox="0 0 24 24" class="svg-icon-large"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
           </div>
           <h3>Flash Card</h3>
-          <p>Tebak huruf Hiragana &amp; Katakana, cek pelafalan, dan evaluasi ingatanmu.</p>
-          <div class="game-difficulty"><span class="diff-dot green-dot"></span> Tingkat: Pemula</div>
+          <p>Hafalkan Hiragana, Katakana, Kosakata, tandai kartu berbintang ⭐, serta latih intensif kartu paling susah 🔥.</p>
+          <div class="game-difficulty"><span class="diff-dot green-dot"></span> Tingkat: Fleksibel &amp; Hafalan</div>
         </div>
 
         <div class="game-card" onclick="startGame('memory-match')">
