@@ -1014,6 +1014,9 @@ function showGameMenu() {
   stopBlastGame();
   const menu = document.getElementById('game-menu');
   const screen = document.getElementById('game-screen');
+  const pageHeader = document.querySelector('#page-games .page-header');
+  if (pageHeader) pageHeader.classList.remove('game-active-header');
+
   if (menu) menu.classList.remove('hidden');
   if (screen) {
     screen.classList.add('hidden');
@@ -1033,6 +1036,9 @@ function startGame(type) {
   stopBlastGame();
   const menu = document.getElementById('game-menu');
   const screen = document.getElementById('game-screen');
+  const pageHeader = document.querySelector('#page-games .page-header');
+  if (pageHeader) pageHeader.classList.add('game-active-header');
+
   if (menu) menu.classList.add('hidden');
   if (screen) screen.classList.remove('hidden');
 
@@ -2167,41 +2173,52 @@ function initBlastBattle() {
 
   screen.innerHTML = `
     <div class="blast-game-container">
-      <!-- HUD BAR -->
+      <!-- HUD BAR (2-ROW CLEAN LAYOUT) -->
       <div class="blast-hud">
-        <div class="blast-hud-left">
-          <button class="blast-hud-btn" onclick="renderBlastLobby()" title="Kembali ke Pengaturan">
-            <svg viewBox="0 0 24 24" class="svg-icon-mini"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-            <span>Lobi</span>
-          </button>
-          <div class="blast-hud-mode-pill">${modeLabel}</div>
+        <div class="blast-hud-row-top">
+          <div class="blast-hud-left">
+            <button class="blast-hud-btn" onclick="renderBlastLobby()" title="Kembali ke Pengaturan">
+              <svg viewBox="0 0 24 24" class="svg-icon-mini"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              <span>Lobi</span>
+            </button>
+            <div class="blast-hud-mode-pill">${modeLabel}</div>
+          </div>
+
+          <div class="blast-hud-right">
+            <div class="blast-combo-pill" id="blast-combo-pill">
+              <span id="blast-combo-text">1x Streak</span>
+            </div>
+            <div class="blast-score-pill">
+              <svg viewBox="0 0 24 24" class="svg-icon-mini filled-gold"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span id="blast-score-text">0</span>
+            </div>
+            <button class="blast-hud-btn icon-only" id="blast-sound-btn" onclick="toggleBlastSound()" title="Efek Suara">
+              <svg viewBox="0 0 24 24" class="svg-icon-mini" id="blast-sound-icon">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+            </button>
+            <button class="blast-hud-btn icon-only" id="blast-pause-btn" onclick="toggleBlastPause()" title="Jeda">
+              <svg viewBox="0 0 24 24" class="svg-icon-mini" id="blast-pause-icon">
+                <rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div class="blast-hud-center">
+        <div class="blast-hud-row-target">
           <div class="blast-timer-pill" id="blast-timer-pill">
             <svg viewBox="0 0 24 24" class="svg-icon-mini"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
             <span id="blast-timer-text">${blastState.timeLeft < 900 ? blastState.timeLeft + 's' : '∞'}</span>
           </div>
-          <div class="blast-combo-pill" id="blast-combo-pill">
-            <span id="blast-combo-text">1x Streak</span>
-          </div>
-        </div>
 
-        <div class="blast-hud-right">
-          <div class="blast-score-pill">
-            <svg viewBox="0 0 24 24" class="svg-icon-mini filled-gold"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span id="blast-score-text">0</span>
+          <!-- Prominent Holographic Target Banner in HUD -->
+          <div class="blast-holo-target-box">
+            <span class="holo-target-label">TARGET:</span>
+            <span class="holo-target-romaji" id="blast-target-romaji">---</span>
+            <span class="holo-target-sub" id="blast-target-sub">Memuat target...</span>
           </div>
-          <button class="blast-hud-btn icon-only" id="blast-sound-btn" onclick="toggleBlastSound()" title="Efek Suara">
-            <svg viewBox="0 0 24 24" class="svg-icon-mini" id="blast-sound-icon">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-            </svg>
-          </button>
-          <button class="blast-hud-btn icon-only" id="blast-pause-btn" onclick="toggleBlastPause()" title="Jeda">
-            <svg viewBox="0 0 24 24" class="svg-icon-mini" id="blast-pause-icon">
-              <rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>
-            </svg>
-          </button>
+
+          <div class="blast-hud-hint">KLIK BUBBLE SESUAI BACAAN</div>
         </div>
       </div>
 
@@ -2219,28 +2236,24 @@ function initBlastBattle() {
         <!-- Bubble Sky Area -->
         <div class="blast-sky" id="blast-sky"></div>
 
-        <!-- Turret Base at Bottom -->
+        <!-- High-Tech Arcade Turret Blaster at Bottom -->
         <div class="blast-turret-wrap" id="blast-turret-wrap">
-          <!-- Aiming Cannon Barrel -->
+          <!-- Aiming Cannon Barrel with Muzzle Flash -->
           <div class="blast-turret-barrel" id="blast-turret-barrel">
+            <div class="blast-muzzle-flash" id="blast-muzzle-flash"></div>
+            <div class="blast-muzzle-glow"></div>
             <div class="blast-barrel-pipe">
               <div class="blast-barrel-rail left"></div>
               <div class="blast-barrel-core"></div>
               <div class="blast-barrel-rail right"></div>
             </div>
-            <div class="blast-muzzle-glow"></div>
           </div>
 
-          <!-- Glowing Turret Core Base with Target Romaji -->
-          <div class="blast-turret-base">
-            <div class="blast-turret-ring-outer"></div>
-            <div class="blast-turret-pod">
-              <div class="blast-target-label">
-                <span class="blast-pulse-dot"></span>
-                <span>TARGET ROMAJI</span>
-              </div>
-              <div class="blast-target-romaji" id="blast-target-romaji">---</div>
-              <div class="blast-target-sub" id="blast-target-sub">Memuat target...</div>
+          <!-- Base Pedestal Mount with Kanji Symbol -->
+          <div class="blast-cannon-mount">
+            <div class="blast-mount-ring"></div>
+            <div class="blast-mount-core">
+              <span class="blast-mount-symbol">砲</span>
             </div>
           </div>
         </div>
@@ -2289,14 +2302,18 @@ function updateBlastAimAngle(clientX, clientY) {
   }
 
   const turretOriginX = (turretRect.left + turretRect.width / 2) - arenaRect.left;
-  const turretOriginY = turretRect.top - arenaRect.top + 28;
+  const turretOriginY = turretRect.top - arenaRect.top + 45;
 
   const dx = px - turretOriginX;
   const dy = py - turretOriginY;
   const angleRad = Math.atan2(dy, dx);
   const angleDeg = angleRad * (180 / Math.PI) + 90;
 
-  barrel.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
+  // Clamp aiming angle between -80deg and +80deg so it aims upwards nicely
+  const clampedDeg = Math.max(-80, Math.min(80, angleDeg));
+  blastState.barrelAngle = clampedDeg;
+  barrel.style.setProperty('--current-rot', clampedDeg + 'deg');
+  barrel.style.transform = `translateX(-50%) rotate(${clampedDeg}deg)`;
 }
 
 const BUBBLE_THEMES = ['cyan', 'indigo', 'violet', 'emerald', 'amber', 'rose'];
@@ -2475,7 +2492,7 @@ function shootBlastBubble(bubbleId, event) {
 
   // Turret barrel muzzle point
   const turretOriginX = (turretRect.left + turretRect.width / 2) - arenaRect.left;
-  const turretOriginY = turretRect.top - arenaRect.top + 28;
+  const turretOriginY = turretRect.top - arenaRect.top + 45;
 
   // Bubble center coordinates
   const bubbleCenterX = (bubbleRect.left + bubbleRect.width / 2) - arenaRect.left;
@@ -2486,16 +2503,35 @@ function shootBlastBubble(bubbleId, event) {
   const dy = bubbleCenterY - turretOriginY;
   const angleRad = Math.atan2(dy, dx);
   const angleDeg = angleRad * (180 / Math.PI) + 90; // +90 because barrel points up vertically
+  const clampedDeg = Math.max(-80, Math.min(80, angleDeg));
 
   if (barrel) {
-    barrel.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
+    barrel.style.setProperty('--current-rot', clampedDeg + 'deg');
+    barrel.style.transform = `translateX(-50%) rotate(${clampedDeg}deg)`;
+    barrel.classList.remove('cannon-kick');
+    void barrel.offsetWidth;
+    barrel.classList.add('cannon-kick');
   }
+
+  // Muzzle flash burst
+  const muzzleFlash = document.getElementById('blast-muzzle-flash');
+  if (muzzleFlash) {
+    muzzleFlash.classList.remove('flash-active');
+    void muzzleFlash.offsetWidth;
+    muzzleFlash.classList.add('flash-active');
+  }
+
   turret.classList.add('turret-fire');
   setTimeout(() => turret.classList.remove('turret-fire'), 220);
 
+  // Calculate muzzle tip position along the barrel direction for laser origin
+  const tipAngleRad = (clampedDeg - 90) * (Math.PI / 180);
+  const muzzleTipX = turretOriginX + Math.cos(tipAngleRad) * 62;
+  const muzzleTipY = turretOriginY + Math.sin(tipAngleRad) * 62;
+
   // Play laser sound and draw beam
   playBlastSfx('laser');
-  drawBlastLaserBeam(turretOriginX, turretOriginY, bubbleCenterX, bubbleCenterY);
+  drawBlastLaserBeam(muzzleTipX, muzzleTipY, bubbleCenterX, bubbleCenterY);
 
   // Hit Evaluation
   const isMatch = blastState.targetItem && (bubble.romaji.toLowerCase() === blastState.targetItem.romaji.toLowerCase());
@@ -3247,7 +3283,35 @@ function showWaveBanner(w) {
 function spawnMonster() {
   if (!msState.running || msState.paused) return;
 
-  const item = getRandomKanaItem();
+  // 5 vertical lanes across the sky (X positions in %)
+  const lanes = [14, 32, 50, 68, 86];
+
+  // Prevent monsters from spawning on top of each other in the same lane:
+  // Check which lanes have an active monster near the spawn entry (progress < 26%)
+  const busyLanes = new Set(
+    msState.monsters
+      .filter(m => !m.dead && m.progress < 26)
+      .map(m => m.xPercent)
+  );
+
+  const availableLanes = lanes.filter(l => !busyLanes.has(l));
+  if (availableLanes.length === 0) {
+    // If all lanes currently have a monster near the top, delay spawn by 600ms
+    setTimeout(spawnMonster, 600);
+    return;
+  }
+
+  const xPercent = availableLanes[Math.floor(Math.random() * availableLanes.length)];
+
+  // Try to pick a kana character that is not already currently on screen
+  const activeChars = new Set(msState.monsters.filter(m => !m.dead).map(m => m.char));
+  let item = getRandomKanaItem();
+  let tries = 0;
+  while (activeChars.has(item.char) && tries < 10) {
+    item = getRandomKanaItem();
+    tries++;
+  }
+
   const isBoss = (msState.monstersSpawnedInWave === msState.monstersTargetInWave - 1);
   const profile = isBoss
     ? MONSTER_PROFILES.find(p => p.type === 'dragon')
@@ -3260,9 +3324,6 @@ function spawnMonster() {
   if (profile.type === 'ghost') speedFactor *= 1.15;
   if (profile.type === 'oni') speedFactor *= 0.85;
 
-  // 5 vertical lanes across the sky (X positions in %)
-  const lanes = [14, 32, 50, 68, 86];
-  const xPercent = lanes[Math.floor(Math.random() * lanes.length)];
   const monsterId = 'mob-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
 
   const monster = {
@@ -3347,6 +3408,21 @@ function monsterGameLoop(now) {
 
       // Drop down vertically from top (0%) towards the gate (78%)
       m.progress += m.speed * dt * 100;
+
+      // Prevent same-lane overlapping: keep minimum 15% vertical gap
+      for (let j = i + 1; j < msState.monsters.length; j++) {
+        const m2 = msState.monsters[j];
+        if (!m2 || m2.dead || m2.xPercent !== m.xPercent) continue;
+        const diff = Math.abs(m.progress - m2.progress);
+        if (diff < 15) {
+          if (m.progress < m2.progress) {
+            m.progress = Math.max(0, m2.progress - 15);
+          } else {
+            m2.progress = Math.max(0, m.progress - 15);
+          }
+        }
+      }
+
       const el = document.getElementById(m.id);
       if (el) {
         el.style.top = m.progress + '%';

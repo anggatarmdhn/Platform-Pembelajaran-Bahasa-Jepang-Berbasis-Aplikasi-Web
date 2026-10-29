@@ -2063,6 +2063,37 @@
             <!-- MONSTER CONTAINER (SPAWN FROM TOP) -->
             <div class="ms-monsters-track" id="ms-monsters-track"></div>
 
+            <!-- LUSH JAPANESE VILLAGE GRASS & LANTERNS GROUND -->
+            <div class="ms-village-grass-ground">
+              <svg viewBox="0 0 800 85" preserveAspectRatio="none" class="ms-grass-svg">
+                <!-- Back Hill Layer (Deep Pine Green) -->
+                <path d="M0,85 L0,40 Q150,18 320,34 T650,22 Q740,30 800,40 L800,85 Z" fill="#143020" />
+                <!-- Mid Grass Layer (Forest/Bamboo Green) -->
+                <path d="M0,85 L0,50 Q180,30 380,44 T720,36 Q760,42 800,50 L800,85 Z" fill="#1F472D" />
+                <!-- Front Lush Grass Layer (Vibrant Village Green) -->
+                <path d="M0,85 L0,62 Q140,46 280,56 T580,50 Q700,58 800,62 L800,85 Z" fill="#2D5E3C" />
+                <!-- Grass Tufts Along Ground -->
+                <path d="M60,60 L63,40 L67,60 M72,61 L76,37 L80,61 M85,62 L90,43 L94,62" stroke="#48865A" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                <path d="M190,57 L193,37 L198,57 M204,58 L208,34 L213,58 M219,59 L224,41 L229,59" stroke="#48865A" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                <path d="M370,53 L374,33 L379,53 M385,54 L390,30 L395,54 M402,55 L407,37 L412,55" stroke="#48865A" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                <path d="M560,52 L564,32 L569,52 M576,53 L580,29 L585,53 M592,54 L597,36 L602,54" stroke="#48865A" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                <path d="M710,59 L713,39 L718,59 M724,60 L728,36 L733,60 M740,61 L745,42 L750,61" stroke="#48865A" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                <!-- Traditional Stone Lanterns (Tōrō) on Grass -->
+                <g transform="translate(100, 16)">
+                  <polygon points="12,0 20,6 4,6" fill="#4B5563" />
+                  <rect x="7" y="6" width="10" height="8" rx="1" fill="#FDE047" opacity="0.9" />
+                  <rect x="9" y="14" width="6" height="18" fill="#374151" />
+                  <rect x="5" y="32" width="14" height="6" rx="2" fill="#1F2937" />
+                </g>
+                <g transform="translate(680, 14)">
+                  <polygon points="12,0 20,6 4,6" fill="#4B5563" />
+                  <rect x="7" y="6" width="10" height="8" rx="1" fill="#FDE047" opacity="0.9" />
+                  <rect x="9" y="14" width="6" height="18" fill="#374151" />
+                  <rect x="5" y="32" width="14" height="6" rx="2" fill="#1F2937" />
+                </g>
+              </svg>
+            </div>
+
             <!-- DEFENSE BARRIER AT BOTTOM -->
             <div class="ms-defense-barrier-bottom">
               <div class="ms-barrier-line"></div>
@@ -2100,7 +2131,7 @@
               <span class="ms-input-icon">
                 <svg viewBox="0 0 24 24" class="svg-icon-mini"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="6" x2="6" y1="9" y2="9"/><line x1="10" x2="10" y1="9" y2="9"/><line x1="14" x2="14" y1="9" y2="9"/><line x1="18" x2="18" y1="9" y2="9"/><line x1="6" x2="6" y1="13" y2="13"/><line x1="18" x2="18" y1="13" y2="13"/><line x1="10" x2="14" y1="13" y2="13"/></svg>
               </span>
-              <input type="text" id="ms-input" class="ms-input-field" placeholder="Ketik langsung dengan keyboard fisil (contoh: ka, sa, tsu)..." autocomplete="off" autocapitalize="off" spellcheck="false" />
+              <input type="text" id="ms-input" class="ms-input-field" placeholder="Ketik langsung dengan keyboard fisik (contoh: ka, sa, tsu)..." autocomplete="off" autocapitalize="off" spellcheck="false" />
               <button class="ms-clear-btn" onclick="clearMonsterInput()" title="Bersihkan input">x</button>
             </div>
           </div>
