@@ -25,6 +25,7 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Autentikasi Pengguna & Status API
 Route::get('/api/auth/status', [AuthController::class, 'status'])->name('auth.status');
@@ -33,6 +34,7 @@ Route::post('/api/auth/register', [AuthController::class, 'register'])->name('au
 Route::post('/api/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::post('/api/auth/profile', [AuthController::class, 'updateProfile'])->name('auth.profile');
 Route::post('/api/auth/score', [AuthController::class, 'addScore'])->name('auth.score');
+Route::post('/api/auth/assessment', [AuthController::class, 'submitAssessment'])->name('auth.assessment');
 
 // API Dinamis Materi & Level dari SQLite
 Route::get('/api/materi/levels', [MateriApiController::class, 'getLevels'])->name('api.materi.levels');
@@ -100,6 +102,7 @@ Route::prefix('guru')->middleware(['web'])->group(function () {
         return $next($request);
     }], function () {
         Route::get('/', [GuruMasterController::class, 'index'])->name('guru.dashboard');
+        Route::post('/profile', [AuthController::class, 'updateProfile'])->name('guru.profile.update');
 
         // CRUD Kotak Level Materi
         Route::post('/levels', [GuruMasterController::class, 'storeLevel'])->name('guru.levels.store');

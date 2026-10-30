@@ -34,26 +34,46 @@
       top: 0;
       z-index: 100;
       box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     .guru-nav-left {
       display: flex;
       align-items: center;
       gap: 1.2rem;
     }
+    .guru-brand-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-shrink: 0;
+    }
+    .svg-crest-mini {
+      width: 26px;
+      height: 26px;
+      display: block;
+    }
+    .guru-brand-text {
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: #0F172A;
+      letter-spacing: -0.5px;
+    }
     .badge-master-guru {
       background: #FEF2F2;
       color: #D9383A;
       border: 1.5px solid #FCA5A5;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 800;
       padding: 0.35rem 0.85rem;
       border-radius: var(--radius-pill);
       letter-spacing: 0.5px;
+      white-space: nowrap;
     }
     .btn-return-app {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       background: #F1F5F9;
       color: #1E293B;
       border: 1.5px solid #CBD5E1;
@@ -63,16 +83,29 @@
       font-weight: 700;
       text-decoration: none;
       transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-return-app .svg-icon-mini {
+      width: 15px;
+      height: 15px;
+      stroke: #334155;
+      fill: none;
+      stroke-width: 2.2;
     }
     .btn-return-app:hover {
-      background: #DBEAFE;
+      background: #EFF6FF;
       color: #1D4ED8;
       border-color: #93C5FD;
+    }
+    .btn-return-app:hover .svg-icon-mini {
+      stroke: #1D4ED8;
     }
     .guru-profile-bar {
       display: flex;
       align-items: center;
       gap: 0.85rem;
+      order: 3;
+      margin-left: auto;
     }
     .guru-avatar-circle {
       width: 42px;
@@ -369,30 +402,52 @@
     }
 
     /* Modal Form */
-    .guru-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
+    .guru-modal-backdrop,
+    #modal-edit-guru-profile,
+    #modal-profile-success {
+      position: fixed !important;
+      inset: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      background: rgba(15, 23, 42, 0.65) !important;
+      backdrop-filter: blur(5px) !important;
+      -webkit-backdrop-filter: blur(5px) !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 99999 !important;
+      padding: 1rem !important;
+      box-sizing: border-box !important;
     }
-    .guru-modal-backdrop.show {
-      display: flex;
+    .guru-modal-backdrop.show,
+    #modal-edit-guru-profile.show,
+    #modal-profile-success.show {
+      display: flex !important;
     }
-    .guru-modal-box {
-      background: #FFFFFF;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 560px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.25);
-      position: relative;
+    .guru-modal-box,
+    #modal-edit-guru-profile .guru-modal-box,
+    #modal-profile-success .guru-modal-box {
+      background: #FFFFFF !important;
+      border-radius: 20px !important;
+      width: 100% !important;
+      max-width: 560px !important;
+      max-height: 90vh !important;
+      max-height: 90dvh !important;
+      overflow-y: auto !important;
+      padding: 2rem !important;
+      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.35) !important;
+      position: relative !important;
+      margin: auto !important;
+      top: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      right: auto !important;
+      transform: none !important;
     }
     .guru-modal-header {
       display: flex;
@@ -526,6 +581,666 @@
       border-radius: var(--radius-pill);
       border: 1px solid #E2E8F0;
     }
+    /* Responsive Toolbar Components for Tables & Cards */
+    .master-toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 1.2rem;
+    }
+    .toolbar-search-box {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+    }
+    .toolbar-search-box svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #64748B;
+    }
+    .toolbar-search-box input {
+      padding-left: 34px !important;
+    }
+    .toolbar-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .toolbar-filter-group label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #475569;
+      white-space: nowrap;
+      margin: 0;
+    }
+    .toolbar-filter-group select {
+      font-weight: 700;
+      font-size: 0.84rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #0F172A;
+    }
+    .toolbar-count-badge {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #2563EB;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+
+    /* ===== RESPONSIVE MEDIA QUERIES (FULL MOBILE & TABLET ADAPTATION) ===== */
+    @media (max-width: 900px) {
+      .guru-navbar {
+        padding: 0.85rem 1.2rem;
+      }
+      .guru-container {
+        padding: 0 1rem;
+        margin: 1.2rem auto 3rem;
+      }
+      .guru-kpi-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.9rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .guru-navbar {
+        display: grid !important;
+        grid-template-columns: auto 1fr !important;
+        grid-template-rows: auto auto !important;
+        row-gap: 0.65rem !important;
+        column-gap: 0.6rem !important;
+        padding: 0.65rem 0.85rem !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+      }
+      .guru-nav-left {
+        display: contents !important;
+      }
+      .guru-brand-wrap {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.4rem !important;
+      }
+      .guru-brand-text {
+        font-size: 1.15rem !important;
+      }
+      .svg-crest-mini {
+        width: 22px !important;
+        height: 22px !important;
+      }
+      .guru-profile-bar {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        justify-self: end !important;
+        align-self: center !important;
+        gap: 0.45rem !important;
+        margin-left: auto !important;
+        width: auto !important;
+      }
+      .guru-avatar-circle {
+        width: 34px !important;
+        height: 34px !important;
+        flex-shrink: 0 !important;
+      }
+      .guru-info-text {
+        max-width: none !important;
+        overflow: visible !important;
+      }
+      .guru-name {
+        font-size: 0.88rem !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+      }
+      .guru-role-sub {
+        display: none !important;
+      }
+      .guru-profile-bar form {
+        margin: 0 !important;
+        flex-shrink: 0 !important;
+      }
+      .guru-profile-bar form button {
+        padding: 0.3rem 0.65rem !important;
+        font-size: 0.74rem !important;
+        border-radius: var(--radius-pill) !important;
+      }
+      .badge-master-guru {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+        justify-self: start !important;
+        align-self: center !important;
+        font-size: 0.68rem !important;
+        padding: 0.28rem 0.6rem !important;
+        white-space: nowrap !important;
+        letter-spacing: 0.2px !important;
+      }
+      .btn-return-app {
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+        justify-self: end !important;
+        align-self: center !important;
+        font-size: 0.76rem !important;
+        padding: 0.32rem 0.75rem !important;
+        white-space: nowrap !important;
+        gap: 0.35rem !important;
+      }
+      .btn-return-app .svg-icon-mini {
+        width: 13px !important;
+        height: 13px !important;
+      }
+      .guru-container {
+        padding: 0 0.75rem;
+        margin: 1rem auto 2.5rem;
+      }
+      .guru-kpi-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.65rem;
+        margin-bottom: 1.2rem;
+      }
+      .kpi-card {
+        padding: 0.9rem 0.8rem;
+        border-radius: 14px;
+      }
+      .kpi-card:last-child {
+        grid-column: span 2;
+      }
+      .kpi-label {
+        font-size: 0.72rem;
+      }
+      .kpi-value {
+        font-size: 1.55rem;
+      }
+      .kpi-sub {
+        font-size: 0.7rem;
+      }
+      .guru-tabs-nav {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.45rem !important;
+        padding: 0.5rem !important;
+        background: #FFFFFF !important;
+        border-radius: 16px !important;
+        border: 1.5px solid #E2E8F0 !important;
+        margin-bottom: 1.2rem !important;
+        overflow-x: visible !important;
+      }
+      .guru-tab-btn {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 0.65rem 0.5rem !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        border-radius: 12px !important;
+        white-space: normal !important;
+        line-height: 1.25 !important;
+        flex-shrink: 0 !important;
+        background: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        color: #475569 !important;
+        box-shadow: none !important;
+      }
+      .guru-tab-btn.active {
+        background: var(--red) !important;
+        color: #FFFFFF !important;
+        border-color: var(--red) !important;
+        box-shadow: 0 4px 12px rgba(217, 56, 58, 0.25) !important;
+      }
+      .guru-tab-btn:last-child {
+        grid-column: span 2 !important;
+      }
+      .master-card {
+        padding: 1.15rem 0.9rem;
+        border-radius: 16px;
+        margin-bottom: 1.2rem;
+      }
+      .master-card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.85rem;
+      }
+      .master-card-title h3 {
+        font-size: 1.15rem;
+      }
+      .master-card-title p {
+        font-size: 0.8rem;
+      }
+      .master-card-header > div:last-child {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .btn-guru-primary,
+      .btn-preset {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        box-sizing: border-box;
+      }
+      .master-toolbar-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+        padding: 10px;
+      }
+      .toolbar-search-box {
+        width: 100%;
+        min-width: 100%;
+      }
+      .toolbar-filter-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .toolbar-filter-group select {
+        flex: 1;
+      }
+      /* ===== RESPONSIVE MOBILE DATA CARDS (NO CUTOFFS) ===== */
+      .guru-table-wrap,
+      .admin-table-wrap {
+        overflow-x: visible !important;
+        border: none !important;
+        background: transparent !important;
+        width: 100% !important;
+      }
+      .guru-table {
+        min-width: 100% !important;
+        width: 100% !important;
+        display: block !important;
+        border: none !important;
+      }
+      .guru-table thead {
+        display: none !important;
+      }
+      .guru-table tbody {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.85rem !important;
+        width: 100% !important;
+      }
+
+      /* Lesson Row -> Card Transformation */
+      #lessons-table-body tr {
+        display: grid !important;
+        grid-template-columns: auto 1fr auto !important;
+        gap: 0.45rem 0.6rem !important;
+        background: #FFFFFF !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 16px !important;
+        padding: 1rem 0.95rem !important;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04) !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+      }
+      #lessons-table-body tr td:nth-child(1) {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        padding: 0 !important;
+        border: none !important;
+        font-size: 0.82rem !important;
+        color: #64748B !important;
+      }
+      #lessons-table-body tr td:nth-child(2) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        padding: 0 !important;
+        border: none !important;
+      }
+      #lessons-table-body tr td:nth-child(6) {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        justify-self: end !important;
+        align-self: center !important;
+        padding: 0 !important;
+        border: none !important;
+      }
+      #lessons-table-body tr td:nth-child(3) {
+        grid-column: 1 / span 3 !important;
+        grid-row: 2 !important;
+        padding: 0.25rem 0 !important;
+        border: none !important;
+      }
+      #lessons-table-body tr td:nth-child(4) {
+        grid-column: 1 / span 3 !important;
+        grid-row: 3 !important;
+        padding: 0.45rem 0 !important;
+        border: none !important;
+        border-top: 1px dashed #F1F5F9 !important;
+      }
+      #lessons-table-body tr td:nth-child(5) {
+        grid-column: 1 / span 2 !important;
+        grid-row: 4 !important;
+        align-self: center !important;
+        padding: 0.2rem 0 !important;
+        border: none !important;
+        font-size: 0.78rem !important;
+        color: #64748B !important;
+      }
+      #lessons-table-body tr td:nth-child(7) {
+        grid-column: 3 !important;
+        grid-row: 4 !important;
+        justify-self: end !important;
+        align-self: center !important;
+        padding: 0.2rem 0 !important;
+        border: none !important;
+        font-size: 0.78rem !important;
+      }
+      #lessons-table-body tr td:nth-child(8) {
+        grid-column: 1 / span 3 !important;
+        grid-row: 5 !important;
+        padding-top: 0.65rem !important;
+        border: none !important;
+        border-top: 1px solid #F1F5F9 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
+      }
+      #lessons-table-body tr td:nth-child(8) button,
+      #lessons-table-body tr td:nth-child(8) a {
+        flex: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 0.55rem 0.8rem !important;
+        font-size: 0.84rem !important;
+        border-radius: 10px !important;
+      }
+
+      /* Students Row -> Card Transformation */
+      #students-table-body tr {
+        display: grid !important;
+        grid-template-columns: auto 1fr auto !important;
+        gap: 0.45rem 0.6rem !important;
+        background: #FFFFFF !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 16px !important;
+        padding: 0.95rem !important;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+      }
+      #students-table-body tr td {
+        padding: 0 !important;
+        border: none !important;
+      }
+      #students-table-body tr td:nth-child(1) {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        font-size: 0.95rem !important;
+        color: var(--red) !important;
+        font-weight: 900 !important;
+      }
+      #students-table-body tr td:nth-child(2) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+      }
+      #students-table-body tr td:nth-child(6) {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        justify-self: end !important;
+        align-self: center !important;
+      }
+      #students-table-body tr td:nth-child(3) {
+        grid-column: 2 / span 2 !important;
+        grid-row: 2 !important;
+        font-size: 0.78rem !important;
+        color: #64748B !important;
+      }
+      #students-table-body tr td:nth-child(4) {
+        grid-column: 1 / span 2 !important;
+        grid-row: 3 !important;
+        align-self: center !important;
+        padding-top: 0.45rem !important;
+        border-top: 1px dashed #F1F5F9 !important;
+      }
+      #students-table-body tr td:nth-child(5) {
+        grid-column: 3 !important;
+        grid-row: 3 !important;
+        justify-self: end !important;
+        align-self: center !important;
+        padding-top: 0.45rem !important;
+        border-top: 1px dashed #F1F5F9 !important;
+        font-size: 0.82rem !important;
+      }
+
+      /* Mini Games Question Bank Table -> Card Transformation */
+      .admin-soal-table thead {
+        display: none !important;
+      }
+      .admin-soal-table,
+      .admin-soal-table tbody {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+      }
+      .admin-soal-table tbody tr {
+        display: grid !important;
+        grid-template-columns: auto 1fr auto !important;
+        gap: 0.45rem 0.6rem !important;
+        background: #FFFFFF !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 14px !important;
+        padding: 0.85rem !important;
+        margin-bottom: 0.75rem !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03) !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+      }
+      .admin-soal-table td {
+        padding: 0 !important;
+        border: none !important;
+      }
+      .admin-soal-table tbody tr td:nth-child(1) {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        font-size: 0.82rem !important;
+        color: #94A3B8 !important;
+      }
+      .admin-soal-table tbody tr td:nth-child(2) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        font-size: 1.35rem !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+      }
+      .admin-soal-table tbody tr td:nth-child(5) {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        justify-self: end !important;
+        align-self: center !important;
+      }
+      .admin-soal-table tbody tr td:nth-child(3) {
+        grid-column: 1 / span 2 !important;
+        grid-row: 2 !important;
+        font-size: 0.82rem !important;
+        color: #2563EB !important;
+        font-weight: 700 !important;
+      }
+      .admin-soal-table tbody tr td:nth-child(4) {
+        grid-column: 3 !important;
+        grid-row: 2 !important;
+        justify-self: end !important;
+        font-size: 0.82rem !important;
+        color: #475569 !important;
+      }
+      .admin-soal-table tbody tr td:nth-child(6) {
+        grid-column: 1 / span 3 !important;
+        grid-row: 3 !important;
+        padding-top: 0.55rem !important;
+        border-top: 1px dashed #F1F5F9 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
+      }
+      .admin-soal-table tbody tr td:nth-child(6) button {
+        flex: 1 !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 0.45rem 0.75rem !important;
+        font-size: 0.8rem !important;
+        border-radius: 8px !important;
+      }
+
+      .levels-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.85rem !important;
+      }
+      .admin-games-selector {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+      }
+      .admin-game-chip {
+        padding: 0.5rem 0.85rem !important;
+        font-size: 0.8rem !important;
+        border-radius: 10px !important;
+        flex: 1 !important;
+        min-width: 120px !important;
+        text-align: center !important;
+        justify-content: center !important;
+      }
+      .admin-settings-card {
+        padding: 1rem 0.85rem !important;
+        border-radius: 14px !important;
+      }
+      .admin-card-head {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.8rem !important;
+      }
+      .admin-soal-toolbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+      }
+      .admin-soal-filter-pills {
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 4px !important;
+        scrollbar-width: none !important;
+      }
+      .admin-soal-filter-pills::-webkit-scrollbar {
+        display: none !important;
+      }
+      .quest-admin-item {
+        padding: 1rem 0.85rem !important;
+      }
+      .quest-admin-item > div:first-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.6rem !important;
+      }
+      .quest-admin-item > div:first-child > div:last-child {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: stretch !important;
+        gap: 0.45rem !important;
+      }
+      .quest-admin-item > div:first-child > div:last-child button {
+        flex: 1 !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 0.45rem 0.65rem !important;
+      }
+      /* Modals on Mobile - Pop-up Tengah */
+      .guru-modal-backdrop {
+        padding: 1rem !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .guru-modal-box {
+        border-radius: 24px !important;
+        max-height: 85vh !important;
+        max-width: 95vw !important;
+        width: 100% !important;
+        margin: auto !important;
+        padding: 1.4rem 1.15rem !important;
+        box-sizing: border-box !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4) !important;
+      }
+      .modal-btn-row {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+      }
+      .modal-btn-row button,
+      .modal-btn-row a {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+    /* OVERRIDE MUTLAK: POPUP EDIT PROFIL GURU & SUKSES WAJIB DI TENGAH LAYAR */
+    #modal-edit-guru-profile,
+    #modal-profile-success {
+      position: fixed !important;
+      inset: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 999999 !important;
+      padding: 1rem !important;
+      margin: 0 !important;
+    }
+    #modal-edit-guru-profile.show,
+    #modal-profile-success.show {
+      display: flex !important;
+    }
+    #modal-edit-guru-profile .guru-modal-box,
+    #modal-profile-success .guru-modal-box {
+      margin: auto !important;
+      position: relative !important;
+      top: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      right: auto !important;
+      transform: none !important;
+      align-self: center !important;
+      border-radius: 20px !important;
+    }
   </style>
 </head>
 <body>
@@ -533,40 +1248,43 @@
   <!-- TOP NAVBAR GURU -->
   <header class="guru-navbar">
     <div class="guru-nav-left">
-      <div class="nav-logo" style="cursor:default;">
+      <div class="guru-brand-wrap">
         <span class="logo-crest">
-          <svg viewBox="0 0 32 32" class="svg-crest">
+          <svg viewBox="0 0 32 32" class="svg-crest-mini">
             <circle cx="16" cy="16" r="14" fill="#D9383A"/>
             <path d="M8 11h16M9 8v15M23 8v15M7 14h18" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </span>
-        <span class="logo-text">SI<span class="logo-accent">Japanese</span></span>
+        <span class="guru-brand-text">SI<span style="color:#D9383A;">Japanese</span></span>
       </div>
-      <span class="badge-master-guru">MASTER DASHBOARD GURU</span>
+      <span class="badge-master-guru">DASHBOARD GURU MASTER</span>
       <a href="{{ route('home') }}" class="btn-return-app" title="Kembali ke portal murid" onclick="try{sessionStorage.setItem('sijapanese_active_page','home');sessionStorage.removeItem('sijapanese_active_lesson_id');sessionStorage.removeItem('sijapanese_active_step');}catch(e){}">
-        <svg viewBox="0 0 24 24" class="svg-icon-mini" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
         <span>Lihat Web Siswa</span>
       </a>
     </div>
 
     <div class="guru-profile-bar">
-      <div class="guru-avatar-circle" style="overflow:hidden;">
-        @php
-          $gAvatar = auth()->user()->avatar ?? 'img/avatar_tanaka.svg';
-        @endphp
-        @if(str_contains($gAvatar, '/') || str_contains($gAvatar, '.svg') || str_contains($gAvatar, '.png'))
-          <img src="{{ asset($gAvatar) }}" alt="Sensei Tanaka" style="width:100%; height:100%; border-radius:50%; object-fit:cover; display:block;" />
-        @else
-          <span>{{ $gAvatar }}</span>
-        @endif
+      <div onclick="openModal('modal-edit-guru-profile')" title="Klik untuk edit profil guru" style="display:inline-flex; align-items:center; gap:0.55rem; background:#F8FAFC; border:1.5px solid #E2E8F0; padding:0.35rem 0.75rem; border-radius:var(--radius-pill); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.borderColor='#BA3D27'; this.style.background='#FFFBF6'" onmouseout="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'">
+        <div class="guru-avatar-circle" style="overflow:hidden;">
+          @php
+            $gAvatar = auth()->user()->avatar ?? 'img/avatar_tanaka.svg';
+          @endphp
+          @if(str_contains($gAvatar, '/') || str_contains($gAvatar, '.svg') || str_contains($gAvatar, '.png'))
+            <img src="{{ asset($gAvatar) }}" alt="Sensei Tanaka" style="width:100%; height:100%; border-radius:50%; object-fit:cover; display:block;" />
+          @else
+            <span>{{ $gAvatar }}</span>
+          @endif
+        </div>
+        <div class="guru-info-text">
+          <span class="guru-name">
+            <span>{{ auth()->user()->name }}</span>
+          </span>
+          <span class="guru-role-sub">Guru Master &bull; Edit</span>
+        </div>
       </div>
-      <div class="guru-info-text">
-        <span class="guru-name">{{ auth()->user()->name }}</span>
-        <span class="guru-role-sub">Guru Bahasa Jepang</span>
-      </div>
-      <form action="{{ route('auth.logout') }}" method="POST" style="margin-left:0.8rem;">
+      <form action="{{ route('logout') }}" method="POST" style="margin:0;">
         @csrf
-        <button type="submit" class="btn-preset" style="color:#DC2626; border-color:#FECACA;" title="Keluar">
+        <button type="submit" class="btn-preset" onclick="try { localStorage.removeItem('sijapanese_active_user'); localStorage.removeItem('sijapanese_auth_user'); sessionStorage.clear(); } catch(e){}" style="color:#DC2626; border-color:#FECACA;" title="Keluar">
           Keluar
         </button>
       </form>
@@ -638,23 +1356,18 @@
     <!-- TAB NAVIGASI UTAMA -->
     <div class="guru-tabs-nav">
       <button class="guru-tab-btn active" onclick="switchGuruTab('levels')">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
         <span>Kotak Level Materi</span>
       </button>
       <button class="guru-tab-btn" onclick="switchGuruTab('lessons')">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         <span>Modul Pelajaran</span>
       </button>
       <button class="guru-tab-btn" onclick="switchGuruTab('quests')">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <span>Bank Soal &amp; Kuis</span>
       </button>
       <button class="guru-tab-btn" onclick="switchGuruTab('students')">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span>Pantauan Siswa &amp; Nilai</span>
       </button>
-      <button class="guru-tab-btn" onclick="switchGuruTab('minigames')">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <button class="guru-tab-btn" onclick="switchGuruTab('minigames', this)">
         <span>Kelola Mini Games &amp; Bank Soal</span>
       </button>
     </div>
@@ -727,8 +1440,38 @@
           </button>
         </div>
 
+        <!-- TOOLBAR PENCARIAN & FILTER MODUL -->
+        <div class="master-toolbar-row">
+          <div class="toolbar-search-box">
+            <input type="text" id="search-lesson-input" class="form-control" placeholder="Cari judul modul, nomor, materi..." oninput="filterLessonsTable()" />
+          </div>
+          <div class="toolbar-filter-group">
+            <label>Filter Level:</label>
+            <select id="filter-lesson-level" class="form-control" onchange="filterLessonsTable()">
+              <option value="all">Semua Level Materi</option>
+              @foreach($levels as $lvl)
+              <option value="{{ strtolower($lvl->code) }}">{{ strtoupper($lvl->code) }} - {{ $lvl->name }}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="toolbar-filter-group">
+            <label>Sortir:</label>
+            <select id="sort-lesson-select" class="form-control" onchange="filterLessonsTable()">
+              <option value="order-asc">Nomor Modul (Urut)</option>
+              <option value="title-asc">Judul Modul (A - Z)</option>
+              <option value="title-desc">Judul Modul (Z - A)</option>
+              <option value="est-asc">Estimasi Cepat</option>
+              <option value="est-desc">Estimasi Terlama</option>
+              <option value="quests-desc">Soal Terbanyak</option>
+            </select>
+          </div>
+          <div class="toolbar-count-badge">
+            Menampilkan <span id="lesson-count-display">{{ $lessons->count() }}</span> Modul
+          </div>
+        </div>
+
         <div class="guru-table-wrap">
-          <table class="guru-table">
+          <table class="guru-table" id="lessons-table">
             <thead>
               <tr>
                 <th style="width:50px;">No</th>
@@ -741,9 +1484,9 @@
                 <th style="text-align:right;">Aksi</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="lessons-table-body">
               @forelse($lessons as $les)
-              <tr id="lesson-row-{{ $les->id }}">
+              <tr id="lesson-row-{{ $les->id }}" class="lesson-table-row" data-id="{{ $les->id }}" data-num="{{ $les->lesson_number }}" data-level="{{ strtolower($les->level->code ?? 'n5') }}" data-title="{{ strtolower($les->title) }}" data-sub="{{ strtolower($les->subtitle ?? '') }}" data-est="{{ $les->est_minutes ?? 0 }}" data-quests="{{ $les->quests->count() }}">
                 <td><strong>{{ $les->lesson_number }}</strong></td>
                 <td>
                   <span class="level-code-badge" style="background:{{ $les->level->accent_color ?? '#2563EB' }}; font-size:0.7rem;">
@@ -816,26 +1559,50 @@
             <h3>Bank Soal Quest Interaktif Berhadiah Poin</h3>
             <p>Kelola dan edit pertanyaan, gambar ilustrasi komik, opsi jawaban (A, B, C, D), kunci jawaban benar, dan penjelasan pembahasan soal.</p>
           </div>
-          <div style="display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap;">
-            <!-- Filter Dropdown Modul -->
-            <div style="display:flex; align-items:center; gap:0.4rem;">
-              <label style="font-size:0.82rem; font-weight:700; color:#64748B;">Filter Modul:</label>
-              <select id="filter-quest-lesson" onchange="filterQuestsByLesson(this.value)" class="form-control" style="width:auto; min-width:200px; font-weight:700; padding:0.45rem 0.8rem;">
-                <option value="all">Semua Modul Materi ({{ $quests->count() }} Soal)</option>
-                @foreach($lessons as $les)
-                <option value="{{ $les->id }}">{{ $les->title }} ({{ strtoupper($les->level->code ?? 'N5') }})</option>
-                @endforeach
-              </select>
-            </div>
-            <button class="btn-guru-primary" onclick="openAddQuestModal()">
-              <span>+ Buat Soal Quest Baru</span>
-            </button>
+          <button class="btn-guru-primary" onclick="openAddQuestModal()">
+            <span>+ Buat Soal Quest Baru</span>
+          </button>
+        </div>
+
+        <!-- TOOLBAR PENCARIAN & FILTER QUEST -->
+        <div class="master-toolbar-row">
+          <div class="toolbar-search-box">
+            <input type="text" id="search-quest-input" class="form-control" placeholder="Cari isi pertanyaan quest, opsi, pembahasan..." oninput="filterQuests()" />
+          </div>
+          <div class="toolbar-filter-group">
+            <label>Filter Modul:</label>
+            <select id="filter-quest-lesson" onchange="filterQuests()" class="form-control" style="width:auto; min-width:180px;">
+              <option value="all">Semua Modul ({{ $quests->count() }} Soal)</option>
+              @foreach($lessons as $les)
+              <option value="{{ $les->id }}">{{ $les->title }} ({{ strtoupper($les->level->code ?? 'N5') }})</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="toolbar-filter-group">
+            <label>Tipe:</label>
+            <select id="filter-quest-type" onchange="filterQuests()" class="form-control">
+              <option value="all">Semua Tipe</option>
+              <option value="image">Ada Gambar</option>
+              <option value="text">Teks Saja</option>
+            </select>
+          </div>
+          <div class="toolbar-filter-group">
+            <label>Sortir:</label>
+            <select id="sort-quest-select" onchange="filterQuests()" class="form-control">
+              <option value="default">Urutan Bawaan</option>
+              <option value="points-desc">Poin Terbesar</option>
+              <option value="points-asc">Poin Terkecil</option>
+              <option value="question-asc">Pertanyaan (A - Z)</option>
+            </select>
+          </div>
+          <div class="toolbar-count-badge">
+            Menampilkan <span id="quest-count-display">{{ $quests->count() }}</span> Soal
           </div>
         </div>
 
         <div id="quest-list-container" style="display:flex; flex-direction:column; gap:1.2rem;">
           @forelse($quests as $q)
-          <div class="quest-admin-item" id="quest-item-{{ $q->id }}" data-lesson-id="{{ $q->lesson_id }}">
+          <div class="quest-admin-item" id="quest-item-{{ $q->id }}" data-id="{{ $q->id }}" data-lesson-id="{{ $q->lesson_id }}" data-points="{{ $q->points }}" data-has-img="{{ !empty($q->image_url) ? 'image' : 'text' }}" data-question="{{ strtolower($q->question) }}" data-order="{{ $q->order_num }}">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
               <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
                 <span style="background:var(--blue); color:#FFF; font-size:0.75rem; font-weight:800; padding:0.25rem 0.75rem; border-radius:var(--radius-pill);">
@@ -921,82 +1688,295 @@
     </div>
 
     <!-- ==============================================
-         TAB 4: PANTAUAN SISWA & NILAI
+         TAB 4: PANTAUAN SISWA & REKAP PENILAIAN LATIHAN
          ============================================== -->
     <div class="guru-tab-content" id="guru-tab-students">
       <div class="master-card">
         <div class="master-card-header">
           <div class="master-card-title">
-            <h3>Pantauan Kemajuan &amp; Poin Siswa</h3>
-            <p>Daftar murid yang telah bergabung, perolehan poin dari kuis dan latihan, serta modul yang diselesaikan.</p>
+            <h3>Pantauan Penilaian Latihan &amp; Kemajuan Siswa</h3>
+            <p>Periksa hasil latihan setiap murid secara presisi: rincian jawaban <strong>Benar</strong> dan <strong>Salah</strong>, nilai akhir (skala 0 - 100), grade kelulusan, dan akumulasi poin saat siswa ditugaskan latihan.</p>
           </div>
         </div>
 
-        <div class="guru-table-wrap">
-          <table class="guru-table">
-            <thead>
-              <tr>
-                <th style="width:60px;">Peringkat</th>
-                <th>Siswa</th>
-                <th>Email</th>
-                <th>Poin Belajar</th>
-                <th>Materi Selesai</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              @forelse($students as $idx => $std)
-              <tr>
-                <td>
-                  @if($idx === 0)
-                  <span style="font-size:1.3rem;">#1</span>
-                  @elseif($idx === 1)
-                  <span style="font-size:1.3rem;">#2</span>
-                  @elseif($idx === 2)
-                  <span style="font-size:1.3rem;">#3</span>
-                  @else
-                  <strong>#{{ $idx + 1 }}</strong>
-                  @endif
-                </td>
-                <td>
-                  <div style="display:flex; align-items:center; gap:0.65rem;">
-                    <div style="width:36px; height:36px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1.5px solid #CBD5E1; background:#F8FAFC; display:flex; align-items:center; justify-content:center;">
-                      @php
-                        $stdAv = $std->avatar ?? 'img/avatar_anggata.svg';
-                      @endphp
-                      @if(str_contains($stdAv, '/') || str_contains($stdAv, '.svg') || str_contains($stdAv, '.png'))
-                        <img src="{{ asset($stdAv) }}" alt="{{ $std->name }}" style="width:100%; height:100%; object-fit:cover;" />
-                      @else
-                        <span>{{ $stdAv }}</span>
-                      @endif
+        <!-- SUB-NAVIGASI PENILAIAN & SISWA -->
+        <div style="display:flex; gap:0.6rem; margin-bottom:1.4rem; border-bottom:1.5px solid #E2E8F0; padding-bottom:0.9rem; flex-wrap:wrap;">
+          <button type="button" class="btn-preset active" id="btn-subnav-assessments" onclick="switchStudentSubTab('assessments')" style="font-size:0.88rem; font-weight:800; padding:0.55rem 1.2rem; border-radius:var(--radius-pill); display:inline-flex; align-items:center; gap:0.5rem; background:#2563EB; color:#FFF; border-color:#2563EB; box-shadow:0 3px 10px rgba(37,99,235,0.25);">
+            <span>Rekap Hasil Penilaian Latihan (Benar/Salah)</span>
+          </button>
+          <button type="button" class="btn-preset" id="btn-subnav-students" onclick="switchStudentSubTab('students')" style="font-size:0.88rem; font-weight:700; padding:0.55rem 1.2rem; border-radius:var(--radius-pill); display:inline-flex; align-items:center; gap:0.5rem;">
+            <span>Daftar Akun Siswa &amp; Leaderboard</span>
+          </button>
+        </div>
+
+        <!-- ==============================================
+             SUB-PANEL 1: REKAP PENILAIAN LATIHAN SISWA
+             ============================================== -->
+        <div id="subpanel-assessments">
+          <!-- KPI MINI RINGKASAN PENILAIAN KELAS -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:1.4rem;">
+            <div style="background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:14px; padding:1rem 1.2rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:#1E40AF; text-transform:uppercase;">Rata-rata Nilai Kelas</div>
+              <div style="font-size:1.8rem; font-weight:900; color:#1D4ED8; margin:0.2rem 0;">{{ $stats['class_avg_score'] ?? 0 }} <span style="font-size:0.95rem; color:#60A5FA;">/ 100</span></div>
+              <div style="font-size:0.75rem; color:#3B82F6; font-weight:600;">Skala evaluasi akademik</div>
+            </div>
+            <div style="background:#ECFDF5; border:1.5px solid #A7F3D0; border-radius:14px; padding:1rem 1.2rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:#065F46; text-transform:uppercase;">Tingkat Kelulusan</div>
+              <div style="font-size:1.8rem; font-weight:900; color:#059669; margin:0.2rem 0;">{{ $stats['pass_rate'] ?? 100 }}%</div>
+              <div style="font-size:0.75rem; color:#10B981; font-weight:600;">Siswa mencapai KKM (≥60)</div>
+            </div>
+            <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:14px; padding:1rem 1.2rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:#92400E; text-transform:uppercase;">Total Latihan Selesai</div>
+              <div style="font-size:1.8rem; font-weight:900; color:#D97706; margin:0.2rem 0;">{{ $stats['total_assessments'] ?? 0 }}</div>
+              <div style="font-size:0.75rem; color:#B45309; font-weight:600;">Pengerjaan modul diserahkan</div>
+            </div>
+            <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:14px; padding:1rem 1.2rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:#991B1B; text-transform:uppercase;">Perlu Bimbingan / Remedial</div>
+              <div style="font-size:1.8rem; font-weight:900; color:#DC2626; margin:0.2rem 0;">{{ $stats['remedial_count'] ?? 0 }}</div>
+              <div style="font-size:0.75rem; color:#EF4444; font-weight:600;">Skor di bawah 60</div>
+            </div>
+          </div>
+
+          <!-- TOOLBAR FILTER PENILAIAN LATIHAN -->
+          <div class="master-toolbar-row">
+            <div class="toolbar-search-box">
+              <input type="text" id="search-assessment-input" class="form-control" placeholder="Cari nama murid, judul materi latihan..." oninput="filterAssessmentsTable()" />
+            </div>
+            <div class="toolbar-filter-group">
+              <label>Filter Siswa:</label>
+              <select id="filter-assessment-student" class="form-control" onchange="filterAssessmentsTable()">
+                <option value="all">Semua Siswa</option>
+                @foreach($students as $std)
+                <option value="{{ $std->id }}">{{ $std->name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="toolbar-filter-group">
+              <label>Grade / Predikat:</label>
+              <select id="filter-assessment-grade" class="form-control" onchange="filterAssessmentsTable()">
+                <option value="all">Semua Grade</option>
+                <option value="A">Grade A (Sangat Baik: 85 - 100)</option>
+                <option value="B">Grade B (Baik: 70 - 84)</option>
+                <option value="C">Grade C (Cukup: 60 - 69)</option>
+                <option value="D">Grade D / Remedial (&lt; 60)</option>
+              </select>
+            </div>
+            <div class="toolbar-filter-group">
+              <label>Sortir:</label>
+              <select id="sort-assessment-select" class="form-control" onchange="filterAssessmentsTable()">
+                <option value="newest">Terbaru Diserahkan</option>
+                <option value="score-desc">Nilai Tertinggi (100 - 0)</option>
+                <option value="score-asc">Nilai Terendah</option>
+                <option value="correct-desc">Jawaban Benar Terbanyak</option>
+              </select>
+            </div>
+            <div class="toolbar-count-badge">
+              Menampilkan <span id="assessment-count-display">{{ isset($assessments) ? $assessments->count() : 0 }}</span> Data Nilai
+            </div>
+          </div>
+
+          <!-- TABEL HASIL PENILAIAN LATIHAN SISWA -->
+          <div class="guru-table-wrap">
+            <table class="guru-table" id="assessments-table">
+              <thead>
+                <tr>
+                  <th style="width:130px;">Waktu Pengerjaan</th>
+                  <th>Nama Murid</th>
+                  <th>Materi / Latihan</th>
+                  <th style="text-align:center;">Hasil Jawaban (Benar / Salah)</th>
+                  <th style="text-align:center; width:110px;">Nilai Akhir</th>
+                  <th style="text-align:center; width:90px;">Grade</th>
+                  <th style="text-align:center; width:110px;">Status Evaluasi</th>
+                </tr>
+              </thead>
+              <tbody id="assessments-table-body">
+                @forelse($assessments ?? [] as $asm)
+                <tr class="assessment-table-row" data-id="{{ $asm->id }}" data-student-id="{{ $asm->user_id }}" data-name="{{ strtolower($asm->user->name ?? '') }}" data-title="{{ strtolower($asm->exercise_title) }}" data-score="{{ $asm->score }}" data-correct="{{ $asm->correct_count }}" data-grade="{{ $asm->grade }}" data-status="{{ $asm->status }}">
+                  <td style="color:#64748B; font-size:0.82rem; white-space:nowrap;">
+                    <strong style="color:#1E293B; display:block;">{{ $asm->created_at ? $asm->created_at->format('d M Y') : 'Hari ini' }}</strong>
+                    <span>{{ $asm->created_at ? $asm->created_at->format('H:i') . ' WIB' : '-' }}</span>
+                  </td>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:0.65rem;">
+                      <div style="width:36px; height:36px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1.5px solid #CBD5E1; background:#F8FAFC; display:flex; align-items:center; justify-content:center;">
+                        @php
+                          $sAv = $asm->user->avatar ?? 'img/avatar_anggata.svg';
+                        @endphp
+                        @if(str_contains($sAv, '/') || str_contains($sAv, '.svg') || str_contains($sAv, '.png'))
+                          <img src="{{ asset($sAv) }}" alt="{{ $asm->user->name ?? 'Siswa' }}" style="width:100%; height:100%; object-fit:cover;" />
+                        @else
+                          <span>{{ $sAv }}</span>
+                        @endif
+                      </div>
+                      <div>
+                        <strong style="color:#0F172A; display:block;">{{ $asm->user->name ?? 'Murid' }}</strong>
+                        <span style="font-size:0.75rem; color:#64748B;">{{ $asm->user->email ?? '' }}</span>
+                      </div>
                     </div>
-                    <div>
-                      <strong style="color:#0F172A;">{{ $std->name }}</strong>
+                  </td>
+                  <td>
+                    <div style="font-weight:700; color:#1E293B;">{{ $asm->exercise_title }}</div>
+                    @if($asm->lesson)
+                      <span style="display:inline-block; margin-top:3px; font-size:0.72rem; padding:2px 8px; border-radius:9999px; background:#EFF6FF; color:#1D4ED8; font-weight:700;">
+                        {{ strtoupper($asm->lesson->level->code ?? 'N5') }} &bull; Modul {{ $asm->lesson->lesson_number }}
+                      </span>
+                    @endif
+                  </td>
+                  <td style="text-align:center;">
+                    <div style="display:inline-flex; align-items:center; gap:6px;">
+                      <!-- Badge Benar -->
+                      <span style="background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0; font-weight:800; font-size:0.8rem; padding:0.25rem 0.65rem; border-radius:9999px;" title="{{ $asm->correct_count }} Jawaban Benar">
+                        <span>{{ $asm->correct_count }} Benar</span>
+                      </span>
+                      <!-- Badge Salah -->
+                      <span style="background:{{ $asm->wrong_count > 0 ? '#FEF2F2' : '#F1F5F9' }}; color:{{ $asm->wrong_count > 0 ? '#991B1B' : '#64748B' }}; border:1px solid {{ $asm->wrong_count > 0 ? '#FECACA' : '#E2E8F0' }}; font-weight:800; font-size:0.8rem; padding:0.25rem 0.65rem; border-radius:9999px;" title="{{ $asm->wrong_count }} Jawaban Salah">
+                        <span>{{ $asm->wrong_count }} Salah</span>
+                      </span>
                     </div>
-                  </div>
-                </td>
-                <td style="color:#64748B;">{{ $std->email }}</td>
-                <td>
-                  <span style="background:#FEF3C7; color:#92400E; font-weight:800; font-size:0.85rem; padding:0.3rem 0.8rem; border-radius:var(--radius-pill);">
-                    {{ $std->score }} Poin
-                  </span>
-                </td>
-                <td>
-                  <strong>{{ is_array($std->completed_lessons) ? count($std->completed_lessons) : 0 }}</strong> Modul
-                </td>
-                <td>
-                  <span class="level-status-pill status-active">Aktif Belajar</span>
-                </td>
-              </tr>
-              @empty
-              <tr>
-                <td colspan="6" style="text-align:center; padding:2rem; color:#94A3B8;">
-                  Belum ada murid yang terdaftar.
-                </td>
-              </tr>
-              @endforelse
-            </tbody>
-          </table>
+                    <div style="font-size:0.72rem; color:#94A3B8; margin-top:3px;">
+                      Total: {{ $asm->total_questions }} Soal
+                    </div>
+                  </td>
+                  <td style="text-align:center;">
+                    <div style="font-size:1.15rem; font-weight:900; color:{{ $asm->score >= 70 ? '#059669' : ($asm->score >= 60 ? '#D97706' : '#DC2626') }};">
+                      {{ $asm->score }} <span style="font-size:0.78rem; font-weight:700; color:#94A3B8;">/ 100</span>
+                    </div>
+                  </td>
+                  <td style="text-align:center;">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; font-weight:900; font-size:1.05rem; background:{{ $asm->grade === 'A' ? '#ECFDF5' : ($asm->grade === 'B' ? '#EFF6FF' : ($asm->grade === 'C' ? '#FFFBEB' : '#FEF2F2')) }}; color:{{ $asm->grade === 'A' ? '#059669' : ($asm->grade === 'B' ? '#1D4ED8' : ($asm->grade === 'C' ? '#D97706' : '#DC2626')) }}; border:2px solid {{ $asm->grade === 'A' ? '#A7F3D0' : ($asm->grade === 'B' ? '#BFDBFE' : ($asm->grade === 'C' ? '#FDE68A' : '#FECACA')) }};">
+                      {{ $asm->grade }}
+                    </span>
+                  </td>
+                  <td style="text-align:center;">
+                    @if($asm->status === 'lulus')
+                      <span class="level-status-pill status-active" style="padding:0.3rem 0.8rem; font-size:0.78rem;">Lulus KKM</span>
+                    @else
+                      <span style="display:inline-block; padding:0.3rem 0.8rem; font-size:0.78rem; font-weight:800; border-radius:9999px; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA;">Remedial</span>
+                    @endif
+                  </td>
+                </tr>
+                @empty
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:3rem 2rem; color:#94A3B8;">
+                    <p style="font-size:1rem; font-weight:700; margin-bottom:0.4rem;">Belum ada riwayat pengerjaan latihan dari murid.</p>
+                    <p style="font-size:0.82rem; margin:0;">Saat siswa mengerjakan kuis quest atau latihan di web siswa, seluruh nilai, rincian benar, dan salah akan otomatis tercatat di sini.</p>
+                  </td>
+                </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ==============================================
+             SUB-PANEL 2: DAFTAR AKUN SISWA & LEADERBOARD
+             ============================================== -->
+        <div id="subpanel-students" style="display:none;">
+          <!-- TOOLBAR PENCARIAN & SORTIR SISWA -->
+          <div class="master-toolbar-row">
+            <div class="toolbar-search-box">
+              <input type="text" id="search-student-input" class="form-control" placeholder="Cari nama siswa, email murid..." oninput="filterStudentsTable()" />
+            </div>
+            <div class="toolbar-filter-group">
+              <label>Sortir:</label>
+              <select id="sort-student-select" class="form-control" onchange="filterStudentsTable()">
+                <option value="score-desc">Poin Tertinggi (#1)</option>
+                <option value="score-asc">Poin Terendah</option>
+                <option value="name-asc">Nama Siswa (A - Z)</option>
+                <option value="name-desc">Nama Siswa (Z - A)</option>
+                <option value="lessons-desc">Modul Selesai Terbanyak</option>
+              </select>
+            </div>
+            <div class="toolbar-filter-group">
+              <label>Status Belajar:</label>
+              <select id="filter-student-status" class="form-control" onchange="filterStudentsTable()">
+                <option value="all">Semua Siswa</option>
+                <option value="has-score">Sudah Punya Poin (&gt; 0)</option>
+                <option value="zero-score">Belum Ada Poin (0)</option>
+                <option value="has-lesson">Sudah Selesai Modul</option>
+              </select>
+            </div>
+            <div class="toolbar-count-badge">
+              Menampilkan <span id="student-count-display">{{ $students->count() }}</span> Siswa
+            </div>
+          </div>
+
+          <div class="guru-table-wrap">
+            <table class="guru-table" id="students-table">
+              <thead>
+                <tr>
+                  <th style="width:60px;">Peringkat</th>
+                  <th>Siswa</th>
+                  <th>Email</th>
+                  <th>Rata-rata Nilai</th>
+                  <th>Latihan Dikerjakan</th>
+                  <th>Poin Gamifikasi</th>
+                  <th>Materi Selesai</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                @forelse($students as $idx => $std)
+                @php
+                  $stdAvg = $std->average_assessment_score;
+                  $stdAssCount = $std->assessments ? $std->assessments->count() : 0;
+                @endphp
+                <tr class="student-table-row" data-rank="{{ $idx + 1 }}" data-name="{{ strtolower($std->name) }}" data-email="{{ strtolower($std->email) }}" data-score="{{ $std->score }}" data-lessons="{{ is_array($std->completed_lessons) ? count($std->completed_lessons) : 0 }}">
+                  <td>
+                    <strong>#{{ $idx + 1 }}</strong>
+                  </td>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:0.65rem;">
+                      <div style="width:36px; height:36px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1.5px solid #CBD5E1; background:#F8FAFC; display:flex; align-items:center; justify-content:center;">
+                        @php
+                          $stdAv = $std->avatar ?? 'img/avatar_anggata.svg';
+                        @endphp
+                        @if(str_contains($stdAv, '/') || str_contains($stdAv, '.svg') || str_contains($stdAv, '.png'))
+                          <img src="{{ asset($stdAv) }}" alt="{{ $std->name }}" style="width:100%; height:100%; object-fit:cover;" />
+                        @else
+                          <span>{{ $stdAv }}</span>
+                        @endif
+                      </div>
+                      <div>
+                        <strong style="color:#0F172A;">{{ $std->name }}</strong>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:#64748B;">{{ $std->email }}</td>
+                  <td>
+                    @if($stdAvg !== null)
+                      <span style="background:{{ $stdAvg >= 70 ? '#ECFDF5' : '#FFFBEB' }}; color:{{ $stdAvg >= 70 ? '#065F46' : '#92400E' }}; border:1px solid {{ $stdAvg >= 70 ? '#A7F3D0' : '#FDE68A' }}; font-weight:800; font-size:0.85rem; padding:0.25rem 0.65rem; border-radius:9999px;">
+                        {{ $stdAvg }} / 100
+                      </span>
+                    @else
+                      <span style="color:#94A3B8; font-size:0.8rem;">Belum ada nilai</span>
+                    @endif
+                  </td>
+                  <td>
+                    <strong>{{ $stdAssCount }}</strong> Selesai
+                  </td>
+                  <td>
+                    <span style="background:#FEF3C7; color:#92400E; font-weight:800; font-size:0.85rem; padding:0.3rem 0.8rem; border-radius:var(--radius-pill);">
+                      {{ $std->score }} Poin
+                    </span>
+                  </td>
+                  <td>
+                    <strong>{{ is_array($std->completed_lessons) ? count($std->completed_lessons) : 0 }}</strong> Modul
+                  </td>
+                  <td>
+                    <span class="level-status-pill status-active">Aktif Belajar</span>
+                  </td>
+                </tr>
+                @empty
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:2rem; color:#94A3B8;">
+                    Belum ada murid yang terdaftar.
+                  </td>
+                </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -1051,6 +2031,107 @@
     </div>
 
   </main>
+
+  <!-- ==============================================
+       MODAL: EDIT PROFIL GURU MASTER (POPUP MODAL)
+       ============================================== -->
+  <div class="guru-modal-backdrop" id="modal-edit-guru-profile">
+    <div class="guru-modal-box" style="max-width: 580px; max-height: 90vh; overflow-y: auto; border-radius: 24px; padding: 1.8rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+      <div class="guru-modal-header" style="border-bottom: 1.5px solid #E2E8F0; padding-bottom: 1rem; margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0;">Pengaturan Profil Guru Pengajar</h3>
+          <p style="color: #64748B; font-size: 0.82rem; margin: 0.2rem 0 0;">Kelola nama tampilan, avatar karakter, email login, dan kata sandi Master Guru.</p>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeModal('modal-edit-guru-profile')" style="font-size: 1.5rem; line-height: 1; border: none; background: #F1F5F9; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; color: #64748B;">&times;</button>
+      </div>
+
+      <form action="{{ route('guru.profile.update') }}" method="POST" id="form-edit-guru-profile" onsubmit="handleGuruProfileSubmit(event)">
+        @csrf
+
+        <!-- Pasfoto Formal Guru 3x4 -->
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0.6rem; margin-bottom:1.4rem; padding:1.1rem; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:18px;">
+          <div style="width:84px; height:84px; border-radius:50%; border:3px solid #BA3D27; overflow:hidden; box-shadow:0 4px 14px rgba(186,61,39,0.2); background:#FFFFFF; display:flex; align-items:center; justify-content:center;">
+            @php
+              $curAvatar = auth()->user()->avatar ?? 'img/avatar_tanaka.svg';
+              if (!str_starts_with($curAvatar, 'img/') && !str_starts_with($curAvatar, '/')) {
+                $curAvatar = 'img/' . $curAvatar;
+              }
+            @endphp
+            <img id="guru-profile-avatar-preview" src="{{ asset($curAvatar) }}" alt="Avatar Preview" style="width:100%; height:100%; object-fit:cover;" />
+          </div>
+          <div style="font-size:0.82rem; font-weight:800; color:#334155;">Pasfoto Formal Guru Pengajar (3x4)</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn-preset" onclick="setGuruAvatar('img/avatar_tanaka.svg')" style="font-size:0.8rem; padding:0.4rem 0.85rem; font-weight:700;">Sensei Tanaka</button>
+            <button type="button" class="btn-preset" onclick="setGuruAvatar('img/avatar_anggata.svg')" style="font-size:0.8rem; padding:0.4rem 0.85rem; font-weight:700;">Sensei Angga</button>
+            <button type="button" class="btn-preset" onclick="setGuruAvatar('img/avatar_aoi.svg')" style="font-size:0.8rem; padding:0.4rem 0.85rem; font-weight:700;">Sensei Aoi</button>
+          </div>
+          <input type="hidden" name="avatar" id="guru-avatar-input" value="{{ $curAvatar }}" />
+        </div>
+
+        <div class="form-group" style="margin-bottom:1.1rem;">
+          <label style="font-weight:800; font-size:0.88rem; color:#334155; display:block; margin-bottom:0.4rem;">Nama Lengkap Guru (Huruf Romawi)</label>
+          <input type="text" name="name" id="guru-name-input" class="form-control" value="{{ auth()->user()->name }}" required style="width:100%; padding:0.8rem 1rem; border:1.5px solid #CBD5E1; border-radius:12px; font-size:0.95rem; font-weight:600;" />
+        </div>
+
+        <div class="form-group" style="margin-bottom:1.1rem;">
+          <label style="font-weight:800; font-size:0.88rem; color:#334155; display:block; margin-bottom:0.4rem;">Alamat Email Akun Guru</label>
+          <input type="email" name="email" id="guru-email-input" class="form-control" value="{{ auth()->user()->email }}" required style="width:100%; padding:0.8rem 1rem; border:1.5px solid #CBD5E1; border-radius:12px; font-size:0.95rem; font-weight:600; background:#FFFFFF; color:#0F172A;" />
+          <small style="color:#64748B; font-size:0.76rem; margin-top:0.3rem; display:block;">Email akun Master Guru dapat Anda ubah kapan saja sebagai kredensial login utama.</small>
+        </div>
+
+        <div class="form-group" style="margin-bottom:1.1rem;">
+          <label style="font-weight:800; font-size:0.88rem; color:#334155; display:block; margin-bottom:0.4rem;">Status Hak Akses Akun</label>
+          <div style="display:inline-flex; align-items:center; gap:0.45rem; padding:0.4rem 0.9rem; background:#FEF2F2; border:1.5px solid #FECACA; color:#BA3D27; font-weight:800; font-size:0.82rem; border-radius:9999px;">
+            <span>Master Guru &bull; Kelola Penuh Seluruh Modul, Tingkat &amp; Soal</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label style="font-weight:800; font-size:0.88rem; color:#334155; display:block; margin-bottom:0.4rem;">Ganti Kata Sandi (Opsional)</label>
+          <input type="password" name="password" class="form-control" placeholder="Biarkan kosong jika tidak ingin mengubah sandi..." minlength="6" style="width:100%; padding:0.8rem 1rem; border:1.5px solid #CBD5E1; border-radius:12px; font-size:0.95rem;" />
+          <small style="color:#94A3B8; font-size:0.76rem; margin-top:0.3rem; display:block;">Minimal 6 karakter jika ingin mengganti kata sandi baru.</small>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem; border-top: 1.5px solid #E2E8F0; padding-top: 1.2rem;">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-edit-guru-profile')" style="padding:0.8rem 1.4rem; border-radius:12px; font-weight:700; font-size:0.92rem; border:1.5px solid #CBD5E1; background:#F8FAFC; color:#475569; cursor:pointer;">
+            Batal
+          </button>
+          <button type="submit" class="btn-primary" style="background:linear-gradient(135deg, #BA3D27 0%, #991B1B 100%); color:#FFFFFF; border:none; padding:0.8rem 1.6rem; border-radius:12px; font-weight:800; font-size:0.92rem; cursor:pointer; box-shadow:0 4px 14px rgba(186,61,39,0.3); display:inline-flex; align-items:center; gap:0.5rem;">
+            <span>Simpan Perubahan Profil Guru</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==============================================
+       MODAL: POPUP SUKSES UPDATE PROFIL GURU
+       ============================================== -->
+  <div class="guru-modal-backdrop" id="modal-profile-success">
+    <div class="guru-modal-box" style="max-width: 440px; text-align: center; padding: 2.2rem 1.8rem; border-radius: 24px; box-shadow: 0 20px 45px rgba(0,0,0,0.2);">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; font-size: 1.1rem; font-weight: 800; box-shadow: 0 10px 25px rgba(22, 163, 74, 0.25);">
+        OK
+      </div>
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem;" id="modal-profile-success-title">Profil Berhasil Diperbarui!</h3>
+      <p style="color: #64748B; font-size: 0.92rem; line-height: 1.5; margin: 0 0 1.4rem;" id="modal-profile-success-msg">
+        {{ session('success') ?? 'Data profil Master Guru Anda telah berhasil disimpan ke database.' }}
+      </p>
+      <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 0.9rem 1.1rem; margin-bottom: 1.5rem; text-align: left;">
+        <div style="font-size: 0.78rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; margin-bottom: 0.35rem;">Informasi Akun Master Terkini:</div>
+        <div style="font-size: 0.95rem; font-weight: 800; color: #1E293B; display: flex; align-items: center; gap: 0.5rem;">
+          <span>Nama:</span>
+          <span id="modal-profile-success-name">{{ auth()->user()->name ?? 'Sensei Tanaka' }}</span>
+        </div>
+        <div style="font-size: 0.88rem; font-weight: 700; color: #475569; margin-top: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>Email:</span>
+          <span id="modal-profile-success-email">{{ auth()->user()->email ?? 'guru@sijapanese.id' }}</span>
+        </div>
+      </div>
+      <button type="button" class="btn-primary" onclick="closeModal('modal-profile-success')" style="width: 100%; justify-content: center; padding: 0.85rem 1.5rem; font-size: 0.95rem; font-weight: 800; border-radius: 12px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFF; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(16,185,129,0.35);">
+        Siap, Lanjutkan
+      </button>
+    </div>
+  </div>
 
   <!-- ==============================================
        MODAL: TAMBAH LEVEL KUSTOM
@@ -1715,17 +2796,32 @@
   <script src="{{ asset('js/app.js') }}"></script>
   <script>
     // Tab Switching
-    function switchGuruTab(tabKey) {
+    function switchGuruTab(tabKey, targetBtn = null) {
       document.querySelectorAll('.guru-tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.guru-tab-content').forEach(c => c.classList.remove('active'));
 
-      event.currentTarget.classList.add('active');
+      if (targetBtn && targetBtn.classList) {
+        targetBtn.classList.add('active');
+      } else {
+        const found = document.querySelector(`.guru-tab-btn[data-tab="${tabKey}"]`) || 
+                      Array.from(document.querySelectorAll('.guru-tab-btn')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(tabKey));
+        if (found) found.classList.add('active');
+      }
+
       const target = document.getElementById('guru-tab-' + tabKey);
-      if (target) target.classList.add('active');
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
 
       if (tabKey === 'minigames') {
         renderAdminGameView();
       }
+    }
+
+    function setGuruAvatar(avatarPath) {
+      document.getElementById('guru-avatar-input').value = avatarPath;
+      document.getElementById('guru-profile-avatar-preview').src = avatarPath;
     }
 
     // Modal Helpers
@@ -2150,16 +3246,259 @@
       }
     }
 
-    // Filter Quests by Lesson
-    function filterQuestsByLesson(lessonId) {
-      const items = document.querySelectorAll('.quest-admin-item');
+    // Switch Sub-Tab di Pantauan Siswa (Assessments vs Students)
+    function switchStudentSubTab(tab) {
+      const btnAss = document.getElementById('btn-subnav-assessments');
+      const btnStd = document.getElementById('btn-subnav-students');
+      const panelAss = document.getElementById('subpanel-assessments');
+      const panelStd = document.getElementById('subpanel-students');
+
+      if (tab === 'assessments') {
+        if (btnAss) {
+          btnAss.classList.add('active');
+          btnAss.style.background = '#2563EB';
+          btnAss.style.color = '#FFF';
+          btnAss.style.borderColor = '#2563EB';
+          btnAss.style.boxShadow = '0 3px 10px rgba(37,99,235,0.25)';
+        }
+        if (btnStd) {
+          btnStd.classList.remove('active');
+          btnStd.style.background = '#F8FAFC';
+          btnStd.style.color = '#475569';
+          btnStd.style.borderColor = '#CBD5E1';
+          btnStd.style.boxShadow = 'none';
+        }
+        if (panelAss) panelAss.style.display = 'block';
+        if (panelStd) panelStd.style.display = 'none';
+      } else {
+        if (btnStd) {
+          btnStd.classList.add('active');
+          btnStd.style.background = '#2563EB';
+          btnStd.style.color = '#FFF';
+          btnStd.style.borderColor = '#2563EB';
+          btnStd.style.boxShadow = '0 3px 10px rgba(37,99,235,0.25)';
+        }
+        if (btnAss) {
+          btnAss.classList.remove('active');
+          btnAss.style.background = '#F8FAFC';
+          btnAss.style.color = '#475569';
+          btnAss.style.borderColor = '#CBD5E1';
+          btnAss.style.boxShadow = 'none';
+        }
+        if (panelAss) panelAss.style.display = 'none';
+        if (panelStd) panelStd.style.display = 'block';
+      }
+    }
+
+    // Filter & Sort Tabel Penilaian Latihan Siswa (Benar, Salah & Nilai)
+    function filterAssessmentsTable() {
+      const kw = (document.getElementById('search-assessment-input')?.value || '').trim().toLowerCase();
+      const studentFilter = document.getElementById('filter-assessment-student')?.value || 'all';
+      const gradeFilter = document.getElementById('filter-assessment-grade')?.value || 'all';
+      const sortMode = document.getElementById('sort-assessment-select')?.value || 'newest';
+      const rows = Array.from(document.querySelectorAll('.assessment-table-row'));
+      const tbody = document.getElementById('assessments-table-body');
+      const countEl = document.getElementById('assessment-count-display');
+
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const studentId = row.getAttribute('data-student-id') || '';
+        const name = row.getAttribute('data-name') || '';
+        const title = row.getAttribute('data-title') || '';
+        const grade = row.getAttribute('data-grade') || '';
+
+        let matchKw = !kw || name.includes(kw) || title.includes(kw);
+        let matchStudent = (studentFilter === 'all') || (studentId === String(studentFilter));
+        let matchGrade = (gradeFilter === 'all') || (grade === gradeFilter);
+
+        if (matchKw && matchStudent && matchGrade) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Sort rows
+      rows.sort((a, b) => {
+        const idA = parseInt(a.getAttribute('data-id') || '0', 10);
+        const idB = parseInt(b.getAttribute('data-id') || '0', 10);
+        const scoreA = parseInt(a.getAttribute('data-score') || '0', 10);
+        const scoreB = parseInt(b.getAttribute('data-score') || '0', 10);
+        const correctA = parseInt(a.getAttribute('data-correct') || '0', 10);
+        const correctB = parseInt(b.getAttribute('data-correct') || '0', 10);
+
+        if (sortMode === 'score-desc') return scoreB - scoreA;
+        if (sortMode === 'score-asc') return scoreA - scoreB;
+        if (sortMode === 'correct-desc') return correctB - correctA;
+        return idB - idA; // newest
+      });
+
+      if (tbody) {
+        rows.forEach(row => tbody.appendChild(row));
+      }
+      if (countEl) countEl.textContent = visibleCount;
+    }
+
+    // Filter & Sort Students Table
+    function filterStudentsTable() {
+      const kw = (document.getElementById('search-student-input')?.value || '').trim().toLowerCase();
+      const sortMode = document.getElementById('sort-student-select')?.value || 'score-desc';
+      const statusFilter = document.getElementById('filter-student-status')?.value || 'all';
+      const rows = Array.from(document.querySelectorAll('.student-table-row'));
+      const tbody = document.getElementById('students-table-body');
+      const countEl = document.getElementById('student-count-display');
+
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const name = row.getAttribute('data-name') || '';
+        const email = row.getAttribute('data-email') || '';
+        const score = parseInt(row.getAttribute('data-score') || '0', 10);
+        const lessons = parseInt(row.getAttribute('data-lessons') || '0', 10);
+
+        let matchKw = !kw || name.includes(kw) || email.includes(kw);
+        let matchStatus = true;
+        if (statusFilter === 'has-score') matchStatus = score > 0;
+        if (statusFilter === 'zero-score') matchStatus = score === 0;
+        if (statusFilter === 'has-lesson') matchStatus = lessons > 0;
+
+        if (matchKw && matchStatus) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Sort rows
+      rows.sort((a, b) => {
+        const scoreA = parseInt(a.getAttribute('data-score') || '0', 10);
+        const scoreB = parseInt(b.getAttribute('data-score') || '0', 10);
+        const nameA = a.getAttribute('data-name') || '';
+        const nameB = b.getAttribute('data-name') || '';
+        const lessonsA = parseInt(a.getAttribute('data-lessons') || '0', 10);
+        const lessonsB = parseInt(b.getAttribute('data-lessons') || '0', 10);
+
+        if (sortMode === 'score-desc') return scoreB - scoreA;
+        if (sortMode === 'score-asc') return scoreA - scoreB;
+        if (sortMode === 'name-asc') return nameA.localeCompare(nameB);
+        if (sortMode === 'name-desc') return nameB.localeCompare(nameA);
+        if (sortMode === 'lessons-desc') return lessonsB - lessonsA;
+        return 0;
+      });
+
+      if (tbody) {
+        rows.forEach(row => tbody.appendChild(row));
+      }
+      if (countEl) countEl.textContent = visibleCount;
+    }
+
+    // Filter & Sort Lessons Table
+    function filterLessonsTable() {
+      const kw = (document.getElementById('search-lesson-input')?.value || '').trim().toLowerCase();
+      const levelFilter = document.getElementById('filter-lesson-level')?.value || 'all';
+      const sortMode = document.getElementById('sort-lesson-select')?.value || 'order-asc';
+      const rows = Array.from(document.querySelectorAll('.lesson-table-row'));
+      const tbody = document.getElementById('lessons-table-body');
+      const countEl = document.getElementById('lesson-count-display');
+
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const title = row.getAttribute('data-title') || '';
+        const sub = row.getAttribute('data-sub') || '';
+        const num = row.getAttribute('data-num') || '';
+        const level = row.getAttribute('data-level') || '';
+
+        let matchKw = !kw || title.includes(kw) || sub.includes(kw) || ('modul ' + num).includes(kw);
+        let matchLevel = (levelFilter === 'all') || (level === levelFilter);
+
+        if (matchKw && matchLevel) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Sort rows
+      rows.sort((a, b) => {
+        const numA = parseInt(a.getAttribute('data-num') || '0', 10);
+        const numB = parseInt(b.getAttribute('data-num') || '0', 10);
+        const titleA = a.getAttribute('data-title') || '';
+        const titleB = b.getAttribute('data-title') || '';
+        const estA = parseInt(a.getAttribute('data-est') || '0', 10);
+        const estB = parseInt(b.getAttribute('data-est') || '0', 10);
+        const questsA = parseInt(a.getAttribute('data-quests') || '0', 10);
+        const questsB = parseInt(b.getAttribute('data-quests') || '0', 10);
+
+        if (sortMode === 'order-asc') return numA - numB;
+        if (sortMode === 'title-asc') return titleA.localeCompare(titleB);
+        if (sortMode === 'title-desc') return titleB.localeCompare(titleA);
+        if (sortMode === 'est-asc') return estA - estB;
+        if (sortMode === 'est-desc') return estB - estA;
+        if (sortMode === 'quests-desc') return questsB - questsA;
+        return 0;
+      });
+
+      if (tbody) {
+        rows.forEach(row => tbody.appendChild(row));
+      }
+      if (countEl) countEl.textContent = visibleCount;
+    }
+
+    // Filter & Sort Quests
+    function filterQuests() {
+      const kw = (document.getElementById('search-quest-input')?.value || '').trim().toLowerCase();
+      const lessonId = document.getElementById('filter-quest-lesson')?.value || 'all';
+      const typeFilter = document.getElementById('filter-quest-type')?.value || 'all';
+      const sortMode = document.getElementById('sort-quest-select')?.value || 'default';
+      const items = Array.from(document.querySelectorAll('.quest-admin-item'));
+      const container = document.getElementById('quest-list-container');
+      const countEl = document.getElementById('quest-count-display');
+
+      let visibleCount = 0;
       items.forEach(item => {
-        if (lessonId === 'all' || item.getAttribute('data-lesson-id') === String(lessonId)) {
+        const lId = item.getAttribute('data-lesson-id') || '';
+        const hasImg = item.getAttribute('data-has-img') || 'text';
+        const qText = item.getAttribute('data-question') || '';
+
+        let matchLesson = (lessonId === 'all') || (lId === String(lessonId));
+        let matchType = (typeFilter === 'all') || (hasImg === typeFilter);
+        let matchKw = !kw || qText.includes(kw);
+
+        if (matchLesson && matchType && matchKw) {
           item.style.display = 'block';
+          visibleCount++;
         } else {
           item.style.display = 'none';
         }
       });
+
+      // Sort items
+      items.sort((a, b) => {
+        const ptsA = parseInt(a.getAttribute('data-points') || '0', 10);
+        const ptsB = parseInt(b.getAttribute('data-points') || '0', 10);
+        const qA = a.getAttribute('data-question') || '';
+        const qB = b.getAttribute('data-question') || '';
+        const ordA = parseInt(a.getAttribute('data-order') || a.getAttribute('data-id') || '0', 10);
+        const ordB = parseInt(b.getAttribute('data-order') || b.getAttribute('data-id') || '0', 10);
+
+        if (sortMode === 'points-desc') return ptsB - ptsA;
+        if (sortMode === 'points-asc') return ptsA - ptsB;
+        if (sortMode === 'question-asc') return qA.localeCompare(qB);
+        return ordA - ordB; // default
+      });
+
+      if (container) {
+        items.forEach(item => container.appendChild(item));
+      }
+      if (countEl) countEl.textContent = visibleCount;
+    }
+
+    function filterQuestsByLesson(lessonId) {
+      const sel = document.getElementById('filter-quest-lesson');
+      if (sel) sel.value = lessonId;
+      filterQuests();
     }
 
     async function deleteQuest(id) {
@@ -2177,6 +3516,7 @@
         if (data.success) {
           const item = document.getElementById('quest-item-' + id);
           if (item) item.remove();
+          filterQuests();
           alert('Soal berhasil dihapus.');
         } else {
           alert('Gagal menghapus soal: ' + (data.message || ''));
@@ -2192,8 +3532,15 @@
     let currentAdminGame = 'kana-blast';
     let adminSoalFilterMode = 'all';
     let adminSoalSearch = '';
+    let adminSoalSort = 'default';
     let adminSoalPage = 1;
     const adminSoalPageSize = 15;
+
+    function setAdminSoalSort(sort) {
+      adminSoalSort = sort;
+      adminSoalPage = 1;
+      renderAdminGameView();
+    }
 
     function switchAdminGameTab(gameKey) {
       currentAdminGame = gameKey;
@@ -2280,6 +3627,19 @@
       const countKanji = allQuestions.filter(q => q.mode && q.mode.includes('kanji')).length;
       const countWb = allQuestions.filter(q => q.mode === 'word-builder').length;
 
+      // Sorting
+      if (adminSoalSort === 'romaji-asc') {
+        filtered.sort((a, b) => (a.romaji || '').localeCompare(b.romaji || ''));
+      } else if (adminSoalSort === 'romaji-desc') {
+        filtered.sort((a, b) => (b.romaji || '').localeCompare(a.romaji || ''));
+      } else if (adminSoalSort === 'char-asc') {
+        filtered.sort((a, b) => (a.char || (a.answer ? a.answer.join('') : '')).localeCompare(b.char || (b.answer ? b.answer.join('') : '')));
+      } else if (adminSoalSort === 'mean-asc') {
+        filtered.sort((a, b) => (a.mean || a.meaning || '').localeCompare(b.mean || b.meaning || ''));
+      } else if (adminSoalSort === 'newest') {
+        filtered.sort((a, b) => (b.id || 0) - (a.id || 0));
+      }
+
       // Pagination setup
       const totalPages = Math.ceil(filtered.length / adminSoalPageSize) || 1;
       if (adminSoalPage > totalPages) adminSoalPage = totalPages;
@@ -2293,7 +3653,6 @@
           <div class="admin-card-head">
             <div>
               <h4>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#BE5544" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
                 <span>Pengaturan Waktu &amp; Kecepatan (${g.title})</span>
               </h4>
               <p>Atur limit waktu bermain siswa agar latihan membaca kosakata lebih menantang atau santai.</p>
@@ -2324,7 +3683,6 @@
           <div class="admin-card-head">
             <div>
               <h4>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563EB" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
                 <span>Sub-Mode Permainan (${subModes.length} Mode Tersedia di Database)</span>
               </h4>
               <p>Aktifkan, nonaktifkan, atau tambah sub-mode baru (contoh: <strong>Kosakata Hiragana, Kosakata Katakana, Kanji N5 Dasar</strong>) untuk game ini.</p>
@@ -2354,7 +3712,6 @@
           <div class="admin-card-head">
             <div>
               <h4>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#059669" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <span>Bank Soal Kosakata &amp; Aksara Database (${allQuestions.length} Butir Soal Terdaftar)</span>
               </h4>
               <p>Kelola seluruh butir kosakata utuh (seperti <strong>かさ / kasa</strong>, <strong>ねこ / neko</strong>, <strong>パン / pan</strong>, dll.) dan <strong>Kanji</strong> yang tersimpan langsung di database SQLite untuk game ini.</p>
@@ -2399,9 +3756,18 @@
                 </button>
               ` : ''}
             </div>
-            <div style="position:relative; min-width:260px;">
-              <input type="text" id="admin-soal-search" class="form-control" placeholder="Cari kosakata, romaji, arti..." oninput="onAdminSoalSearch(this.value)" value="${adminSoalSearch}" style="padding-left:34px;" />
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#64748B" stroke-width="2" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:1; justify-content:flex-end;">
+              <div style="min-width:220px; flex:1;">
+                <input type="text" id="admin-soal-search" class="form-control" placeholder="Cari kosakata, romaji, arti..." oninput="onAdminSoalSearch(this.value)" value="${adminSoalSearch}" />
+              </div>
+              <select id="admin-soal-sort" class="form-control" onchange="setAdminSoalSort(this.value)" style="width:auto; min-width:180px; font-weight:700;">
+                <option value="default" ${adminSoalSort === 'default' ? 'selected' : ''}>Urutan: Bawaan</option>
+                <option value="romaji-asc" ${adminSoalSort === 'romaji-asc' ? 'selected' : ''}>Romaji (A - Z)</option>
+                <option value="romaji-desc" ${adminSoalSort === 'romaji-desc' ? 'selected' : ''}>Romaji (Z - A)</option>
+                <option value="char-asc" ${adminSoalSort === 'char-asc' ? 'selected' : ''}>Karakter / Aksara</option>
+                <option value="mean-asc" ${adminSoalSort === 'mean-asc' ? 'selected' : ''}>Arti Kata (A - Z)</option>
+                <option value="newest" ${adminSoalSort === 'newest' ? 'selected' : ''}>Terbaru Ditambahkan</option>
+              </select>
             </div>
           </div>
 
@@ -2597,6 +3963,31 @@
     GameConfigManager.subscribe(() => {
       renderAdminGameView();
     });
+
+    function handleGuruProfileSubmit(e) {
+      try {
+        const name = document.getElementById('guru-name-input')?.value.trim();
+        const email = document.getElementById('guru-email-input')?.value.trim();
+        const avatar = document.getElementById('guru-avatar-input')?.value;
+        const stored = localStorage.getItem('sijapanese_active_user');
+        let user = stored ? JSON.parse(stored) : {};
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (avatar) user.avatar = avatar;
+        localStorage.setItem('sijapanese_active_user', JSON.stringify(user));
+
+        const modalName = document.getElementById('modal-profile-success-name');
+        if (modalName && name) modalName.textContent = name;
+        const modalEmail = document.getElementById('modal-profile-success-email');
+        if (modalEmail && email) modalEmail.textContent = email;
+      } catch (err) {}
+    }
+
+    @if(session('profile_updated') || session('success'))
+      document.addEventListener('DOMContentLoaded', function() {
+        openModal('modal-profile-success');
+      });
+    @endif
   </script>
 </body>
 </html>

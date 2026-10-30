@@ -8,6 +8,7 @@ use App\Models\MateriLesson;
 use App\Models\LessonQuest;
 use App\Models\MinigameConfig;
 use App\Models\MinigameQuestion;
+use App\Models\StudentAssessment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,16 +23,71 @@ class GuruMasterController extends Controller
     // Dashboard Utama Master Guru
     public function index()
     {
+        StudentAssessment::ensureTableExists();
+
         $levels = MateriLevel::with(['lessons' => function($q) {
             $q->withCount('quests');
         }])->orderBy('order', 'asc')->get();
 
         $lessons = MateriLesson::with(['level', 'quests'])->orderBy('order', 'asc')->get();
         $quests = LessonQuest::with('lesson.level')->orderBy('id', 'desc')->get();
-        $students = User::where('role', 'siswa')->orderBy('score', 'desc')->get();
+        
+        $students = User::where('role', 'siswa')
+            ->with(['assessments' => function($q) {
+                $q->orderBy('created_at', 'desc');
+            }])
+            ->orderBy('score', 'desc')
+            ->get();
+
+        $assessments = StudentAssessment::with(['user', 'lesson'])
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // Seeder awal jika riwayat penilaian masih kosong agar guru langsung melihat contoh penilaian
+        if ($assessments->isEmpty() && $students->isNotEmpty()) {
+            $firstStudent = $students->first();
+            $secondStudent = $students->count() > 1 ? $students->skip(1)->first() : $firstStudent;
+            
+            StudentAssessment::create([
+                'user_id' => $firstStudent->id,
+                'lesson_id' => 1,
+                'exercise_title' => 'Modul 1: Kedai Ramen Katakana',
+                'exercise_type' => 'quest',
+                'total_questions' => 5,
+                'correct_count' => 4,
+                'wrong_count' => 1,
+                'score' => 80,
+                'grade' => 'B',
+                'status' => 'lulus',
+                'created_at' => now()->subHours(2),
+            ]);
+
+            if ($secondStudent && $secondStudent->id !== $firstStudent->id) {
+                StudentAssessment::create([
+                    'user_id' => $secondStudent->id,
+                    'lesson_id' => 1,
+                    'exercise_title' => 'Modul 1: Kedai Ramen Katakana',
+                    'exercise_type' => 'quest',
+                    'total_questions' => 5,
+                    'correct_count' => 5,
+                    'wrong_count' => 0,
+                    'score' => 100,
+                    'grade' => 'A',
+                    'status' => 'lulus',
+                    'created_at' => now()->subDay(),
+                ]);
+            }
+
+            $assessments = StudentAssessment::with(['user', 'lesson'])->orderBy('id', 'desc')->get();
+        }
 
         $minigameConfigs = MinigameConfig::all();
         $minigameQuestions = MinigameQuestion::where('is_active', true)->orderBy('order', 'asc')->get();
+
+        $avgScore = $assessments->isNotEmpty() ? (int) round($assessments->avg('score')) : 0;
+        $passedCount = $assessments->where('status', 'lulus')->count();
+        $remedialCount = $assessments->where('status', 'remedial')->count();
+        $passRate = $assessments->isNotEmpty() ? round(($passedCount / $assessments->count()) * 100) : 100;
 
         $stats = [
             'total_students' => $students->count(),
@@ -41,9 +97,13 @@ class GuruMasterController extends Controller
             'total_quests' => $quests->count(),
             'total_minigame_questions' => $minigameQuestions->count(),
             'highest_score' => $students->max('score') ?? 0,
+            'total_assessments' => $assessments->count(),
+            'class_avg_score' => $avgScore,
+            'remedial_count' => $remedialCount,
+            'pass_rate' => $passRate,
         ];
 
-        return view('guru.dashboard', compact('levels', 'lessons', 'quests', 'students', 'stats', 'minigameConfigs', 'minigameQuestions'));
+        return view('guru.dashboard', compact('levels', 'lessons', 'quests', 'students', 'stats', 'minigameConfigs', 'minigameQuestions', 'assessments'));
     }
 
     // ==========================================

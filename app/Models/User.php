@@ -51,4 +51,16 @@ class User extends Authenticatable
     {
         return $this->isGuru() ? 'badge-guru' : 'badge-siswa';
     }
+
+    public function assessments()
+    {
+        return $this->hasMany(StudentAssessment::class, 'user_id')->orderBy('created_at', 'desc');
+    }
+
+    public function getAverageAssessmentScoreAttribute(): ?int
+    {
+        StudentAssessment::ensureTableExists();
+        $avg = $this->assessments()->avg('score');
+        return $avg !== null ? (int) round($avg) : null;
+    }
 }

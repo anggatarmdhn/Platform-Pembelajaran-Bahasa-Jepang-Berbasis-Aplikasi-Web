@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Masuk - SIJapanese Portal Pembelajaran &amp; Dashboard Master Guru</title>
+  <title>Masuk - SIJapanese Portal Pembelajaran &amp; Dashboard Guru</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
@@ -13,9 +13,6 @@
       --red-dark: #B91C1C;
       --blue: #2563EB;
       --blue-dark: #1D4ED8;
-      --yellow: #F59E0B;
-      --green: #10B981;
-      --purple: #8B5CF6;
       --text: #0F172A;
       --text-soft: #64748B;
       --bg: #F8FAFC;
@@ -37,23 +34,15 @@
     }
     .login-container {
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
     }
     .login-card {
       background: #FFFFFF;
       border: 1.5px solid #E2E8F0;
       border-radius: 24px;
-      padding: 2.5rem 2.2rem;
-      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12);
+      padding: 2.4rem 2rem;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.10);
       position: relative;
-      overflow: hidden;
-    }
-    .login-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, var(--red) 0%, var(--yellow) 25%, var(--green) 50%, var(--blue) 75%, var(--purple) 100%);
     }
     .login-header {
       text-align: center;
@@ -69,7 +58,7 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 0.85rem;
-      box-shadow: 0 4px 14px rgba(217, 56, 58, 0.2);
+      box-shadow: 0 4px 14px rgba(217, 56, 58, 0.15);
     }
     .logo-badge svg {
       width: 32px;
@@ -107,7 +96,7 @@
     .alert-warning {
       background: #FFFBEB;
       border: 1.5px solid #FDE68A;
-      color: #B45309;
+      color: #D97706;
     }
     .alert-success {
       background: #ECFDF5;
@@ -115,19 +104,19 @@
       color: #065F46;
     }
     .form-group {
-      margin-bottom: 1.15rem;
+      margin-bottom: 1.2rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.45rem;
     }
     .form-group label {
-      font-size: 0.84rem;
-      font-weight: 800;
+      font-size: 0.86rem;
+      font-weight: 700;
       color: #334155;
     }
     .form-group input {
       width: 100%;
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1rem;
       border: 1.5px solid #CBD5E1;
       border-radius: 12px;
       font-size: 0.95rem;
@@ -138,12 +127,12 @@
       outline: none;
     }
     .form-group input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(217, 56, 58, 0.12);
     }
     .btn-submit-login {
       width: 100%;
-      padding: 0.85rem;
+      padding: 0.9rem 1.2rem;
       background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
       color: #FFFFFF;
       border: none;
@@ -151,138 +140,64 @@
       font-size: 1rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(217, 56, 58, 0.35);
+      box-shadow: 0 4px 14px rgba(217, 56, 58, 0.3);
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      margin-top: 0.5rem;
+      margin-top: 0.6rem;
     }
     .btn-submit-login:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(217, 56, 58, 0.45);
+      box-shadow: 0 6px 20px rgba(217, 56, 58, 0.4);
     }
-    .demo-accounts-wrap {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1.5px dashed #E2E8F0;
-    }
-    .demo-title {
-      font-size: 0.82rem;
-      font-weight: 800;
-      color: var(--text-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 0.85rem;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-    .demo-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .demo-card {
-      background: #F8FAFC;
-      border: 1.5px solid #E2E8F0;
-      border-radius: 14px;
-      padding: 0.85rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    .demo-card:hover {
-      background: #FFFFFF;
-      transform: translateY(-2px);
-    }
-    .demo-card.card-guru:hover {
-      border-color: var(--red);
-      box-shadow: 0 4px 14px rgba(217, 56, 58, 0.15);
-    }
-    .demo-card.card-siswa:hover {
-      border-color: var(--blue);
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.15);
-    }
-    .demo-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .demo-avatar {
-      font-size: 1.8rem;
-    }
-    .demo-details strong {
-      display: block;
-      font-size: 0.9rem;
-      color: var(--text);
-    }
-    .demo-details span {
-      font-size: 0.76rem;
-      color: var(--text-soft);
-    }
-    .demo-badge-role {
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 0.15rem 0.5rem;
-      border-radius: 9999px;
-      display: inline-block;
-      margin-top: 0.2rem;
-    }
-    .role-badge-guru {
-      background: #FEF2F2;
-      color: var(--red);
-      border: 1px solid #FECACA;
-    }
-    .role-badge-siswa {
-      background: #EFF6FF;
-      color: var(--blue);
-      border: 1px solid #BFDBFE;
-    }
-    .btn-use-demo {
-      padding: 0.4rem 0.75rem;
-      border-radius: 8px;
-      border: 1.5px solid #CBD5E1;
-      background: #FFFFFF;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--text);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
-    }
-    .demo-card:hover .btn-use-demo {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: #FFFFFF;
-    }
-    .demo-card.card-guru:hover .btn-use-demo {
-      background: var(--red);
-      border-color: var(--red);
-      color: #FFFFFF;
+    .btn-submit-login:active {
+      transform: translateY(0);
     }
     .bottom-links {
-      margin-top: 1.5rem;
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1.5px solid #F1F5F9;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--text-soft);
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.65rem;
     }
     .bottom-links a {
       color: var(--blue);
       font-weight: 700;
       text-decoration: none;
+      transition: color 0.15s ease;
     }
     .bottom-links a:hover {
+      color: var(--blue-dark);
       text-decoration: underline;
+    }
+    @media (max-width: 480px) {
+      body {
+        padding: 16px 12px;
+      }
+      .login-card {
+        padding: 1.8rem 1.3rem;
+        border-radius: 20px;
+      }
+      .login-title {
+        font-size: 1.45rem;
+      }
+      .login-sub {
+        font-size: 0.85rem;
+      }
+      .form-group input {
+        font-size: 0.92rem;
+        padding: 0.8rem 0.9rem;
+      }
+      .btn-submit-login {
+        padding: 0.85rem;
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
@@ -298,7 +213,7 @@
           </svg>
         </div>
         <h1 class="login-title">SI<span>Japanese</span></h1>
-        <p class="login-sub">Masuk ke Portal Siswa &amp; Dashboard Master Guru</p>
+        <p class="login-sub">Masuk ke Portal Siswa &amp; Dashboard Guru</p>
       </div>
 
       <!-- Flash Alerts -->
@@ -331,13 +246,13 @@
         @csrf
 
         <div class="form-group">
-          <label>Email Pengguna</label>
-          <input type="email" name="email" id="input-email" placeholder="contoh: guru@sijapanese.sch.id" value="{{ old('email') }}" required autofocus />
+          <label for="input-email">Alamat Email</label>
+          <input type="email" name="email" id="input-email" placeholder="contoh: nama@email.com" value="{{ old('email') }}" required autofocus autocomplete="email" />
         </div>
 
         <div class="form-group">
-          <label>Kata Sandi</label>
-          <input type="password" name="password" id="input-password" placeholder="Masukkan kata sandi..." required />
+          <label for="input-password">Kata Sandi</label>
+          <input type="password" name="password" id="input-password" placeholder="Masukkan kata sandi..." required autocomplete="current-password" />
         </div>
 
         <button type="submit" class="btn-submit-login">
@@ -346,81 +261,12 @@
         </button>
       </form>
 
-      <!-- KARTU CONTOH AKUN GURU & SISWA -->
-      <div class="demo-accounts-wrap">
-        <div class="demo-title">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span>PILIH CONTOH AKUN UNTUK COBA:</span>
-        </div>
-
-        <div class="demo-grid">
-          <!-- Akun Guru -->
-          <div class="demo-card card-guru" onclick="useDemoAccount('guru@sijapanese.sch.id', 'password')">
-            <div class="demo-info">
-              <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1.5px solid #FECACA;">
-                <img src="{{ asset('img/avatar_tanaka.svg') }}" alt="Sensei Tanaka" style="width:100%; height:100%; object-fit:cover;">
-              </div>
-              <div class="demo-details">
-                <strong>Sensei Tanaka</strong>
-                <span>guru@sijapanese.sch.id</span>
-                <div>
-                  <span class="demo-badge-role role-badge-guru">Guru Pengajar (Akses /guru)</span>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="btn-use-demo">Gunakan Akun &rarr;</button>
-          </div>
-
-          <!-- Akun Siswa 1 -->
-          <div class="demo-card card-siswa" onclick="useDemoAccount('kenji@sijapanese.sch.id', 'password')">
-            <div class="demo-info">
-              <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1.5px solid #BFDBFE;">
-                <img src="{{ asset('img/avatar_anggata.svg') }}" alt="Anggata Ramadhan" style="width:100%; height:100%; object-fit:cover;">
-              </div>
-              <div class="demo-details">
-                <strong>Anggata Al Haadi Ramadhan</strong>
-                <span>kenji@sijapanese.sch.id</span>
-                <div>
-                  <span class="demo-badge-role role-badge-siswa">Siswa Belajar N5</span>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="btn-use-demo">Gunakan Akun &rarr;</button>
-          </div>
-
-          <!-- Akun Siswa 2 -->
-          <div class="demo-card card-siswa" onclick="useDemoAccount('aoi@sijapanese.sch.id', 'password')">
-            <div class="demo-info">
-              <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1.5px solid #BFDBFE;">
-                <img src="{{ asset('img/avatar_aoi.svg') }}" alt="Aoi Sorano" style="width:100%; height:100%; object-fit:cover;">
-              </div>
-              <div class="demo-details">
-                <strong>Aoi Sorano</strong>
-                <span>aoi@sijapanese.sch.id</span>
-                <div>
-                  <span class="demo-badge-role role-badge-siswa">Siswi Belajar N4</span>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="btn-use-demo">Gunakan Akun &rarr;</button>
-          </div>
-        </div>
-      </div>
-
       <div class="bottom-links">
-        <div>Belum punya akun murid? <a href="{{ route('register') }}">Daftar Siswa Baru</a></div>
-        <div><a href="{{ route('home') }}">← Kembali ke Beranda Aplikasi</a></div>
+        <div>Belum memiliki akun? <a href="{{ route('register') }}">Daftar Akun Baru</a></div>
+        <div><a href="{{ route('home') }}">← Kembali ke Beranda</a></div>
       </div>
     </div>
   </div>
 
-  <script>
-    function useDemoAccount(email, password) {
-      document.getElementById('input-email').value = email;
-      document.getElementById('input-password').value = password;
-      // Auto submit agar langsung login
-      document.querySelector('form').submit();
-    }
-  </script>
 </body>
 </html>

@@ -430,7 +430,7 @@ function showPage(page) {
 
   if (page === 'hiragana') renderCharGrid('hiragana');
   if (page === 'katakana') renderCharGrid('katakana');
-  if (page === 'vocabulary') showVocabCategory('numbers');
+  if (page === 'vocabulary') initVocabularySystem();
   if (page === 'home') updateProgressBars();
   if (page === 'games') showGameMenu();
   if (page === 'monster') initMonsterLobby();
@@ -611,11 +611,11 @@ function renderCharGrid(type) {
 
   // Categories list
   const categories = [
-    { id: 'Semua', name: 'Semua', count: data.length },
-    { id: 'Dasar', name: 'Dasar (Seion)', count: data.filter(c => c.category === 'Dasar').length },
-    { id: 'Tenten', name: 'Tenten (Dakuon 濁音)', count: data.filter(c => c.category === 'Tenten').length },
-    { id: 'Maru', name: 'Maru (Handakuon 半濁音)', count: data.filter(c => c.category === 'Maru').length },
-    { id: 'Gabungan', name: 'Gabungan (Yōon 拗音)', count: data.filter(c => c.category === 'Gabungan').length }
+    { id: 'Semua', name: 'Semua Huruf', count: data.length },
+    { id: 'Dasar', name: 'Huruf Dasar', count: data.filter(c => c.category === 'Dasar').length },
+    { id: 'Tenten', name: 'Huruf Tenten', count: data.filter(c => c.category === 'Tenten').length },
+    { id: 'Maru', name: 'Huruf Maru', count: data.filter(c => c.category === 'Maru').length },
+    { id: 'Gabungan', name: 'Huruf Gabungan', count: data.filter(c => c.category === 'Gabungan').length }
   ];
 
   // Build row pills based on category in strict Gojuon order
@@ -634,7 +634,7 @@ function renderCharGrid(type) {
   let html = `
     <div class="char-filter-wrapper">
       <div class="char-filter-section">
-        <div class="char-filter-label">Kategori Aksara:</div>
+        <div class="char-filter-label">Pilih Kategori:</div>
         <div class="char-filter-bar category-filter-bar">
           ${categories.map(cat => `
             <button class="filter-pill filter-cat-pill ${(currentCat === cat.id) ? 'active cat-active-' + cat.id.toLowerCase() : ''}"
@@ -647,7 +647,7 @@ function renderCharGrid(type) {
       </div>
 
       <div class="char-filter-section sub-filter-section">
-        <div class="char-filter-label">Urutan Baris (Akasatanahamayarawa):</div>
+        <div class="char-filter-label">Pilih Baris:</div>
         <div class="char-filter-bar group-filter-bar">
           ${rowPillList.map(g => `
             <button class="filter-pill filter-grp-pill ${(currentGrp === g.id) ? 'active' : ''}"
@@ -663,20 +663,20 @@ function renderCharGrid(type) {
   // Determine which sections to render
   const sectionsToRender = [];
   if (currentCat === 'Semua') {
-    sectionsToRender.push({ cat: 'Dasar', title: 'Aksara Dasar (Gojūon 五十音: A-Ka-Sa-Ta-Na-Ha-Ma-Ya-Ra-Wa)', count: 46, rows: KANA_ROW_DEFS.Dasar });
+    sectionsToRender.push({ cat: 'Dasar', title: 'Huruf Dasar (46 Huruf)', count: 46, rows: KANA_ROW_DEFS.Dasar });
     if (currentGrp === 'Semua') {
-      sectionsToRender.push({ cat: 'Tenten', title: 'Aksara Tenten (Dakuon 濁音: Ga-Za-Da-Ba)', count: 20, rows: KANA_ROW_DEFS.Tenten });
-      sectionsToRender.push({ cat: 'Maru', title: 'Aksara Maru (Handakuon 半濁音: Pa)', count: 5, rows: KANA_ROW_DEFS.Maru });
-      sectionsToRender.push({ cat: 'Gabungan', title: 'Aksara Gabungan (Yōon 拗音: Kya, Sha, Cha...)', count: 33, rows: KANA_ROW_DEFS.Gabungan });
+      sectionsToRender.push({ cat: 'Tenten', title: 'Huruf Tenten (20 Huruf)', count: 20, rows: KANA_ROW_DEFS.Tenten });
+      sectionsToRender.push({ cat: 'Maru', title: 'Huruf Maru (5 Huruf)', count: 5, rows: KANA_ROW_DEFS.Maru });
+      sectionsToRender.push({ cat: 'Gabungan', title: 'Huruf Gabungan (33 Huruf)', count: 33, rows: KANA_ROW_DEFS.Gabungan });
     }
   } else if (currentCat === 'Dasar') {
-    sectionsToRender.push({ cat: 'Dasar', title: 'Aksara Dasar (Gojūon 五十音: A-Ka-Sa-Ta-Na-Ha-Ma-Ya-Ra-Wa)', count: 46, rows: KANA_ROW_DEFS.Dasar });
+    sectionsToRender.push({ cat: 'Dasar', title: 'Huruf Dasar (46 Huruf)', count: 46, rows: KANA_ROW_DEFS.Dasar });
   } else if (currentCat === 'Tenten') {
-    sectionsToRender.push({ cat: 'Tenten', title: 'Aksara Tenten (Dakuon 濁音: Ga-Za-Da-Ba)', count: 20, rows: KANA_ROW_DEFS.Tenten });
+    sectionsToRender.push({ cat: 'Tenten', title: 'Huruf Tenten (20 Huruf)', count: 20, rows: KANA_ROW_DEFS.Tenten });
   } else if (currentCat === 'Maru') {
-    sectionsToRender.push({ cat: 'Maru', title: 'Aksara Maru (Handakuon 半濁音: Pa)', count: 5, rows: KANA_ROW_DEFS.Maru });
+    sectionsToRender.push({ cat: 'Maru', title: 'Huruf Maru (5 Huruf)', count: 5, rows: KANA_ROW_DEFS.Maru });
   } else if (currentCat === 'Gabungan') {
-    sectionsToRender.push({ cat: 'Gabungan', title: 'Aksara Gabungan (Yōon 拗音: Kya, Sha, Cha...)', count: 33, rows: KANA_ROW_DEFS.Gabungan });
+    sectionsToRender.push({ cat: 'Gabungan', title: 'Huruf Gabungan (33 Huruf)', count: 33, rows: KANA_ROW_DEFS.Gabungan });
   }
 
   // Render each section table
@@ -955,55 +955,715 @@ function renderQuizResult(type) {
   `;
 }
 
-// ===== VOCABULARY SECTION =====
+// ====================================================
+// VOCABULARY 3-MODE SYSTEM ENGINE (ZERO ICONS / ZERO EMOJIS)
+// Mode 1: Kamus & Eksplorasi (Search, Categories, Audio, Master)
+// Mode 2: Flashcard Audio (Flip Card, Deck Selector, Review/Mastered)
+// Mode 3: Latihan & Kuis Kosakata (10 Questions, Score 0-100, Teacher Assessment Integration)
+// ====================================================
+
+let activeVocabMode = 'explore';
+let currentVocabCategory = 'all';
+let currentVocabSearchQuery = '';
+
+const VOCAB_CATEGORIES_CONFIG = [
+  { key: 'all', label: 'Semua Kosakata' },
+  { key: 'jlpt_n5', label: 'JLPT N5' },
+  { key: 'jlpt_n4', label: 'JLPT N4' },
+  { key: 'travel', label: 'Wisata & Stasiun' },
+  { key: 'verbs', label: 'Kata Kerja' },
+  { key: 'adjectives', label: 'Kata Sifat' },
+  { key: 'food', label: 'Makanan' },
+  { key: 'greetings', label: 'Sapaan' },
+  { key: 'family', label: 'Keluarga' },
+  { key: 'numbers', label: 'Angka' }
+];
+
+function getAllVocabList() {
+  let list = [];
+  if (typeof VOCABULARY === 'undefined') return list;
+  for (const catKey in VOCABULARY) {
+    if (Array.isArray(VOCABULARY[catKey])) {
+      VOCABULARY[catKey].forEach(item => {
+        if (!list.some(x => x.jp === item.jp)) {
+          list.push({ ...item, categoryKey: catKey });
+        }
+      });
+    }
+  }
+  return list;
+}
+
+function getVocabListByCategory(catKey) {
+  if (!catKey || catKey === 'all') {
+    return getAllVocabList();
+  }
+  if (typeof VOCABULARY !== 'undefined' && Array.isArray(VOCABULARY[catKey])) {
+    return VOCABULARY[catKey].map(item => ({ ...item, categoryKey: catKey }));
+  }
+  return [];
+}
+
+function initVocabularySystem() {
+  renderVocabCategoriesBar();
+  switchVocabMode(activeVocabMode || 'explore');
+}
+window.initVocabularySystem = initVocabularySystem;
+
+// Mode Switching (Explore / Flashcard / Quiz)
+function switchVocabMode(mode) {
+  activeVocabMode = mode;
+  
+  // Update Buttons
+  const btnExplore = document.getElementById('btn-vocab-mode-explore');
+  const btnFlash = document.getElementById('btn-vocab-mode-flashcard');
+  const btnQuiz = document.getElementById('btn-vocab-mode-quiz');
+  
+  if (btnExplore) btnExplore.classList.toggle('active', mode === 'explore');
+  if (btnFlash) btnFlash.classList.toggle('active', mode === 'flashcard');
+  if (btnQuiz) btnQuiz.classList.toggle('active', mode === 'quiz');
+
+  // Update Containers
+  const viewExplore = document.getElementById('vocab-view-explore');
+  const viewFlash = document.getElementById('vocab-view-flashcard');
+  const viewQuiz = document.getElementById('vocab-view-quiz');
+
+  if (viewExplore) viewExplore.classList.toggle('hidden', mode !== 'explore');
+  if (viewFlash) viewFlash.classList.toggle('hidden', mode !== 'flashcard');
+  if (viewQuiz) viewQuiz.classList.toggle('hidden', mode !== 'quiz');
+
+  if (mode === 'explore') {
+    renderVocabExplore();
+  } else if (mode === 'flashcard') {
+    initFlashcardMode();
+  } else if (mode === 'quiz') {
+    backToVocabLobby();
+  }
+}
+window.switchVocabMode = switchVocabMode;
+
+// ===== MODE 1: KAMUS & EKSPLORASI =====
+function renderVocabCategoriesBar() {
+  const container = document.getElementById('vocab-categories-bar');
+  if (!container) return;
+
+  container.innerHTML = VOCAB_CATEGORIES_CONFIG.map(cat => `
+    <button type="button" class="vocab-cat-btn ${currentVocabCategory === cat.key ? 'active' : ''}" onclick="selectVocabCategory('${cat.key}')">
+      ${cat.label}
+    </button>
+  `).join('');
+}
+
+function selectVocabCategory(catKey) {
+  currentVocabCategory = catKey;
+  renderVocabCategoriesBar();
+  renderVocabExplore();
+}
+window.selectVocabCategory = selectVocabCategory;
+
+// Backwards compatibility for older code
 function showVocabCategory(cat) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  const tabEl = document.getElementById('tab-' + cat);
-  if (tabEl) tabEl.classList.add('active');
+  selectVocabCategory(cat);
+}
+window.showVocabCategory = showVocabCategory;
 
-  const data = VOCABULARY[cat] || [];
+function handleVocabSearch(query) {
+  currentVocabSearchQuery = (query || '').trim().toLowerCase();
+  renderVocabExplore();
+}
+window.handleVocabSearch = handleVocabSearch;
+
+function clearVocabSearch() {
+  const input = document.getElementById('vocab-search-input');
+  if (input) input.value = '';
+  currentVocabSearchQuery = '';
+  renderVocabExplore();
+}
+window.clearVocabSearch = clearVocabSearch;
+
+function renderVocabExplore() {
   const grid = document.getElementById('vocab-grid');
+  const summaryEl = document.getElementById('vocab-results-summary');
   if (!grid) return;
-  grid.innerHTML = '';
 
-  data.forEach((item, i) => {
-    const card = document.createElement('div');
-    const isLearned = state.learnedVocab.has(item.jp);
-    card.className = 'vocab-card' + (isLearned ? ' learned' : '');
-    card.style.animationDelay = (i * 0.03) + 's';
+  let items = getVocabListByCategory(currentVocabCategory);
 
-    card.innerHTML = `
-      <div class="vocab-card-top">
-        <span class="vocab-badge-number">${i + 1}</span>
-        <button class="vocab-audio-btn" title="Dengarkan pelafalan" onclick="event.stopPropagation(); speakJapanese('${item.jp}')">
-          <svg viewBox="0 0 24 24" class="svg-icon-mini"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-        </button>
-      </div>
-      <div class="vocab-jp">${item.jp}</div>
-      <div class="vocab-reading">${item.reading}</div>
-      <div class="vocab-id">${item.id}</div>
-      <div class="vocab-card-footer">
-        <span class="vocab-status-pill">${isLearned ? 'Sudah Dikuasai' : '+2 Poin Saat Dipelajari'}</span>
+  if (currentVocabSearchQuery) {
+    const q = currentVocabSearchQuery;
+    items = items.filter(item => 
+      (item.jp && item.jp.toLowerCase().includes(q)) ||
+      (item.kana && item.kana.toLowerCase().includes(q)) ||
+      (item.reading && item.reading.toLowerCase().includes(q)) ||
+      (item.id && item.id.toLowerCase().includes(q)) ||
+      (item.example && item.example.toLowerCase().includes(q))
+    );
+  }
+
+  if (summaryEl) {
+    const catObj = VOCAB_CATEGORIES_CONFIG.find(c => c.key === currentVocabCategory);
+    const catLabel = catObj ? catObj.label : 'Semua';
+    summaryEl.textContent = `Menampilkan ${items.length} kosakata (${catLabel})${currentVocabSearchQuery ? ` untuk pencarian "${currentVocabSearchQuery}"` : ''}`;
+  }
+
+  if (items.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: var(--card); border: 1.5px solid var(--border); border-radius: var(--radius);">
+        <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 6px;">Tidak ada kosakata yang cocok</h4>
+        <p style="font-size: 0.9rem; color: var(--text-soft);">Coba gunakan kata kunci pencarian lain atau pilih kategori Semua Kosakata.</p>
       </div>
     `;
+    return;
+  }
 
-    card.onclick = () => {
-      speakJapanese(item.jp);
-      if (!state.learnedVocab.has(item.jp)) {
-        state.learnedVocab.add(item.jp);
-        addScore(2);
-        saveState();
-        showToast('Kosakata Baru: ' + item.jp + ' (' + item.reading + ') +2 Poin!', 'success');
-        card.classList.add('learned');
-        const pill = card.querySelector('.vocab-status-pill');
-        if (pill) pill.textContent = 'Sudah Dikuasai';
-        updateProgressBars();
-      }
-    };
+  grid.innerHTML = items.map((item, index) => {
+    const mainWord = item.kana || item.jp;
+    const isLearned = state.learnedVocab.has(item.jp) || state.learnedVocab.has(mainWord);
+    const levelBadge = item.level || 'Dasar';
+    const safeWord = mainWord.replace(/'/g, "\\'");
 
-    grid.appendChild(card);
-  });
+    return `
+      <div class="vocab-card ${isLearned ? 'learned' : ''}" id="vocab-card-${index}">
+        <div class="vocab-card-header">
+          <span class="vocab-card-level-chip">${levelBadge}</span>
+          <span class="vocab-card-num">#${index + 1}</span>
+        </div>
+        <div class="vocab-card-body">
+          <div class="vocab-jp-row">
+            <span class="vocab-jp">${mainWord}</span>
+          </div>
+          <div class="vocab-reading">${item.reading}</div>
+          <div class="vocab-id">${item.id}</div>
+          ${item.example ? `
+            <div class="vocab-example-box">
+              <div class="vocab-example-text-jp">${item.example}</div>
+            </div>
+          ` : ''}
+        </div>
+        <div class="vocab-card-footer">
+          <button type="button" class="btn-vocab-sound" onclick="speakJapanese('${safeWord}')">
+            Dengar Audio
+          </button>
+          <button type="button" class="btn-vocab-master ${isLearned ? 'is-mastered' : ''}" onclick="toggleVocabMastered('${safeWord}', this)">
+            ${isLearned ? 'Sudah Dikuasai' : 'Tandai Hafal (+2 Poin)'}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
+
+function toggleVocabMastered(jpWord, btn) {
+  if (!state.learnedVocab.has(jpWord)) {
+    state.learnedVocab.add(jpWord);
+    addScore(2);
+    saveState();
+    showToast(`Kosakata "${jpWord}" ditandai hafal! +2 Poin`, 'success');
+    if (btn) {
+      btn.classList.add('is-mastered');
+      btn.textContent = 'Sudah Dikuasai';
+      const card = btn.closest('.vocab-card');
+      if (card) card.classList.add('learned');
+    }
+    updateProgressBars();
+  } else {
+    state.learnedVocab.delete(jpWord);
+    saveState();
+    showToast(`Kosakata "${jpWord}" dihapus dari daftar hafal`, 'info');
+    if (btn) {
+      btn.classList.remove('is-mastered');
+      btn.textContent = 'Tandai Hafal (+2 Poin)';
+      const card = btn.closest('.vocab-card');
+      if (card) card.classList.remove('learned');
+    }
+    updateProgressBars();
+  }
+}
+window.toggleVocabMastered = toggleVocabMastered;
+
+// ===== MODE 2: FLASHCARD AUDIO =====
+let flashcardDeck = [];
+let currentFlashcardIndex = 0;
+let isFlashcardFlipped = false;
+
+function initFlashcardMode() {
+  const select = document.getElementById('vocab-flashcard-deck-select');
+  const deckKey = select ? select.value : 'jlpt_n5';
+  changeFlashcardDeck(deckKey);
+}
+window.initFlashcardMode = initFlashcardMode;
+
+function changeFlashcardDeck(deckKey) {
+  flashcardDeck = getVocabListByCategory(deckKey);
+  currentFlashcardIndex = 0;
+  isFlashcardFlipped = false;
+  
+  const flipper = document.getElementById('vocab-flipper');
+  if (flipper) flipper.classList.remove('is-flipped');
+
+  renderCurrentFlashcard();
+}
+window.changeFlashcardDeck = changeFlashcardDeck;
+
+function renderCurrentFlashcard() {
+  if (!flashcardDeck || flashcardDeck.length === 0) return;
+
+  const item = flashcardDeck[currentFlashcardIndex];
+  if (!item) return;
+
+  const total = flashcardDeck.length;
+  const currentNum = currentFlashcardIndex + 1;
+  const progressPct = Math.round((currentNum / total) * 100);
+
+  // Counter & Progress
+  const counterText = document.getElementById('flashcard-counter-text');
+  const progressFill = document.getElementById('flashcard-progress-fill');
+  const masteredText = document.getElementById('flashcard-mastered-text');
+
+  if (counterText) counterText.textContent = `Kartu ${currentNum} dari ${total}`;
+  if (progressFill) progressFill.style.width = `${progressPct}%`;
+  
+  const masteredInDeck = flashcardDeck.filter(x => state.learnedVocab.has(x.jp)).length;
+  if (masteredText) masteredText.textContent = `${masteredInDeck} Dikuasai`;
+
+  // Front Elements
+  const frontLevel = document.getElementById('flash-front-level');
+  const frontJp = document.getElementById('flash-front-jp');
+  const frontKana = document.getElementById('flash-front-kana');
+  const frontRomaji = document.getElementById('flash-front-romaji');
+
+  const mainWord = item.kana || item.jp;
+  if (frontLevel) frontLevel.textContent = item.level || 'Dasar';
+  if (frontJp) frontJp.textContent = mainWord;
+  if (frontKana) frontKana.textContent = '';
+  if (frontRomaji) frontRomaji.textContent = item.reading || '';
+
+  // Back Elements
+  const backLevel = document.getElementById('flash-back-level');
+  const backMeaning = document.getElementById('flash-back-meaning');
+  const backExJp = document.getElementById('flash-back-example-jp');
+  const backExId = document.getElementById('flash-back-example-id');
+
+  if (backLevel) backLevel.textContent = item.level || 'N5';
+  if (backMeaning) backMeaning.textContent = item.id;
+  
+  if (item.example) {
+    const parts = item.example.split('(');
+    const jpPart = parts[0] ? parts[0].trim() : item.example;
+    const idPart = parts[1] ? parts[1].replace(')', '').trim() : '';
+    if (backExJp) backExJp.textContent = jpPart;
+    if (backExId) backExId.textContent = idPart;
+  } else {
+    if (backExJp) backExJp.textContent = item.jp;
+    if (backExId) backExId.textContent = item.id;
+  }
+
+  // Ensure card is front-facing
+  isFlashcardFlipped = false;
+  const flipper = document.getElementById('vocab-flipper');
+  if (flipper) flipper.classList.remove('is-flipped');
+}
+
+function flipFlashcard() {
+  const flipper = document.getElementById('vocab-flipper');
+  if (!flipper) return;
+  isFlashcardFlipped = !isFlashcardFlipped;
+  flipper.classList.toggle('is-flipped', isFlashcardFlipped);
+}
+window.flipFlashcard = flipFlashcard;
+
+function prevFlashcard() {
+  if (flashcardDeck.length === 0) return;
+  currentFlashcardIndex = (currentFlashcardIndex - 1 + flashcardDeck.length) % flashcardDeck.length;
+  renderCurrentFlashcard();
+}
+window.prevFlashcard = prevFlashcard;
+
+function nextFlashcard() {
+  if (flashcardDeck.length === 0) return;
+  currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcardDeck.length;
+  renderCurrentFlashcard();
+}
+window.nextFlashcard = nextFlashcard;
+
+function playFlashcardAudio() {
+  if (!flashcardDeck || flashcardDeck.length === 0) return;
+  const item = flashcardDeck[currentFlashcardIndex];
+  if (item) {
+    speakJapanese(item.kana || item.jp);
+  }
+}
+window.playFlashcardAudio = playFlashcardAudio;
+
+function markFlashcardMastered() {
+  if (!flashcardDeck || flashcardDeck.length === 0) return;
+  const item = flashcardDeck[currentFlashcardIndex];
+  if (!item) return;
+
+  const keyWord = item.kana || item.jp;
+  if (!state.learnedVocab.has(item.jp) && !state.learnedVocab.has(keyWord)) {
+    state.learnedVocab.add(item.jp);
+    state.learnedVocab.add(keyWord);
+    addScore(3);
+    saveState();
+    showToast(`Hafal kata "${keyWord}"! +3 Poin`, 'success');
+    updateProgressBars();
+  } else {
+    showToast(`Kata "${keyWord}" sudah tercatat sebelumnya`, 'info');
+  }
+
+  nextFlashcard();
+}
+window.markFlashcardMastered = markFlashcardMastered;
+
+function markFlashcardReview() {
+  showToast('Tersimpan untuk diulang kembali nanti.', 'info');
+  nextFlashcard();
+}
+window.markFlashcardReview = markFlashcardReview;
+
+// ===== MODE 3: LATIHAN & KUIS KOSAKATA (EVALUASI MASTER GURU) =====
+let vocabQuizQuestions = [];
+let currentVocabQuizIndex = 0;
+let vocabQuizLiveScore = 0;
+let vocabQuizCorrectCount = 0;
+let vocabQuizWrongCount = 0;
+let vocabQuizActivePacket = 'jlpt_n5';
+let vocabQuizActivePacketTitle = 'Kosakata Dasar';
+let isVocabQuizAnswerLocked = false;
+
+const VOCAB_QUIZ_PACKET_NAMES = {
+  jlpt_n5: 'Kosakata Dasar Sehari-hari',
+  jlpt_n4: 'Percakapan & Situasi Praktis',
+  travel: 'Wisata, Stasiun & Jalan',
+  verbs: 'Kata Kerja Sehari-hari',
+  adjectives: 'Kata Sifat & Keadaan',
+  mixed: 'Campuran Semua Kosakata'
+};
+
+function backToVocabLobby() {
+  const lobby = document.getElementById('vocab-quiz-lobby');
+  const play = document.getElementById('vocab-quiz-play');
+  const result = document.getElementById('vocab-quiz-result');
+
+  if (lobby) lobby.classList.remove('hidden');
+  if (play) play.classList.add('hidden');
+  if (result) result.classList.add('hidden');
+}
+window.backToVocabLobby = backToVocabLobby;
+
+function quitVocabQuiz() {
+  if (confirm('Apakah Anda yakin ingin keluar dari latihan ini? Nilai belum tersimpan ke Master Guru.')) {
+    backToVocabLobby();
+  }
+}
+window.quitVocabQuiz = quitVocabQuiz;
+
+function selectVocabQuizPacket(packetKey) {
+  vocabQuizActivePacket = packetKey;
+  vocabQuizActivePacketTitle = VOCAB_QUIZ_PACKET_NAMES[packetKey] || 'Latihan Kosakata';
+
+  let pool = [];
+  if (packetKey === 'mixed') {
+    pool = getAllVocabList();
+  } else {
+    pool = getVocabListByCategory(packetKey);
+  }
+
+  if (pool.length < 4) {
+    pool = getAllVocabList();
+  }
+
+  // Shuffle pool and pick 10 items
+  const shuffledPool = shuffle([...pool]);
+  const quizWords = shuffledPool.slice(0, Math.min(10, shuffledPool.length));
+
+  // Build 10 questions with multiple choice options
+  vocabQuizQuestions = quizWords.map((targetWord, qIndex) => {
+    const mainWord = targetWord.kana || targetWord.jp;
+    const distractors = shuffle(shuffledPool.filter(w => (w.kana || w.jp) !== mainWord)).slice(0, 3);
+    
+    const formatType = (qIndex % 3 === 0) ? 'meaning' : ((qIndex % 3 === 1) ? 'reading' : 'audio');
+    
+    let prompt = '';
+    let typeBadge = '';
+    let correctText = '';
+    let options = [];
+
+    if (formatType === 'meaning') {
+      typeBadge = 'Tebak Arti Kata';
+      prompt = 'Pilih arti yang tepat untuk kosakata berikut:';
+      correctText = targetWord.id;
+      options = shuffle([targetWord.id, ...distractors.map(d => d.id)]);
+    } else if (formatType === 'reading') {
+      typeBadge = 'Tebak Cara Baca';
+      prompt = `Pilih cara baca (Romaji) yang tepat untuk: "${mainWord}" (${targetWord.id})`;
+      correctText = targetWord.reading;
+      options = shuffle([
+        targetWord.reading,
+        ...distractors.map(d => d.reading)
+      ]);
+    } else {
+      typeBadge = 'Pendengaran (Audio)';
+      prompt = 'Dengarkan suara pelafalan audio di bawah, lalu pilih arti yang sesuai:';
+      correctText = targetWord.id;
+      options = shuffle([targetWord.id, ...distractors.map(d => d.id)]);
+    }
+
+    return {
+      target: targetWord,
+      mainWord: mainWord,
+      formatType: formatType,
+      typeBadge: typeBadge,
+      prompt: prompt,
+      correctText: correctText,
+      options: options
+    };
+  });
+
+  currentVocabQuizIndex = 0;
+  vocabQuizLiveScore = 0;
+  vocabQuizCorrectCount = 0;
+  vocabQuizWrongCount = 0;
+  isVocabQuizAnswerLocked = false;
+
+  const lobby = document.getElementById('vocab-quiz-lobby');
+  const play = document.getElementById('vocab-quiz-play');
+  const result = document.getElementById('vocab-quiz-result');
+
+  if (lobby) lobby.classList.add('hidden');
+  if (play) play.classList.remove('hidden');
+  if (result) result.classList.add('hidden');
+
+  renderVocabQuizQuestion();
+}
+window.selectVocabQuizPacket = selectVocabQuizPacket;
+
+function renderVocabQuizQuestion() {
+  if (currentVocabQuizIndex >= vocabQuizQuestions.length) {
+    finishVocabQuiz();
+    return;
+  }
+
+  isVocabQuizAnswerLocked = false;
+  const q = vocabQuizQuestions[currentVocabQuizIndex];
+  const totalQ = vocabQuizQuestions.length;
+  const currentNum = currentVocabQuizIndex + 1;
+  const progressPct = Math.round((currentNum / totalQ) * 100);
+
+  // Header Bar Info
+  const titleEl = document.getElementById('vocab-quiz-packet-title');
+  const stepEl = document.getElementById('vocab-quiz-step-text');
+  const liveScoreEl = document.getElementById('vocab-quiz-live-score');
+  const progressFill = document.getElementById('vocab-quiz-progress-fill');
+
+  if (titleEl) titleEl.textContent = `Paket: ${vocabQuizActivePacketTitle}`;
+  if (stepEl) stepEl.textContent = `Soal ${currentNum} dari ${totalQ}`;
+  if (liveScoreEl) liveScoreEl.textContent = vocabQuizLiveScore;
+  if (progressFill) progressFill.style.width = `${progressPct}%`;
+
+  // Question Prompt & Box
+  const typeBadgeEl = document.getElementById('vocab-q-type-badge');
+  const promptEl = document.getElementById('vocab-q-prompt');
+  const mainJpEl = document.getElementById('vocab-q-main-jp');
+  const subReadingEl = document.getElementById('vocab-q-sub-reading');
+  const optionsGrid = document.getElementById('vocab-quiz-options-container');
+  const feedbackBox = document.getElementById('vocab-quiz-feedback-box');
+
+  if (typeBadgeEl) typeBadgeEl.textContent = q.typeBadge;
+  if (promptEl) promptEl.textContent = q.prompt;
+
+  if (q.formatType === 'audio') {
+    if (mainJpEl) mainJpEl.textContent = '???';
+    if (subReadingEl) subReadingEl.textContent = 'Dengarkan suara audio untuk menjawab';
+    setTimeout(() => {
+      speakJapanese(q.mainWord);
+    }, 300);
+  } else if (q.formatType === 'reading') {
+    if (mainJpEl) mainJpEl.textContent = q.mainWord;
+    if (subReadingEl) subReadingEl.textContent = `Arti: ${q.target.id}`;
+  } else {
+    if (mainJpEl) mainJpEl.textContent = q.mainWord;
+    if (subReadingEl) subReadingEl.textContent = `Cara baca: ${q.target.reading}`;
+  }
+
+  if (feedbackBox) {
+    feedbackBox.className = 'vocab-quiz-feedback-box';
+    feedbackBox.textContent = '';
+  }
+
+  // Render 4 Options
+  if (optionsGrid) {
+    optionsGrid.innerHTML = q.options.map((optText) => {
+      const isCorrect = (optText === q.correctText);
+      const safeOpt = optText.replace(/"/g, '&quot;');
+      return `
+        <button type="button" class="btn-vocab-opt" data-correct="${isCorrect ? '1' : '0'}" onclick="handleVocabQuizAnswer(this)">
+          ${safeOpt}
+        </button>
+      `;
+    }).join('');
+  }
+}
+
+function playQuizTargetAudio() {
+  if (currentVocabQuizIndex < vocabQuizQuestions.length) {
+    const q = vocabQuizQuestions[currentVocabQuizIndex];
+    if (q && q.mainWord) {
+      speakJapanese(q.mainWord);
+    }
+  }
+}
+window.playQuizTargetAudio = playQuizTargetAudio;
+
+function handleVocabQuizAnswer(btn) {
+  if (isVocabQuizAnswerLocked) return;
+  isVocabQuizAnswerLocked = true;
+
+  const isCorrect = btn.dataset.correct === '1';
+  const q = vocabQuizQuestions[currentVocabQuizIndex];
+  const feedbackBox = document.getElementById('vocab-quiz-feedback-box');
+  const liveScoreEl = document.getElementById('vocab-quiz-live-score');
+
+  // Disable all options
+  document.querySelectorAll('.btn-vocab-opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.correct === '1') {
+      b.classList.add('correct');
+    }
+  });
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    vocabQuizCorrectCount++;
+    vocabQuizLiveScore += 10;
+    if (liveScoreEl) liveScoreEl.textContent = vocabQuizLiveScore;
+    if (feedbackBox) {
+      feedbackBox.className = 'vocab-quiz-feedback-box correct';
+      feedbackBox.textContent = `Jawaban Benar! (+10 Nilai)`;
+    }
+  } else {
+    btn.classList.add('wrong');
+    vocabQuizWrongCount++;
+    if (feedbackBox) {
+      feedbackBox.className = 'vocab-quiz-feedback-box wrong';
+      feedbackBox.textContent = `Kurang Tepat. Jawaban yang benar adalah: ${q.correctText}`;
+    }
+  }
+
+  // Advance to next question after 1.1s
+  setTimeout(() => {
+    currentVocabQuizIndex++;
+    renderVocabQuizQuestion();
+  }, 1100);
+}
+window.handleVocabQuizAnswer = handleVocabQuizAnswer;
+
+function finishVocabQuiz() {
+  const totalQuestions = vocabQuizQuestions.length || 10;
+  const scorePercent = Math.round((vocabQuizCorrectCount / totalQuestions) * 100);
+  const earnedPoints = vocabQuizCorrectCount * 5; // up to +50 points
+
+  const isPassed = scorePercent >= 70;
+  const grade = scorePercent >= 85 ? 'A' : (scorePercent >= 70 ? 'B' : (scorePercent >= 60 ? 'C' : 'D'));
+
+  // Award points to user
+  if (earnedPoints > 0) {
+    addScore(earnedPoints);
+    saveState();
+  }
+
+  // 1. Submit to Backend API (Laravel SQLite)
+  try {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    fetch('/api/auth/assessment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
+      },
+      body: JSON.stringify({
+        lesson_id: 999, // vocabulary evaluation code
+        exercise_title: `Latihan Kosakata: ${vocabQuizActivePacketTitle}`,
+        exercise_type: 'vocabulary',
+        total_questions: totalQuestions,
+        correct_count: vocabQuizCorrectCount,
+        wrong_count: vocabQuizWrongCount,
+        score: scorePercent,
+        points: earnedPoints
+      })
+    }).then(r => r.json()).then(data => {
+      if (data.new_score && typeof currentUser !== 'undefined' && currentUser) {
+        currentUser.score = data.new_score;
+        if (typeof saveUser === 'function') saveUser(currentUser);
+        if (typeof renderUserWidget === 'function') renderUserWidget();
+      }
+    }).catch(() => {});
+  } catch (err) {}
+
+  // 2. Synchronize to LocalStorage for Master Guru Instant Live Display
+  try {
+    const localAssessments = JSON.parse(localStorage.getItem('sijapanese_student_assessments') || '[]');
+    const activeUser = JSON.parse(localStorage.getItem('sijapanese_active_user') || '{}');
+    localAssessments.unshift({
+      id: Date.now(),
+      user_name: activeUser.name || 'Siswa',
+      user_avatar: activeUser.avatar || 'img/avatar_anggata.svg',
+      lesson_id: 999,
+      exercise_title: `Latihan Kosakata: ${vocabQuizActivePacketTitle}`,
+      total_questions: totalQuestions,
+      correct_count: vocabQuizCorrectCount,
+      wrong_count: vocabQuizWrongCount,
+      score: scorePercent,
+      grade: grade,
+      status: isPassed ? 'lulus' : 'remedial',
+      created_at: new Date().toISOString()
+    });
+    localStorage.setItem('sijapanese_student_assessments', JSON.stringify(localAssessments.slice(0, 50)));
+  } catch (e) {}
+
+  // Show Result UI
+  const play = document.getElementById('vocab-quiz-play');
+  const result = document.getElementById('vocab-quiz-result');
+
+  if (play) play.classList.add('hidden');
+  if (result) result.classList.remove('hidden');
+
+  // Fill Result Elements
+  const gradePill = document.getElementById('vocab-result-grade-pill');
+  const headingEl = document.getElementById('vocab-result-heading');
+  const scoreValEl = document.getElementById('vocab-result-score-val');
+  const correctCountEl = document.getElementById('vocab-result-correct-count');
+  const wrongCountEl = document.getElementById('vocab-result-wrong-count');
+  const pointsValEl = document.getElementById('vocab-result-points-val');
+  const statusTextEl = document.getElementById('vocab-result-status-text');
+
+  if (gradePill) {
+    gradePill.textContent = `Grade ${grade} - ${grade === 'A' ? 'Sangat Baik' : (grade === 'B' ? 'Baik' : (grade === 'C' ? 'Cukup' : 'Perlu Bimbingan'))}`;
+    gradePill.style.background = isPassed ? '#ECFDF5' : '#FEF2F2';
+    gradePill.style.color = isPassed ? '#065F46' : '#991B1B';
+    gradePill.style.borderColor = isPassed ? '#A7F3D0' : '#FECACA';
+  }
+
+  if (headingEl) {
+    headingEl.textContent = isPassed ? 'Selamat, Anda Lulus Latihan!' : 'Hasil Latihan: Perlu Remedial';
+  }
+  if (scoreValEl) scoreValEl.textContent = scorePercent;
+  if (correctCountEl) correctCountEl.textContent = `${vocabQuizCorrectCount} Soal`;
+  if (wrongCountEl) wrongCountEl.textContent = `${vocabQuizWrongCount} Soal`;
+  if (pointsValEl) pointsValEl.textContent = `+${earnedPoints} Poin`;
+  if (statusTextEl) {
+    statusTextEl.textContent = isPassed ? 'LULUS (Tuntas)' : 'REMEDIAL (<70)';
+    statusTextEl.style.color = isPassed ? '#059669' : '#DC2626';
+  }
+
+  showToast(`Kuis Selesai! Nilai: ${scorePercent} (${isPassed ? 'LULUS' : 'REMEDIAL'})`, isPassed ? 'success' : 'info');
+}
+
+function retryCurrentVocabQuiz() {
+  selectVocabQuizPacket(vocabQuizActivePacket);
+}
+window.retryCurrentVocabQuiz = retryCurrentVocabQuiz;
 
 // ====================================================
 // MASTER GAME CONFIGURATION & QUESTION BANK MANAGER
@@ -1216,18 +1876,67 @@ function buildDefaultQuestions(gameId) {
   return list;
 }
 
+function formatShortSubModeName(name) {
+  if (!name) return '';
+  const str = String(name).trim();
+
+  // "Semua" variants
+  if (/^semua\b/i.test(str)) {
+    return 'Semua';
+  }
+
+  // Hiragana variants
+  if (/hiragana/i.test(str)) {
+    if (str.includes('かさ') || str.includes('ねこ')) return 'Hiragana (かさ...)';
+    if (str.includes('104')) return 'Hiragana 104';
+    return 'Hiragana';
+  }
+
+  // Katakana variants
+  if (/katakana/i.test(str)) {
+    if (str.includes('パン') || str.includes('テレビ')) return 'Katakana (パン...)';
+    if (str.includes('104')) return 'Katakana 104';
+    return 'Katakana';
+  }
+
+  // Kanji variants
+  if (/kanji/i.test(str)) {
+    return 'Kanji N5';
+  }
+
+  // Mix / other
+  if (/campuran/i.test(str)) {
+    return 'Campuran';
+  }
+  if (/kata pendek/i.test(str)) {
+    return 'Kata Pendek';
+  }
+  if (/kosakata mini/i.test(str)) {
+    return 'Kosakata Mini';
+  }
+  if (/susun kosakata/i.test(str)) {
+    return 'Susun Kata';
+  }
+
+  // If still long and has parentheses, strip them
+  if (str.length > 18 && str.includes('(')) {
+    return str.replace(/\([^)]+\)/g, '').trim();
+  }
+  return str;
+}
+
 const DEFAULT_GAME_CONFIG = {
   'kana-blast': {
     title: 'Kana Blast (Turret Blaster)',
     durations: [30, 45, 60, 90, 999],
     defaultDuration: 60,
     subModes: [
-      { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ, dll.)', active: true },
-      { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ, dll.)', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)', active: true },
-      { id: 'kana-hiragana', name: 'Aksara Hiragana Dasar', active: true },
-      { id: 'kana-katakana', name: 'Aksara Katakana Dasar', active: true },
-      { id: 'mix', name: 'Campuran Ekstrem (Kana & Kata)', active: true }
+      { id: 'vocab-hiragana', name: 'Hiragana (かさ...)', active: true },
+      { id: 'vocab-katakana', name: 'Katakana (パン...)', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5', active: true },
+      { id: 'kana-hiragana', name: 'Hiragana 104', active: true },
+      { id: 'kana-katakana', name: 'Katakana 104', active: true },
+      { id: 'mix', name: 'Campuran', active: true }
     ],
     customQuestions: buildDefaultQuestions('kana-blast')
   },
@@ -1236,21 +1945,21 @@ const DEFAULT_GAME_CONFIG = {
     speeds: ['slow', 'normal', 'fast'],
     defaultSpeed: 'normal',
     subModes: [
-      { id: 'words', name: 'Kosakata Mini (ねこ, いぬ, かさ, dll.)', active: true },
-      { id: 'hiragana', name: 'Hiragana Saja', active: true },
-      { id: 'katakana', name: 'Katakana Saja', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true },
-      { id: 'mix', name: 'Campuran Hiragana & Katakana', active: true }
+      { id: 'words', name: 'Kosakata Mini', active: true },
+      { id: 'hiragana', name: 'Hiragana', active: true },
+      { id: 'katakana', name: 'Katakana', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5', active: true },
+      { id: 'mix', name: 'Campuran', active: true }
     ],
     customQuestions: buildDefaultQuestions('sky-defense')
   },
   'flash-card': {
     title: 'Flash Card Kosakata & Kanji',
     subModes: [
-      { id: 'all', name: 'Semua Kosakata & Kanji', active: true },
-      { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ)', active: true },
-      { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ)', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
+      { id: 'all', name: 'Semua', active: true },
+      { id: 'vocab-hiragana', name: 'Hiragana (かさ...)', active: true },
+      { id: 'vocab-katakana', name: 'Katakana (パン...)', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5', active: true }
     ],
     customQuestions: buildDefaultQuestions('flash-card')
   },
@@ -1258,10 +1967,10 @@ const DEFAULT_GAME_CONFIG = {
     title: 'Memory Match',
     pairsCount: 8,
     subModes: [
-      { id: 'all', name: 'Semua Kosakata (Hiragana & Katakana)', active: true },
-      { id: 'vocab-hiragana', name: 'Kosakata Hiragana Saja (かさ, ねこ)', active: true },
-      { id: 'vocab-katakana', name: 'Kosakata Katakana Saja (パン, テレビ)', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
+      { id: 'all', name: 'Semua', active: true },
+      { id: 'vocab-hiragana', name: 'Hiragana (かさ...)', active: true },
+      { id: 'vocab-katakana', name: 'Katakana (パン...)', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5', active: true }
     ],
     customQuestions: buildDefaultQuestions('memory-match')
   },
@@ -1269,10 +1978,10 @@ const DEFAULT_GAME_CONFIG = {
     title: 'Speed Quiz Mode',
     duration: 30,
     subModes: [
-      { id: 'all', name: 'Semua Kosakata & Kanji', active: true },
-      { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ)', active: true },
-      { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ)', active: true },
-      { id: 'kanji-n5', name: 'Kanji N5 Dasar', active: true }
+      { id: 'all', name: 'Semua', active: true },
+      { id: 'vocab-hiragana', name: 'Hiragana (かさ...)', active: true },
+      { id: 'vocab-katakana', name: 'Katakana (パン...)', active: true },
+      { id: 'kanji-n5', name: 'Kanji N5', active: true }
     ],
     customQuestions: buildDefaultQuestions('speed-quiz')
   },
@@ -1655,9 +2364,13 @@ function showGameMenu() {
   const pageHeader = document.querySelector('#page-games .page-header');
   if (pageHeader) pageHeader.classList.remove('game-active-header');
 
-  if (menu) menu.classList.remove('hidden');
+  if (menu) {
+    menu.classList.remove('hidden');
+    menu.style.display = '';
+  }
   if (screen) {
     screen.classList.add('hidden');
+    screen.style.display = 'none';
     screen.innerHTML = '';
   }
   const title = document.getElementById('game-page-title');
@@ -1667,6 +2380,10 @@ function showGameMenu() {
 
   const backBtn = document.getElementById('games-back-btn');
   if (backBtn) backBtn.onclick = () => showPage('home');
+
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
 }
 
 function startGame(type) {
@@ -1677,13 +2394,24 @@ function startGame(type) {
   const pageHeader = document.querySelector('#page-games .page-header');
   if (pageHeader) pageHeader.classList.add('game-active-header');
 
-  if (menu) menu.classList.add('hidden');
-  if (screen) screen.classList.remove('hidden');
+  if (menu) {
+    menu.classList.add('hidden');
+    menu.style.display = 'none';
+  }
+  if (screen) {
+    screen.classList.remove('hidden');
+    screen.style.display = 'block';
+  }
 
   const backBtn = document.getElementById('games-back-btn');
   if (backBtn) backBtn.onclick = showGameMenu;
 
   currentGame = type;
+
+  // Pastikan posisi scroll langsung mentok ke atas
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
 
   if (type === 'flash-card') startFlashCard();
   else if (type === 'memory-match') startMemoryMatch();
@@ -1824,6 +2552,10 @@ function getFlashModeLabel(mode) {
 }
 
 function startFlashCard(mode = null) {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Flash Card Mode';
 
@@ -1904,15 +2636,15 @@ function renderFlashCard() {
   const activeSubModes = (typeof GameConfigManager !== 'undefined')
     ? GameConfigManager.getSubModes('flash-card')
     : [
-        { id: 'all', name: 'Semua Huruf' },
-        { id: 'hiragana', name: 'Hiragana' },
-        { id: 'katakana', name: 'Katakana' },
+        { id: 'all', name: 'Semua' },
+        { id: 'vocab-hiragana', name: 'Hiragana (かさ...)' },
+        { id: 'vocab-katakana', name: 'Katakana (パン...)' },
         { id: 'kanji-n5', name: 'Kanji N5' }
       ];
 
   const subChipsHtml = activeSubModes.map(sm => `
-    <button class="flash-filter-chip ${fs.mode === sm.id ? 'active' : ''}" onclick="setFlashMode('${sm.id}')">
-      <span>${sm.name}</span>
+    <button class="flash-filter-chip ${fs.mode === sm.id ? 'active' : ''}" onclick="setFlashMode('${sm.id}')" title="${sm.name}">
+      <span>${formatShortSubModeName(sm.name)}</span>
     </button>
   `).join('');
 
@@ -1920,8 +2652,8 @@ function renderFlashCard() {
     <div class="flash-filter-container">
       <div class="flash-filter-scroll">
         ${subChipsHtml}
-        <button class="flash-filter-chip star-chip ${fs.mode === 'starred' ? 'active' : ''}" onclick="setFlashMode('starred')">
-          <span>Huruf Berbintang (${starredCount})</span>
+        <button class="flash-filter-chip star-chip ${fs.mode === 'starred' ? 'active' : ''}" onclick="setFlashMode('starred')" title="Huruf Berbintang (${starredCount})">
+          <span>★ Berbintang (${starredCount})</span>
         </button>
       </div>
     </div>
@@ -2129,6 +2861,10 @@ function flashAnswer(know) {
 let memState = {};
 
 function startMemoryMatch(mode = null) {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Memory Match Mode';
 
@@ -2196,18 +2932,18 @@ function renderMemoryGrid() {
   const activeSubModes = (typeof GameConfigManager !== 'undefined')
     ? GameConfigManager.getSubModes('memory-match')
     : [
-        { id: 'hiragana', name: 'Hiragana Saja' },
-        { id: 'katakana', name: 'Katakana Saja' },
-        { id: 'kanji-n5', name: 'Kanji N5 Dasar' },
-        { id: 'all', name: 'Campuran' }
+        { id: 'all', name: 'Semua' },
+        { id: 'vocab-hiragana', name: 'Hiragana (かさ...)' },
+        { id: 'vocab-katakana', name: 'Katakana (パン...)' },
+        { id: 'kanji-n5', name: 'Kanji N5' }
       ];
 
   const subChipsHtml = `
     <div class="flash-filter-container" style="margin-bottom:14px;">
       <div class="flash-filter-scroll">
         ${activeSubModes.map(sm => `
-          <button class="flash-filter-chip ${ms.mode === sm.id ? 'active' : ''}" onclick="startMemoryMatch('${sm.id}')">
-            <span>${sm.name}</span>
+          <button class="flash-filter-chip ${ms.mode === sm.id ? 'active' : ''}" onclick="startMemoryMatch('${sm.id}')" title="${sm.name}">
+            <span>${formatShortSubModeName(sm.name)}</span>
           </button>
         `).join('')}
       </div>
@@ -2303,6 +3039,10 @@ function flipMemory(idx) {
 let speedState = {};
 
 function startSpeedQuiz(mode = null) {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Speed Quiz Mode';
 
@@ -2386,18 +3126,18 @@ function renderSpeedQuiz() {
   const activeSubModes = (typeof GameConfigManager !== 'undefined')
     ? GameConfigManager.getSubModes('speed-quiz')
     : [
-        { id: 'all', name: 'Semua Huruf' },
-        { id: 'hiragana', name: 'Hiragana Saja' },
-        { id: 'katakana', name: 'Katakana Saja' },
-        { id: 'kanji-n5', name: 'Kanji N5 Dasar' }
+        { id: 'all', name: 'Semua' },
+        { id: 'vocab-hiragana', name: 'Hiragana (かさ...)' },
+        { id: 'vocab-katakana', name: 'Katakana (パン...)' },
+        { id: 'kanji-n5', name: 'Kanji N5' }
       ];
 
   const subChipsHtml = `
     <div class="flash-filter-container" style="margin-bottom:14px;">
       <div class="flash-filter-scroll">
         ${activeSubModes.map(sm => `
-          <button class="flash-filter-chip ${ss.mode === sm.id ? 'active' : ''}" onclick="startSpeedQuiz('${sm.id}')">
-            <span>${sm.name}</span>
+          <button class="flash-filter-chip ${ss.mode === sm.id ? 'active' : ''}" onclick="startSpeedQuiz('${sm.id}')" title="${sm.name}">
+            <span>${formatShortSubModeName(sm.name)}</span>
           </button>
         `).join('')}
       </div>
@@ -2525,6 +3265,10 @@ function renderSpeedResult() {
 let wbState = {};
 
 function startWordBuilder() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   const title = document.getElementById('game-page-title');
   if (title) title.textContent = 'Word Builder Mode';
 
@@ -2899,6 +3643,10 @@ function playBlastSfx(type) {
 }
 
 function startKanaBlast() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   loadBlastStats();
   const title = document.getElementById('game-page-title');
   const sub = document.getElementById('game-page-subtitle');
@@ -2926,17 +3674,17 @@ function renderBlastLobby() {
   const activeBlastSubModes = (typeof GameConfigManager !== 'undefined')
     ? GameConfigManager.getSubModes('kana-blast')
     : [
-        { id: 'vocab-hiragana', name: 'Kosakata Hiragana (かさ, ねこ, dll.)' },
-        { id: 'vocab-katakana', name: 'Kosakata Katakana (パン, テレビ, dll.)' },
-        { id: 'kanji-n5', name: 'Kanji N5 Dasar (日, 月, 木, 山, dll.)' },
-        { id: 'kana-hiragana', name: 'Aksara Hiragana (104 Huruf)' },
-        { id: 'kana-katakana', name: 'Aksara Katakana (104 Huruf)' },
-        { id: 'mix', name: 'Campuran Ekstrem (Kana & Kata)' }
+        { id: 'vocab-hiragana', name: 'Hiragana (かさ...)' },
+        { id: 'vocab-katakana', name: 'Katakana (パン...)' },
+        { id: 'kanji-n5', name: 'Kanji N5' },
+        { id: 'kana-hiragana', name: 'Hiragana 104' },
+        { id: 'kana-katakana', name: 'Katakana 104' },
+        { id: 'mix', name: 'Campuran' }
       ];
 
   const subModePillsHtml = activeBlastSubModes.map(sm => `
-    <button class="blast-pill ${blastState.mode === sm.id ? 'active' : ''}" onclick="setBlastMode('${sm.id}')">
-      <span>${sm.name}</span>
+    <button class="blast-pill ${blastState.mode === sm.id ? 'active' : ''}" onclick="setBlastMode('${sm.id}')" title="${sm.name}">
+      <span>${formatShortSubModeName(sm.name)}</span>
     </button>
   `).join('');
 

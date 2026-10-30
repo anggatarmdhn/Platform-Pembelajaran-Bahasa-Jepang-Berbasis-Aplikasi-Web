@@ -144,12 +144,13 @@ body {
     align-items: center !important;
   }
 
-  /* ===== FOOTER ON MOBILE (SEAMLESS & NO BELANG) ===== */
+  /* ===== FOOTER ON MOBILE (SEAMLESS & DOWN AT BOTTOM) ===== */
   .site-footer {
     background: transparent !important;
     border-top: none !important;
-    padding: 14px 16px calc(76px + env(safe-area-inset-bottom, 0px)) !important;
-    margin-top: 20px !important;
+    padding: 20px 16px 24px !important;
+    margin-top: 36px !important;
+    display: block !important;
   }
 
   .footer-copy {
@@ -886,13 +887,28 @@ body {
   }
 
   /* ===== MINI GAMES PAGE ON MOBILE ===== */
-  .game-menu-grid {
+  .game-menu:not(.hidden),
+  .game-menu-grid:not(.hidden) {
+    display: grid !important;
     grid-template-columns: 1fr !important;
-    gap: 12px !important;
+    gap: 14px !important;
+    padding: 10px 14px 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .game-menu.hidden,
+  .game-menu-grid.hidden,
+  #game-menu.hidden,
+  #game-screen.hidden,
+  .game-screen.hidden {
+    display: none !important;
   }
 
   .game-card {
-    padding: 16px 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 20px 18px !important;
     border-radius: 18px !important;
   }
 
@@ -974,3 +990,251 @@ body {
   border-bottom-color: #DC2626 !important;
   color: #991B1B !important;
 }
+
+/* ==========================================================================
+   MINIGAMES MODE & SUBMODE SELECTION - WRAP CLEANLY (NO HORIZONTAL SCROLL)
+   ========================================================================== */
+.flash-filter-container {
+  width: 100% !important;
+  margin-bottom: 10px !important;
+}
+
+.flash-filter-scroll {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 7px 6px !important;
+  overflow-x: visible !important;
+  padding: 4px 2px 6px !important;
+  width: 100% !important;
+  scrollbar-width: none !important;
+}
+
+.flash-filter-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+.flash-filter-chip {
+  padding: 6px 12px !important;
+  font-size: 0.78rem !important;
+  white-space: normal !important;
+  line-height: 1.25 !important;
+  border-radius: 999px !important;
+  flex: 0 1 auto !important;
+  text-align: center !important;
+}
+
+/* Kana Blast - Pill choices wrap cleanly on mobile */
+.blast-pill-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 7px !important;
+}
+
+.blast-pill {
+  padding: 8px 12px !important;
+  font-size: 0.8rem !important;
+  white-space: normal !important;
+  border-radius: 10px !important;
+  text-align: center !important;
+}
+
+/* Sky Atk Defense - Monster letter choice selector wrap cleanly on mobile */
+.ms-pill-selector {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 6px 5px !important;
+}
+
+.ms-pill {
+  min-width: 78px !important;
+  padding: 7px 10px !important;
+  font-size: 0.8rem !important;
+  flex: 1 1 auto !important;
+  text-align: center !important;
+}
+
+/* Kana Blast - Fixed stable container and HUD on mobile to prevent size jumping */
+.blast-game-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  margin: 0 auto !important;
+  border-radius: 18px !important;
+}
+
+.blast-hud {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  border-radius: 18px 18px 0 0 !important;
+}
+
+.blast-hud-row-top {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 8px 10px !important;
+  gap: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.blast-hud-row-target {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 5px 10px !important;
+  gap: 8px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  max-height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+}
+
+.blast-hud-hint {
+  display: none !important;
+}
+
+.blast-timer-pill {
+  flex-shrink: 0 !important;
+  padding: 5px 10px !important;
+  font-size: 0.82rem !important;
+}
+
+.blast-holo-target-box {
+  flex: 1 !important;
+  min-width: 0 !important;
+  height: 38px !important;
+  max-height: 38px !important;
+  padding: 3px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.holo-target-label {
+  font-size: 0.62rem !important;
+  letter-spacing: 0.05em !important;
+  flex-shrink: 0 !important;
+}
+
+.holo-target-romaji,
+.blast-target-romaji {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 130px !important;
+  display: inline-block !important;
+  line-height: 1.2 !important;
+}
+
+.holo-target-sub,
+.blast-target-sub {
+  font-size: 0.74rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 80px !important;
+  color: #94A3B8 !important;
+  display: inline-block !important;
+  line-height: 1.2 !important;
+  flex-shrink: 1 !important;
+}
+
+.blast-target-speaker-btn {
+  width: 24px !important;
+  height: 24px !important;
+  flex-shrink: 0 !important;
+}
+
+.blast-arena {
+  width: 100% !important;
+  height: 480px !important;
+  min-height: 480px !important;
+  max-height: 480px !important;
+  box-sizing: border-box !important;
+  border-radius: 0 0 18px 18px !important;
+}
+
+/* ====================================================
+   KOSAKATA (VOCABULARY) MOBILE RESPONSIVE
+   ==================================================== */
+@media (max-width: 768px) {
+  .vocab-tabs {
+    display: flex !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    gap: 8px !important;
+    padding: 6px 16px 14px !important;
+    margin: 0 0 12px 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .vocab-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+  .vocab-tabs .tab-btn {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 8px 16px !important;
+    font-size: 0.84rem !important;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.2s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  .vocab-tabs .tab-btn.active {
+    background: #B45309 !important;
+    color: #FFFFFF !important;
+    border-color: #B45309 !important;
+    box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3) !important;
+  }
+  .vocab-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    padding: 0 16px 60px !important;
+  }
+  .vocab-card {
+    padding: 14px 12px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  }
+  .vocab-card-top {
+    margin-bottom: 8px !important;
+  }
+  .vocab-jp {
+    font-size: 1.45rem !important;
+  }
+  .vocab-reading {
+    font-size: 0.82rem !important;
+  }
+  .vocab-id {
+    font-size: 0.92rem !important;
+    margin-top: 6px !important;
+  }
+  .vocab-card-footer {
+    margin-top: 10px !important;
+    padding-top: 8px !important;
+  }
+}
+
+

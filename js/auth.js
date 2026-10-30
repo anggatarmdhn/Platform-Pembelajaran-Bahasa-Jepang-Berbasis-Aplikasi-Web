@@ -50,24 +50,32 @@ const DEMO_ACCOUNTS = {
 };
 
 function getSavedUser() {
+  // 1. Cek sesi Laravel jika disuntikkan via window.LARAVEL_USER
+  if (typeof window !== 'undefined' && window.LARAVEL_USER !== undefined) {
+    return window.LARAVEL_USER;
+  }
+
+  // 2. Cek local storage (mode statis/offline)
   try {
-    const saved = localStorage.getItem('sijapanese_active_user');
+    const saved = localStorage.getItem('sijapanese_active_user') || localStorage.getItem('sijapanese_auth_user');
     if (saved) {
       const parsed = JSON.parse(saved);
-      // Migrasi avatar jika masih format emoji lama
-      if (!parsed.avatar || parsed.avatar.length <= 4) {
-        if (parsed.role === 'guru') parsed.avatar = 'img/avatar_tanaka.svg';
-        else if (parsed.name && parsed.name.includes('Aoi')) parsed.avatar = 'img/avatar_aoi.svg';
-        else parsed.avatar = 'img/avatar_anggata.svg';
+      if (parsed && parsed.email) {
+        if (!parsed.avatar || parsed.avatar.length <= 4) {
+          if (parsed.role === 'guru') parsed.avatar = 'img/avatar_tanaka.svg';
+          else if (parsed.name && parsed.name.includes('Aoi')) parsed.avatar = 'img/avatar_aoi.svg';
+          else parsed.avatar = 'img/avatar_anggata.svg';
+        }
+        return parsed;
       }
-      return parsed;
     }
   } catch (e) {}
-  return DEMO_ACCOUNTS.kenji;
+
+  return null;
 }
 
 let currentUser = getSavedUser();
-let isUserLoggedIn = true;
+let isUserLoggedIn = currentUser !== null;
 
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
@@ -78,6 +86,8 @@ if (typeof document !== 'undefined') {
 }
 
 function initAuthSystem() {
+  currentUser = getSavedUser();
+  isUserLoggedIn = currentUser !== null;
   injectAuthModals();
   renderUserWidget();
 }
@@ -99,9 +109,14 @@ function renderUserWidget() {
   if (!container) return;
 
   if (!isUserLoggedIn || !currentUser) {
+    const isStatic = window.location.pathname.endsWith('.html');
+    const loginUrl = isStatic ? 'login.html' : '/login';
+    const registerUrl = isStatic ? 'register.html' : '/register';
+
     container.innerHTML = `
-      <div class="nav-auth-wrap">
-        <button class="btn-nav-masuk" onclick="openLoginModal()" title="Masuk ke Akun">Masuk</button>
+      <div class="nav-auth-wrap not-logged-in" style="display:flex; align-items:center; gap:0.5rem;">
+        <a href="${loginUrl}" class="btn-nav-masuk" style="text-decoration:none; padding:0.4rem 0.9rem; border-radius:9999px; font-weight:700; font-size:0.85rem; border:1.5px solid #CBD5E1; color:#1E293B; background:transparent;">Masuk</a>
+        <a href="${registerUrl}" class="btn-nav-daftar" style="text-decoration:none; padding:0.4rem 0.9rem; border-radius:9999px; font-weight:700; font-size:0.85rem; border:1.5px solid #D9383A; color:#FFFFFF; background:#D9383A;">Daftar</a>
       </div>
     `;
     return;
@@ -205,21 +220,20 @@ function injectAuthModals() {
         </div>
 
         <div class="sij-modal-body">
-          <!-- Banner Akun Aktif & Cepat Ganti Admin/Client -->
+          <!-- Informasi Akun Pengguna -->
           <div id="prof-role-banner" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.75rem 1rem; margin-bottom:1.15rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem;">
             <div style="display:flex; align-items:center; gap:0.75rem;">
-              <div id="prof-role-icon-wrap">
-                ${renderAvatarHtml(currentUser.avatar, currentUser.name, 'prof-role-avatar-thumb')}
-              </div>
+              <div id="prof-role-icon-wrap"></div>
               <div>
-                <strong id="prof-role-title" style="font-size:0.86rem; color:#0F172A; display:block;">Akun Siswa Belajar</strong>
-                <small id="prof-role-email" style="color:#64748B; font-size:0.75rem;">kenji@sijapanese.sch.id</small>
+                <strong id="prof-role-title" style="font-size:0.86rem; color:#0F172A; display:block;">Akun Pengguna</strong>
+                <small id="prof-role-email" style="color:#64748B; font-size:0.75rem;"></small>
               </div>
             </div>
-            <button type="button" id="prof-role-switch-btn" onclick="toggleAdminClientRole()" style="background:#FFFFFF; border:1.5px solid #CBD5E1; color:#0F172A; font-weight:800; font-size:0.78rem; padding:0.45rem 0.85rem; border-radius:9999px; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; gap:0.4rem;">
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-              <span id="prof-role-switch-text">Ganti ke Akun Guru</span>
-            </button>
+            <div>
+              <span id="prof-role-badge" style="font-size:0.75rem; font-weight:800; padding:0.25rem 0.65rem; border-radius:9999px; border:1px solid #E2E8F0;">
+                Akun Aktif
+              </span>
+            </div>
           </div>
 
           <form id="form-sij-profile" onsubmit="saveProfileModal(event)">
@@ -299,64 +313,10 @@ function injectAuthModals() {
             </button>
           </form>
 
-          <div class="modal-actions-row">
-            <button type="button" class="btn-modal-link" onclick="openLoginModalFromProfile()">Ganti Akun Lain</button>
-            <button type="button" class="btn-modal-logout" onclick="logoutFromModal()">
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              <span>Keluar (Logout)</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL PILIH AKUN PENGGUNA (BERSIH DENGAN AVATAR VEKTOR ANIME RESMI) -->
-    <div class="sij-modal-backdrop" id="modal-quick-login" onclick="handleBackdropClick(event, 'modal-quick-login')">
-      <div class="sij-modal-card">
-        <div class="sij-modal-header">
-          <div class="sij-modal-titles">
-            <h3>Pilih Akun Pengguna</h3>
-            <p>Klik akun di bawah untuk langsung beralih profil</p>
-          </div>
-          <button class="sij-modal-close-btn" onclick="closeLoginModal()">&times;</button>
-        </div>
-
-        <div class="sij-modal-body">
-          <div class="sij-demo-account-list">
-            <!-- Guru Tanaka -->
-            <button type="button" class="sij-demo-account-btn btn-is-guru" onclick="quickLoginAs('guru')">
-              <div style="display:flex; align-items:center; gap:0.85rem;">
-                <img src="img/avatar_tanaka.svg" alt="Sensei Tanaka" class="demo-acc-avatar-img" />
-                <div>
-                  <strong style="display:block; color:#0F172A; font-size:0.92rem;">Sensei Tanaka</strong>
-                  <small style="color:#64748B;">guru@sijapanese.sch.id</small>
-                </div>
-              </div>
-              <span class="demo-role-pill guru">Guru Pengajar &rarr;</span>
-            </button>
-
-            <!-- Siswa Anggata -->
-            <button type="button" class="sij-demo-account-btn" onclick="quickLoginAs('kenji')">
-              <div style="display:flex; align-items:center; gap:0.85rem;">
-                <img src="img/avatar_anggata.svg" alt="Anggata Ramadhan" class="demo-acc-avatar-img" />
-                <div>
-                  <strong style="display:block; color:#0F172A; font-size:0.92rem;">Anggata Al Haadi Ramadhan</strong>
-                  <small style="color:#64748B;">kenji@sijapanese.sch.id • 1.250 Poin</small>
-                </div>
-              </div>
-              <span class="demo-role-pill siswa">Siswa N5 &rarr;</span>
-            </button>
-
-            <!-- Siswa Aoi -->
-            <button type="button" class="sij-demo-account-btn" onclick="quickLoginAs('aoi')">
-              <div style="display:flex; align-items:center; gap:0.85rem;">
-                <img src="img/avatar_aoi.svg" alt="Aoi Sorano" class="demo-acc-avatar-img" />
-                <div>
-                  <strong style="display:block; color:#0F172A; font-size:0.92rem;">Aoi Sorano</strong>
-                  <small style="color:#64748B;">aoi@sijapanese.sch.id • 480 Poin</small>
-                </div>
-              </div>
-              <span class="demo-role-pill siswa">Siswa N4 &rarr;</span>
+          <div class="modal-actions-row" style="justify-content:center; padding-top:0.5rem;">
+            <button type="button" class="btn-modal-logout" onclick="logoutFromModal()" style="width:100%; justify-content:center; padding:0.65rem 1rem; border-radius:12px;">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <span>Keluar dari Akun (Logout)</span>
             </button>
           </div>
         </div>
@@ -378,38 +338,42 @@ const AVATAR_PRESETS = [
 let currentAvatarIdx = 0;
 
 function openProfileModal() {
+  if (!currentUser) {
+    goToLogin();
+    return;
+  }
   const modal = document.getElementById('modal-user-profile');
   if (!modal) return;
 
-  document.getElementById('prof-nama').value = currentUser.name || 'Anggata Al Haadi Ramadhan';
-  document.getElementById('prof-reg').value = currentUser.reg_no || 'JFT-2026-51720';
-  document.getElementById('prof-nat').value = currentUser.nationality || 'INDONESIA';
+  const isGuru = currentUser.role === 'guru';
+
+  document.getElementById('prof-nama').value = currentUser.name || '';
+  document.getElementById('prof-reg').value = currentUser.reg_no || (isGuru ? 'SIJ-2026-GURU01' : 'JFT-2026-51720');
+  document.getElementById('prof-nat').value = currentUser.nationality || (isGuru ? 'JAPAN' : 'INDONESIA');
   document.getElementById('prof-gender').value = currentUser.gender || 'Laki-laki (MALE)';
-  document.getElementById('prof-birth').value = currentUser.birthdate || '2007/09/16';
-  document.getElementById('prof-level').value = currentUser.target_level || 'JLPT N5 (Dasar 1)';
+  document.getElementById('prof-birth').value = currentUser.birthdate || (isGuru ? '1988/04/12' : '2007/09/16');
+  document.getElementById('prof-level').value = currentUser.target_level || (isGuru ? 'Pengajar (N1 - N5)' : 'JLPT N5 (Dasar 1)');
 
   const avatarBox = document.getElementById('profile-avatar-display-box');
   if (avatarBox) {
     avatarBox.innerHTML = renderAvatarHtml(currentUser.avatar, currentUser.name, 'profile-modal-avatar-img');
   }
 
-  const isGuru = currentUser.role === 'guru';
   const roleIconWrap = document.getElementById('prof-role-icon-wrap');
   const roleTitle = document.getElementById('prof-role-title');
   const roleEmail = document.getElementById('prof-role-email');
-  const roleBtn = document.getElementById('prof-role-switch-btn');
-  const roleBtnText = document.getElementById('prof-role-switch-text');
+  const roleBadge = document.getElementById('prof-role-badge');
 
   if (roleIconWrap) {
     roleIconWrap.innerHTML = renderAvatarHtml(currentUser.avatar, currentUser.name, 'prof-role-avatar-thumb');
   }
-  if (roleTitle) roleTitle.textContent = isGuru ? 'Akun Admin (Guru Master)' : 'Akun Client (Siswa Belajar)';
-  if (roleEmail) roleEmail.textContent = currentUser.email || (isGuru ? 'guru@sijapanese.sch.id' : 'kenji@sijapanese.sch.id');
-  
-  if (roleBtn) {
-    if (roleBtnText) roleBtnText.textContent = isGuru ? 'Ganti ke Akun Siswa' : 'Ganti ke Akun Guru';
-    roleBtn.style.borderColor = isGuru ? '#BFDBFE' : '#FECACA';
-    roleBtn.style.color = isGuru ? '#2563EB' : '#D9383A';
+  if (roleTitle) roleTitle.textContent = isGuru ? 'Guru Pengajar (Master)' : 'Siswa Belajar';
+  if (roleEmail) roleEmail.textContent = currentUser.email || '';
+  if (roleBadge) {
+    roleBadge.textContent = isGuru ? 'Master Guru' : 'Siswa Aktif';
+    roleBadge.style.background = isGuru ? '#FEF2F2' : '#EFF6FF';
+    roleBadge.style.color = isGuru ? '#D9383A' : '#2563EB';
+    roleBadge.style.borderColor = isGuru ? '#FECACA' : '#BFDBFE';
   }
 
   const guruBox = document.getElementById('guru-shortcut-area');
@@ -422,16 +386,8 @@ function openProfileModal() {
 
 function closeProfileModal() {
   const modal = document.getElementById('modal-user-profile');
-  if (modal) modal.classList.remove('show');
-}
-
-async function toggleAdminClientRole() {
-  closeProfileModal();
-  if (currentUser.role === 'guru') {
-    await quickLoginAs('kenji');
-  } else {
-    await quickLoginAs('guru');
-  }
+  if (!modal) return;
+  modal.classList.remove('show');
 }
 
 function pickNextAvatar() {
@@ -462,14 +418,40 @@ async function saveProfileModal(e) {
   currentUser.target_level = document.getElementById('prof-level').value;
 
   saveUser(currentUser);
+
+  // Sync to Laravel database if session is authenticated
+  try {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    await fetch('/api/auth/profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
+      },
+      body: JSON.stringify({
+        name: currentUser.name,
+        avatar: currentUser.avatar
+      })
+    });
+  } catch (err) {}
+
   closeProfileModal();
   await showLoadingOverlay('Menyimpan Profil...', 'Memperbarui data identitas peserta...', currentUser.avatar, 600);
   renderUserWidget();
 }
 
-function openLoginModalFromProfile() {
-  closeProfileModal();
-  openLoginModal();
+function goToLogin() {
+  const isLaravel = window.location.pathname.startsWith('/guru') || window.location.pathname.startsWith('/belajar') || window.location.pathname.startsWith('/modul') || window.location.port === '8080';
+  window.location.href = isLaravel ? '/login' : 'login.html';
+}
+
+function openLoginModal() {
+  goToLogin();
+}
+
+function closeLoginModal() {
+  // deprecated, no quick-login modal
 }
 
 async function logoutFromModal() {
@@ -477,52 +459,24 @@ async function logoutFromModal() {
   await logoutUser();
 }
 
-// ====================================================
-// LOGIKA MODAL LOGIN DENGAN LOADING ANIMASI
-// ====================================================
-function openLoginModal() {
-  const modal = document.getElementById('modal-quick-login');
-  if (modal) modal.classList.add('show');
-}
-
-function closeLoginModal() {
-  const modal = document.getElementById('modal-quick-login');
-  if (modal) modal.classList.remove('show');
-}
-
-async function quickLoginAs(roleKey) {
-  const account = DEMO_ACCOUNTS[roleKey];
-  if (!account) return;
-
-  closeLoginModal();
-
-  if (account.role === 'guru') {
-    await showLoadingOverlay('Memuat Akun Guru...', 'Mempersiapkan Dashboard Master Guru...', 'img/avatar_tanaka.svg', 750);
-    currentUser = { ...account };
-    isUserLoggedIn = true;
-    saveUser(currentUser);
-    renderUserWidget();
-    const guruUrl = (window.location.port === '8080') ? '/guru' : 'guru.html';
-    window.location.href = guruUrl;
-  } else {
-    const avatar = account.avatar || 'img/avatar_anggata.svg';
-    const firstName = account.name.split(' ')[0];
-    await showLoadingOverlay(`Memuat Akun ${firstName}...`, 'Menyiapkan modul materi & progres kuis...', avatar, 700);
-    currentUser = { ...account };
-    isUserLoggedIn = true;
-    saveUser(currentUser);
-    renderUserWidget();
-  }
-}
-
 async function logoutUser() {
-  await showLoadingOverlay('Mengeluarkan Akun...', 'Membersihkan sesi login...', 'img/avatar_anggata.svg', 600);
+  await showLoadingOverlay('Mengeluarkan Akun...', 'Membersihkan sesi login...', 'img/avatar_anggata.svg', 500);
   isUserLoggedIn = false;
+  currentUser = null;
   try {
     localStorage.removeItem('sijapanese_active_user');
+    localStorage.removeItem('sijapanese_auth_user');
+    sessionStorage.clear();
   } catch (e) {}
 
-  renderUserWidget();
+  const laravelLogoutForm = document.getElementById('logout-form');
+  if (laravelLogoutForm) {
+    laravelLogoutForm.submit();
+  } else {
+    renderUserWidget();
+    const isStatic = window.location.pathname.endsWith('.html');
+    window.location.href = isStatic ? 'index.html' : '/';
+  }
 }
 
 function saveUser(user) {

@@ -234,12 +234,110 @@
 }
 
 /* ====================================================
-   3. LESSON CARDS LIST (WARNA-WARNI KATEGORI)
+   3. LESSON CARDS LIST (GAYA NIHONGO TO JAPAN)
    ==================================================== */
 .materi-lesson-list {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 0.75rem;
+}
+
+.materi-nihongo-catalog-row {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1.5px solid #F1E7DD;
+  border-radius: 16px;
+  padding: 1.1rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  gap: 1.25rem;
+}
+
+.materi-nihongo-catalog-row:hover {
+  transform: translateY(-2px);
+  border-color: #EA580C;
+  background: #FFFDFB;
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.08);
+}
+
+.nihongo-row-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #FAF6F0;
+  border: 1.5px solid #E4D9CF;
+  color: #78350F;
+  font-weight: 800;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.materi-nihongo-catalog-row:hover .nihongo-row-num {
+  background: #FFF7ED;
+  border-color: #EA580C;
+  color: #EA580C;
+}
+
+.nihongo-row-num.done {
+  background: #ECFDF5;
+  color: #059669;
+  border-color: #6EE7B7;
+}
+
+.nihongo-row-content {
+  flex: 1;
+}
+
+.nihongo-row-title {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.35;
+}
+
+.nihongo-row-subtitle {
+  font-size: 0.88rem;
+  color: #64748B;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.nihongo-row-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-shrink: 0;
+}
+
+.nihongo-row-time {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #94A3B8;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.nihongo-row-arrow {
+  font-size: 1.4rem;
+  color: #CBD5E1;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.materi-nihongo-catalog-row:hover .nihongo-row-arrow {
+  color: #EA580C;
+  transform: translateX(3px);
 }
 
 .materi-lesson-card {
@@ -367,6 +465,293 @@
   color: #FFFFFF;
   border-color: transparent;
   transform: scale(1.1);
+}
+
+/* ==================================================== */
+/* NIHONGOTOJAPAN HORIZONTAL STEPPER NAVIGATION TABS     */
+/* ==================================================== */
+.nihongo-stepper-container {
+  width: 100%;
+  border-bottom: 2px solid #E5E7EB;
+  margin-bottom: 1.8rem;
+  background: transparent;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #FAF6F0;
+  padding-top: 0.25rem;
+}
+
+.nihongo-stepper-scroll {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0 0.25rem;
+}
+
+.nihongo-stepper-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.nihongo-step-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 3.5px solid transparent;
+  padding: 0.75rem 0.4rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  position: relative;
+  margin-bottom: -2px;
+}
+
+.nihongo-step-tab-btn:hover {
+  color: #0F172A;
+}
+
+.nihongo-step-tab-btn.active {
+  color: #C2410C;
+  border-bottom-color: #EA580C;
+  font-weight: 800;
+}
+
+.nihongo-step-body {
+  animation: fadeInStep 0.25s ease forwards;
+}
+
+@keyframes fadeInStep {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.step-header-banner {
+  margin-bottom: 1.6rem;
+}
+
+.step-label-pill {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #EA580C;
+  background: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.step-main-title {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #0F172A;
+  line-height: 1.25;
+  margin: 0 0 0.4rem 0;
+}
+
+.step-desc-text {
+  font-size: 0.96rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Bottom Stepper Nav */
+.nihongo-step-bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1.5px solid #E2E8F0;
+  gap: 1rem;
+}
+
+.btn-step-nav-prev,
+.btn-step-nav-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: 9999px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  border: none;
+}
+
+.btn-step-nav-prev {
+  background: #F1F5F9;
+  color: #334155;
+  border: 1.5px solid #CBD5E1;
+}
+
+.btn-step-nav-prev:hover:not(:disabled) {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.btn-step-nav-prev:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-step-nav-next {
+  background: #EA580C;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25);
+}
+
+.btn-step-nav-next:hover {
+  background: #C2410C;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
+}
+
+.step-nav-indicator {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #64748B;
+}
+
+/* 5 Vokal Romaji Grid */
+.romaji-vowels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.romaji-vowel-card {
+  background: #FFFFFF;
+  border: 2px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1.2rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.romaji-vowel-card:hover {
+  border-color: #EA580C;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.12);
+}
+
+.romaji-vowel-kana {
+  font-size: 2.2rem;
+  font-weight: 900;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: #BA3D27;
+  margin-bottom: 0.2rem;
+}
+
+.romaji-vowel-latin {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 0.4rem;
+}
+
+.romaji-vowel-tip {
+  font-size: 0.78rem;
+  color: #64748B;
+  line-height: 1.35;
+  margin-bottom: 0.8rem;
+}
+
+.btn-vowel-audio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFF7ED;
+  color: #C2410C;
+  border: 1px solid #FFEDD5;
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-vowel-audio:hover {
+  background: #FFEDD5;
+}
+
+/* Flashcard Latihan Kosakata Step */
+.latihan-vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.latihan-vocab-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.latihan-vocab-card:hover {
+  border-color: #EA580C;
+  background: #FFFBF7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.08);
+}
+
+.latihan-vocab-jp {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.latihan-vocab-romaji {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #EA580C;
+}
+
+.latihan-vocab-meaning {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.btn-latihan-speaker {
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 9999px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-latihan-speaker:hover {
+  background: #EA580C;
+  color: #FFFFFF;
+  border-color: #EA580C;
 }
 
 /* ====================================================
@@ -3484,3 +3869,1280 @@ body.is-dragging-gesture .quest-opt-btn * {
   object-fit: contain;
   display: block;
 }
+
+
+/* ====================================================
+   SIMPLIFIED LESSON LAYOUT (GAYA NIHONGOTOJAPAN)
+   Simpel, Bersih, Tanpa Ikon / Emoji, Ramah Pemula
+   ==================================================== */
+.lesson-nav-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.4rem;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border, #E4D9CF);
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  flex-wrap: wrap;
+}
+
+.lesson-nav-top .btn-back-catalog {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  background: #FAF6F0;
+  border: 1.5px solid #E2D7CC;
+  color: #4A3B32;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lesson-nav-top .btn-back-catalog:hover {
+  background: #F1E7DD;
+  color: #BA5444;
+}
+
+.lesson-top-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #2D2520;
+}
+
+.lesson-nav-quick-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-lesson-mode-tab {
+  padding: 0.55rem 1.1rem;
+  border-radius: 10px;
+  border: 1.5px solid #E2D7CC;
+  background: #FAF6F0;
+  color: #64554B;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-lesson-mode-tab:hover {
+  background: #F1E7DD;
+  color: #2D2520;
+}
+
+.btn-lesson-mode-tab.active {
+  background: #BA5444;
+  border-color: #BA5444;
+  color: #FFFFFF;
+}
+
+/* Nihongo Study Article Styles */
+.nihongo-study-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border, #E4D9CF);
+  border-radius: 20px;
+  padding: 2rem 2.2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .nihongo-study-card {
+    padding: 1.4rem 1.1rem;
+  }
+}
+
+.nihongo-hero-header {
+  border-bottom: 1.5px solid #F1E7DD;
+  padding-bottom: 1.4rem;
+  margin-bottom: 1.8rem;
+}
+
+.nihongo-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.nihongo-tag-chip {
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #FAF1EE;
+  color: #BA5444;
+  border: 1px solid #F1D6CF;
+}
+
+.nihongo-time-chip {
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: #EFF4F8;
+  color: #3E6B89;
+  border: 1px solid #D1DFE9;
+}
+
+.nihongo-points-chip {
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+
+.nihongo-lesson-h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #2D2520;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.nihongo-lesson-sub {
+  font-size: 1.02rem;
+  color: #64554B;
+  line-height: 1.5;
+}
+
+/* Sections */
+.nihongo-section-block {
+  margin-bottom: 2.2rem;
+}
+
+.nihongo-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #2D2520;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nihongo-section-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #BA5444;
+  color: #FFFFFF;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.nihongo-prose-text {
+  font-size: 0.98rem;
+  color: #4A3B32;
+  line-height: 1.65;
+  margin-bottom: 1.2rem;
+}
+
+.nihongo-prose-text p {
+  margin-bottom: 0.8rem;
+}
+
+/* Formula Box */
+.grammar-formula-box {
+  background: #FDFBF8;
+  border: 2px dashed #BA5444;
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.4rem;
+}
+
+.grammar-formula-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #BA5444;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+}
+
+.grammar-formula-code {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.3px;
+}
+
+.grammar-formula-desc {
+  font-size: 0.92rem;
+  color: #64554B;
+}
+
+/* Example Dialogue Cards */
+.example-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.example-dialogue-card {
+  background: #FAF6F0;
+  border: 1.5px solid #EADBCE;
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.example-jp-phrase {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #2D2520;
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
+}
+
+.example-romaji-phrase {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3E6B89;
+  margin-bottom: 0.2rem;
+}
+
+.example-id-meaning {
+  font-size: 0.92rem;
+  color: #64554B;
+}
+
+.btn-phrase-audio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+  border: 1.5px solid #3E6B89;
+  background: #FFFFFF;
+  color: #3E6B89;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-phrase-audio:hover {
+  background: #3E6B89;
+  color: #FFFFFF;
+}
+
+/* Vocab Table / Grid */
+.study-vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.study-vocab-item {
+  background: #FFFFFF;
+  border: 1.5px solid #EADBCE;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.study-vocab-item:hover {
+  transform: translateY(-2px);
+  border-color: #BA5444;
+}
+
+.vocab-item-jp {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #2D2520;
+  line-height: 1.2;
+}
+
+.vocab-item-romaji {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #3E6B89;
+  margin-top: 0.15rem;
+}
+
+.vocab-item-meaning {
+  font-size: 0.86rem;
+  color: #64554B;
+  margin-top: 0.15rem;
+}
+
+.btn-vocab-item-audio {
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  border: 1.5px solid #E2D7CC;
+  background: #FAF6F0;
+  color: #4A3B32;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.btn-vocab-item-audio:hover {
+  background: #BA5444;
+  border-color: #BA5444;
+  color: #FFFFFF;
+}
+
+/* Cultural Note */
+.study-culture-box {
+  background: #EFF4F8;
+  border: 1.5px solid #D1DFE9;
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 1.8rem;
+}
+
+.study-culture-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #244B65;
+  margin-bottom: 0.4rem;
+}
+
+.study-culture-desc {
+  font-size: 0.92rem;
+  color: #3E6B89;
+  line-height: 1.55;
+}
+
+/* CTA to Quiz */
+.study-cta-box {
+  background: #FAF6F0;
+  border: 1.5px solid #EADBCE;
+  border-radius: 16px;
+  padding: 1.6rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.study-cta-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #2D2520;
+  margin-bottom: 0.4rem;
+}
+
+.study-cta-desc {
+  font-size: 0.95rem;
+  color: #64554B;
+  margin-bottom: 1.2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-start-lesson-quiz {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  border-radius: 12px;
+  border: none;
+  background: #BA5444;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(186, 84, 68, 0.25);
+}
+
+.btn-start-lesson-quiz:hover {
+  background: #A34537;
+  transform: translateY(-2px);
+}
+
+/* Quiz Card Component in Lesson */
+.nihongo-quiz-wrapper {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border, #E4D9CF);
+  border-radius: 20px;
+  padding: 2rem 2.2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+
+@media (max-width: 768px) {
+  .nihongo-quiz-wrapper {
+    padding: 1.4rem 1.1rem;
+  }
+}
+
+.nihongo-quiz-header {
+  border-bottom: 1.5px solid #F1E7DD;
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nihongo-quiz-title-wrap h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2D2520;
+  margin-bottom: 0.3rem;
+}
+
+.nihongo-quiz-title-wrap p {
+  font-size: 0.92rem;
+  color: #64554B;
+}
+
+.quiz-score-live-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+.lesson-quiz-item-card {
+  background: #FAF6F0;
+  border: 1.5px solid #EADBCE;
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.lesson-quiz-item-card.answered-correct {
+  border-color: #10B981;
+  background: #F0FDF4;
+}
+
+.lesson-quiz-item-card.answered-wrong {
+  border-color: #EF4444;
+  background: #FEF2F2;
+}
+
+.quiz-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.quiz-q-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  background: #BA5444;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+.quiz-q-prompt {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #2D2520;
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+
+.btn-quiz-chokai-audio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  border: 1.5px solid #3E6B89;
+  background: #FFFFFF;
+  color: #3E6B89;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.btn-quiz-chokai-audio:hover {
+  background: #3E6B89;
+  color: #FFFFFF;
+}
+
+.quiz-options-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.btn-quiz-option {
+  width: 100%;
+  text-align: left;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  border: 1.5px solid #D6C8BA;
+  background: #FFFFFF;
+  color: #2D2520;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-quiz-option:hover:not(:disabled) {
+  border-color: #BA5444;
+  background: #FAF1EE;
+  color: #BA5444;
+}
+
+.btn-quiz-option.correct {
+  border-color: #10B981 !important;
+  background: #ECFDF5 !important;
+  color: #065F46 !important;
+  font-weight: 800;
+}
+
+.btn-quiz-option.wrong {
+  border-color: #EF4444 !important;
+  background: #FEF2F2 !important;
+  color: #991B1B !important;
+}
+
+.quiz-item-feedback {
+  margin-top: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: none;
+}
+
+.quiz-item-feedback.show {
+  display: block;
+}
+
+.quiz-item-feedback.correct {
+  background: #D1FAE5;
+  border: 1px solid #A7F3D0;
+  color: #065F46;
+}
+
+.quiz-item-feedback.wrong {
+  background: #FEE2E2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+}
+
+.quiz-final-actions-card {
+  background: #FAF6F0;
+  border: 1.5px solid #EADBCE;
+  border-radius: 16px;
+  padding: 1.6rem;
+  text-align: center;
+  margin-top: 1.8rem;
+  display: none;
+}
+
+.quiz-final-actions-card.show {
+  display: block;
+}
+
+.quiz-final-stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0 1.4rem;
+  flex-wrap: wrap;
+}
+
+.quiz-final-stat-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.quiz-final-stat-val {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #2D2520;
+}
+
+.quiz-final-stat-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #8C7E73;
+}
+
+.quiz-final-btns {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.btn-quiz-action-next {
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  background: #BA5444;
+  color: #FFFFFF;
+  border: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-quiz-action-next:hover {
+  background: #A34537;
+}
+
+.btn-quiz-action-retry {
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  background: #FAF6F0;
+  border: 1.5px solid #E2D7CC;
+  color: #4A3B32;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-quiz-action-retry:hover {
+  background: #F1E7DD;
+}
+
+.btn-quiz-action-back {
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  background: #FAF6F0;
+  border: 1.5px solid #E2D7CC;
+  color: #4A3B32;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-quiz-action-back:hover {
+  background: #F1E7DD;
+}
+
+
+/* ====================================================
+   KOMPONEN 3 AKSARA JEPANG & PETA INTERAKTIF KOTA JEPANG
+   Aesthetic: Minimalist Japanese Typographic Style
+   Strict: ZERO EMOJI & ZERO ICON
+   ==================================================== */
+
+/* 1. Grid Komparasi 3 Aksara */
+.writing-intro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.writing-intro-card {
+  background: #FFFFFF;
+  border: 2px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 1.4rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.writing-intro-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.card-hiragana {
+  border-color: #FED7AA;
+  background: #FFFDF9;
+}
+.card-hiragana:hover {
+  border-color: #F97316;
+}
+
+.card-katakana {
+  border-color: #BFDBFE;
+  background: #F8FAFC;
+}
+.card-katakana:hover {
+  border-color: #2563EB;
+}
+
+.card-kanji {
+  border-color: #FECACA;
+  background: #FFFBFB;
+}
+.card-kanji:hover {
+  border-color: #BA3D27;
+}
+
+.writing-card-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  background: #F1F5F9;
+  color: #475569;
+  margin-bottom: 0.8rem;
+}
+
+.card-hiragana .writing-card-badge { background: #FFEDD5; color: #C2410C; }
+.card-katakana .writing-card-badge { background: #EFF6FF; color: #1D4ED8; }
+.card-kanji .writing-card-badge { background: #FEE2E2; color: #991B1B; }
+
+.writing-card-main-jp {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #0F172A;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.card-hiragana .writing-card-main-jp { color: #EA580C; }
+.card-katakana .writing-card-main-jp { color: #2563EB; }
+.card-kanji .writing-card-main-jp { color: #BA3D27; }
+
+.writing-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin-bottom: 0.6rem;
+}
+
+.writing-card-desc {
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0 0 1rem;
+  flex-grow: 1;
+}
+
+.writing-card-example {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: left;
+}
+
+.writing-card-example .ex-label {
+  font-weight: 800;
+  color: #64748B;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.writing-card-example .ex-val {
+  font-weight: 700;
+  color: #0F172A;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+.btn-writing-audio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.55rem 0.9rem;
+  border-radius: 9999px;
+  border: 1.5px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #1E293B;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-writing-audio:hover {
+  background: #0F172A;
+  color: #FFFFFF;
+  border-color: #0F172A;
+}
+
+/* 2. Grid Simbol Kanji Alam Piktogram */
+.kanji-nature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0 2rem;
+}
+
+.kanji-nature-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1.2rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.03);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.kanji-nature-card:hover {
+  transform: translateY(-3px);
+  border-color: #BA3D27;
+}
+
+.kanji-symbol-large {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #BA3D27;
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
+}
+
+.kanji-reading-romaji {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #2563EB;
+  margin-bottom: 0.35rem;
+}
+
+.kanji-nature-meaning {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.4;
+  margin-bottom: 0.85rem;
+  flex-grow: 1;
+}
+
+.btn-kanji-audio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid #CBD5E1;
+  background: #F8FAFC;
+  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-kanji-audio:hover {
+  background: #BA3D27;
+  color: #FFFFFF;
+  border-color: #BA3D27;
+}
+
+/* 3. Peta Interaktif Kepulauan Jepang & Kota Terkenal */
+.japan-map-interactive-module {
+  background: #FFFFFF;
+  border: 2px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 1.6rem;
+  margin: 1.6rem 0 2.2rem;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+}
+
+.japan-map-top-bar {
+  margin-bottom: 1.3rem;
+}
+
+.japan-map-hint {
+  display: block;
+  font-size: 0.88rem;
+  color: #475569;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.japan-cities-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+}
+
+.japan-city-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1.5px solid #CBD5E1;
+  background: #F8FAFC;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.japan-city-tab-btn:hover {
+  border-color: #BA3D27;
+  color: #BA3D27;
+  background: #FEF2F2;
+}
+
+.japan-city-tab-btn.active {
+  background: #BA3D27;
+  color: #FFFFFF;
+  border-color: #BA3D27;
+  box-shadow: 0 4px 12px rgba(186, 61, 39, 0.25);
+}
+
+.japan-map-display-layout {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 1.6rem;
+  align-items: stretch;
+}
+
+.japan-map-svg-wrap {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 380px;
+}
+
+.japan-map-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+}
+
+.japan-island-path {
+  fill: url(#islandGradient);
+  stroke: #94A3B8;
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  transition: fill 0.2s ease;
+}
+
+.japan-island-path:hover {
+  fill: #E2E8F0;
+}
+
+.island-watermark-text {
+  font-size: 14px;
+  font-weight: 900;
+  fill: #94A3B8;
+  letter-spacing: 2.5px;
+  opacity: 0.6;
+}
+
+.island-watermark-text-small {
+  font-size: 10px;
+  font-weight: 900;
+  fill: #94A3B8;
+  letter-spacing: 1.5px;
+  opacity: 0.6;
+}
+
+/* Pin Kota */
+.japan-map-pin .pin-circle-halo {
+  fill: rgba(186, 61, 39, 0.18);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  transform-origin: center;
+}
+
+.japan-map-pin .pin-circle-outer {
+  fill: #BA3D27;
+  stroke: #FFFFFF;
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.japan-map-pin .pin-circle-inner {
+  fill: #FFFFFF;
+}
+
+.japan-map-pin .pin-text-label {
+  font-size: 11px;
+  font-weight: 800;
+  fill: #0F172A;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 -1px 3px rgba(255, 255, 255, 0.9), 1px 0 3px rgba(255, 255, 255, 0.9), -1px 0 3px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+
+.japan-map-pin:hover .pin-circle-outer {
+  transform: scale(1.3);
+  fill: #9A2E1A;
+}
+
+.japan-map-pin.active .pin-circle-outer {
+  fill: #2563EB;
+  stroke: #FFFFFF;
+  stroke-width: 2.5;
+  transform: scale(1.25);
+}
+
+.japan-map-pin.active .pin-circle-halo {
+  fill: rgba(37, 99, 235, 0.25);
+  transform: scale(1.5);
+}
+
+.japan-map-pin.active .pin-text-label {
+  fill: #1D4ED8;
+  font-weight: 900;
+}
+
+/* Detail Card Kota Terpilih */
+.japan-city-detail-panel {
+  background: #FFFDF9;
+  border: 2px solid #FED7AA;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.08);
+}
+
+.city-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1.5px solid #FDE68A;
+}
+
+.city-detail-kanji-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.2rem;
+}
+
+.city-kanji-large {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #BA3D27;
+  line-height: 1;
+}
+
+.city-kana-sub {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #64748B;
+}
+
+.city-name-latin {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #0F172A;
+  margin: 0.2rem 0 0.35rem;
+}
+
+.city-region-badge {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 800;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+}
+
+.btn-city-audio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: #0F172A;
+  color: #FFFFFF;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+}
+
+.btn-city-audio:hover {
+  background: #BA3D27;
+  transform: translateY(-2px);
+}
+
+.city-detail-desc {
+  font-size: 0.92rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0 0 1.2rem;
+}
+
+.city-highlights-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.city-highlight-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 0.75rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.city-highlight-box .highlight-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748B;
+}
+
+.city-highlight-box .highlight-val {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.4;
+}
+
+/* Responsif Mobile & Tablet */
+@media (max-width: 820px) {
+  .writing-intro-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .japan-map-display-layout {
+    grid-template-columns: 1fr;
+  }
+  .japan-map-svg-wrap {
+    min-height: 300px;
+  }
+}
+
+/* Interaktivitas Bedah Kalimat & Tantangan Mini */
+.kalimat-word-group {
+  display: inline-flex;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.kalimat-word-group:hover,
+.kalimat-word-group.active-focus {
+  background: #FEF3C7;
+  outline: 2.5px solid #F59E0B;
+}
+
+.kalimat-breakdown-card.active-focus {
+  border-color: #EA580C;
+  background: #FFF7ED;
+  box-shadow: 0 4px 16px rgba(234, 88, 12, 0.15);
+  transform: translateY(-2px);
+}
+
+.huruf-examples-panel {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 1.2rem;
+}
+
+.huruf-examples-panel.open {
+  max-height: 400px;
+  opacity: 1;
+  padding: 1rem 1.2rem 1.2rem;
+}
+
+.challenge-feedback-box {
+  display: none;
+  margin-top: 1.2rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  animation: fadeInStep 0.2s ease forwards;
+}
+
+.challenge-feedback-box.show {
+  display: block;
+}
+
+.challenge-feedback-box.correct {
+  background: #ECFDF5;
+  border: 1.5px solid #6EE7B7;
+  color: #065F46;
+}
+
+.challenge-feedback-box.wrong {
+  background: #FEF2F2;
+  border: 1.5px solid #FCA5A5;
+  color: #991B1B;
+}
+
+.btn-challenge-opt.correct {
+  background: #ECFDF5 !important;
+  border-color: #10B981 !important;
+  color: #065F46 !important;
+  font-weight: 800;
+}
+
+.btn-challenge-opt.wrong {
+  background: #FEF2F2 !important;
+  border-color: #EF4444 !important;
+  color: #991B1B !important;
+}
+
